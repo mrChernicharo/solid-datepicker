@@ -150,3 +150,10 @@ export function getDaysGrid(date: Date) {
 
 	return res;
 }
+
+export const isSameDate = (d: Date, selectedDate: Date) =>
+	new Date(d.setHours(0, 0, 0)).getTime() ===
+	new Date(selectedDate.setHours(0, 0, 0)).getTime();
+
+export const isCurrentMonth = (d: Date, selectedDate: Date) =>
+	d.getMonth() === selectedDate.getMonth();

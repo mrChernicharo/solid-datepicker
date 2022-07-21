@@ -19,6 +19,8 @@ import s from "./App.module.css";
 import {
 	getDaysGrid,
 	inputMask,
+	isCurrentMonth,
+	isSameDate,
 	months,
 	parseDate,
 	placeholderText,
@@ -27,13 +29,12 @@ import {
 
 // let lang = "en";
 let lang = "pt-BR";
+const today = new Date(new Date().setHours(0, 0, 0));
 
 const App: Component = () => {
 	let inputRef;
 	const [dateStr, setDateStr] = createSignal("");
-	const [selectedDate, setSelectedDate] = createSignal(
-		new Date(new Date().setHours(0, 0, 0))
-	);
+	const [selectedDate, setSelectedDate] = createSignal(today);
 	const [showCalendar, setShowCalendar] = createSignal(true);
 
 	function handleInputChange(e) {
@@ -45,22 +46,18 @@ const App: Component = () => {
 			parseDate(dateStr()) && parseDate(dateStr()) !== selectedDate();
 
 		if (isValidDate) {
-			console.log("valid");
 			setSelectedDate(parseDate(dateStr())!);
 		}
 	}
-
 	function handleKeyDown(e) {
 		const { selectionStart, selectionEnd } = inputRef;
 
 		switch (e.code) {
 			case "ArrowDown": {
 				setShowCalendar(true);
-				return console.log(e);
 			}
 			case "ArrowUp": {
 				setShowCalendar(false);
-				return console.log(e);
 			}
 			case "ArrowLeft": {
 				return console.log(e, { selectionStart, selectionEnd });
@@ -124,12 +121,6 @@ const App: Component = () => {
 		setSelectedDate(new Date(timestamp));
 	}
 
-	const isSameDate = (d: Date) =>
-		new Date(d.setHours(0, 0, 0)).getTime() ===
-		new Date(selectedDate().setHours(0, 0, 0)).getTime();
-
-	const isCurrentMonth = (d: Date) => d.getMonth() === selectedDate().getMonth();
-
 	const dayGrid = createMemo(() => getDaysGrid(selectedDate()));
 
 	createEffect(() => {
@@ -162,19 +153,17 @@ const App: Component = () => {
 
 				<Show when={showCalendar()}>
 					<div class={s.monthSelectContainer}>
-						<div class={s.monthSelectChevron} onClick={decrementYear}>
-							<button class={s.hiddenBtn}>
-								{/* <FaSolidPlay size={12} style={{ transform: "rotate(180deg)" }}/> */}
-								{/* <FaSolidCaretLeft /> */}
-								{/* <FaSolidChevronLeft /> */}
-								<FaSolidAngleDoubleLeft size={16} />
-							</button>
-						</div>
-
-						<div class={s.monthSelectChevron} onClick={decrementMonth}>
-							<button class={s.hiddenBtn}>
-								<FaSolidAngleLeft size={16} />
-							</button>
+						<div>
+							<div class={s.monthSelectChevron} onClick={decrementYear}>
+								<button class={s.hiddenBtn}>
+									<FaSolidAngleDoubleLeft size={16} />
+								</button>
+							</div>
+							<div class={s.monthSelectChevron} onClick={decrementMonth}>
+								<button class={s.hiddenBtn}>
+									<FaSolidAngleLeft size={16} />
+								</button>
+							</div>
 						</div>
 
 						<div class={s.selectedYearMonth}>
@@ -182,40 +171,42 @@ const App: Component = () => {
 							{selectedDate().getFullYear()}
 						</div>
 
-						<div class={s.monthSelectChevron} onClick={incrementMonth}>
-							<button class={s.hiddenBtn}>
-								<FaSolidAngleRight size={16} />
-							</button>
-						</div>
-						<div class={s.monthSelectChevron} onClick={incrementYear}>
-							<button class={s.hiddenBtn}>
-								<FaSolidAngleDoubleRight size={16} />
-							</button>
+						<div>
+							<div class={s.monthSelectChevron} onClick={incrementMonth}>
+								<button class={s.hiddenBtn}>
+									<FaSolidAngleRight size={16} />
+								</button>
+							</div>
+							<div class={s.monthSelectChevron} onClick={incrementYear}>
+								<button class={s.hiddenBtn}>
+									<FaSolidAngleDoubleRight size={16} />
+								</button>
+							</div>
 						</div>
 					</div>
 
 					<div class={s.calendarContainer}>
 						<For each={weekdays}>
-							{weekday => <div class={s.dateCell}>{weekday}</div>}
+							{weekday => (
+								<div class={`${s.dateCell} ${s.weekday}`}>{weekday}</div>
+							)}
 						</For>
 						<For each={dayGrid()}>
-							{d => {
-								// console.log({ date: d.date, selec: selectedDate() });
-
-								return (
-									<div
-										class={`${s.dateCell} 
-                    ${isSameDate(d.date) ? s.selectedDate : ""} 
-                    ${!isCurrentMonth(d.date) ? s.notCurrentMonthCell : ""} 
-                  `}
-										onClick={e => {
-											setSelectedDate(d.date);
-											// setShowCalendar(false);
-										}}>
-										<button class={s.hiddenBtn}>{d.day}</button>
-									</div>
-								);
-							}}
+							{d => (
+								<div
+									//prettier-ignore
+									class={`
+										${s.dateCell} 
+										${isSameDate(d.date, selectedDate()) ? s.selectedDate : ""} 
+										${!isCurrentMonth(d.date, selectedDate()) ? s.notCurrentMonthCell : "" }  
+									`}
+									onClick={e => {
+										setSelectedDate(d.date);
+										// setShowCalendar(false);
+									}}>
+									<button class={s.hiddenBtn}>{d.day}</button>
+								</div>
+							)}
 						</For>
 					</div>
 				</Show>
