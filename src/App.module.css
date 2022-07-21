@@ -1,0 +1,114 @@
+.App {
+	text-align: center;
+	background-color: #282c34;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	font-size: calc(10px + 2vmin);
+	color: white;
+}
+
+.datePicker {
+	position: relative;
+	border: 1px solid red;
+}
+
+.inputContainer {
+	display: flex;
+	position: relative;
+}
+
+.input {
+	padding: 0.5rem;
+	border: transparent;
+  width: 240px;
+}
+
+.inputBtn {
+	height: 100%;
+
+	position: absolute;
+	right: 0;
+
+	border: transparent;
+
+	transition: 0.2s;
+}
+
+.inputBtn:hover {
+	cursor: pointer;
+	opacity: 0.8;
+}
+
+.monthSelectContainer {
+	/* border: 1px solid red; */
+	font-size: 20px;
+	display: flex;
+	justify-content: space-between;
+}
+
+.monthSelectContainer div {
+	display: block;
+	display: flex;
+	align-items: center;
+}
+
+.selectedYearMonth {
+  font-size: 16px;
+}
+
+
+.calendarContainer {
+  position: absolute;
+  left: -1px;
+	width: calc(100% + 2px);
+	
+  display: grid;
+	grid-template-columns: repeat(7, 1fr);
+
+	border: 1px solid red;
+	background-color: #282c34;
+}
+
+
+.monthSelectChevron {
+}
+
+.dateCell {
+	font-size: 14px;
+	padding: 0.25rem;
+  height: 32px;
+	cursor: pointer;
+	border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dateCell.selectedDate {
+	background-color: rgba(232, 129, 44, 0.4) !important;
+}
+
+.dateCell:hover,
+.monthSelectChevron:hover {
+	background-color: rgba(255, 255, 255, 0.1);
+}
+
+.dateCell {
+  color: #fff
+}
+
+.notCurrentMonthCell{
+  color: #666;
+}
+
+.hiddenBtn {
+	cursor: pointer;
+
+	padding-top: 3px !important;
+	background: transparent;
+	border: none;
+	color: inherit;
+}
