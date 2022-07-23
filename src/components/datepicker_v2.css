@@ -38,14 +38,14 @@ span.input-label {
 	font-size: 13px;
 	position: absolute;
 	left: 2px;
-	top: 2px;
+	/* top: 2px; */
 	transition: all 0.3s;
 	color: rgba(255, 255, 255, 0.4);
 	pointer-events: none;
 }
 
 span.input-label.is-focused {
-	transform: translate(-6px, -20px) scale(0.84);
+	transform: translate(-6px, -16px) scale(0.84);
 	color: red;
 }
 
@@ -55,14 +55,14 @@ div.date-input-outline {
 	width: 100%;
 	position: absolute;
 	left: 0;
-	background-color: rgba(255, 255, 255, 0.2);
+	background-color: rgba(255, 255, 255, 0.4);
 }
 
 div.date-input-outline::after {
 	content: "";
 	width: 50%;
 	height: 2px;
-	background-color: blue;
+	background-color: #111;
 	position: absolute;
 	right: 0;
 }
@@ -71,13 +71,13 @@ div.date-input-outline::before {
 	content: "";
 	width: 50%;
 	height: 2px;
-	background-color: green;
+	background-color: #111;
 	position: absolute;
 	left: 0;
 }
 
 .date-input-field:hover > div.date-input-outline {
-	background-color: rgba(255, 255, 255, 0.4);
+	background-color: rgba(255, 255, 255, 0.65);
 	height: 2px;
 	transition: 0.2s;
 }
@@ -173,7 +173,7 @@ div.calendar-grid {
 
 
 .date-picker-overlay {
-	background-color: greenyellow;
+	background-color: green;
 	position: fixed;
 	top: 0;
 	left: 0;

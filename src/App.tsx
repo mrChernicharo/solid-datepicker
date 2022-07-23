@@ -65,10 +65,14 @@ export default function App() {
 					max={maxDate}
 					placeholder={"placeholder"}
 					hint={"dd/mm/aaaa"}
+					delimiter={"/"}
+					applyMask={true}
 					filter={weekendFilter}
 					onDateSelected={d => setSelectedDate(d)} // both input and calendar
-					onInput={console.log} // input input
-					onChange={console.log} // input change
+					// onInput={console.log} // input input
+					onInput={e => {}} // input input
+					// onInput={console.log} // input input
+					onChange={e => {}} // input change
 					closeAfterClick={false}
 					label="DatePicker label"
 					disabled={false}
@@ -81,8 +85,8 @@ export default function App() {
 					dateClass={higlight20thDay}
 				/>
 
-				{/* <DatePicker_v2
-					ref={datepickerRef2}
+				<DatePicker_v2
+					ref={datepickerRef}
 					value={new Date()}
 					type={"datePicker"}
 					color={color}
@@ -93,6 +97,8 @@ export default function App() {
 					max={maxDate}
 					placeholder={"29/04/1987"}
 					hint={"dd/mm/aaaa"}
+					delimiter={"#"}
+					applyMask={true}
 					filter={weekendFilter}
 					onDateSelected={console.log} // both input and calendar
 					onInput={console.log} // input input
@@ -106,7 +112,7 @@ export default function App() {
 					touchUIMode={false}
 					calendarOnly={false} // no input, calendar only
 					dateClass={higlight20thDay}
-				/> */}
+				/>
 			</div>
 		</div>
 	);
