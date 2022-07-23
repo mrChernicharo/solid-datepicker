@@ -1,4 +1,12 @@
-import { Component, createSignal, For, JSXElement, Ref, Show } from "solid-js";
+import {
+	Component,
+	createRenderEffect,
+	createSignal,
+	For,
+	JSXElement,
+	Ref,
+	Show,
+} from "solid-js";
 import { Portal } from "solid-js/web";
 import { DatePickerType } from "../App";
 import { getDaysGrid } from "../utils/helpers";
@@ -16,14 +24,15 @@ interface Props {
 	max: Date;
 	filter: (d: Date) => boolean;
 	onDateSelected: (d: Date) => void; // both input and calenda;
-	onInput: (d: Date) => void; // input input;
-	onChange: (d: Date) => void; // input chang;
+	onInput: (e: any) => void; // input input;
+	onChange: (e: any) => void; // input chang;
 	dateClass: (d: Date) => string;
 	label: string;
 	placeholder: string;
 	disabled: boolean;
 	inputDisabled: boolean;
 	calendarDisabled: boolean;
+	closeAfterClick: boolean;
 	monthButtons: boolean;
 	yearButtons: boolean;
 	locale: string;
@@ -36,10 +45,14 @@ export default function DatePicker_v2(props: Props) {
 	let inputRef, labelRef, outlineRef;
 
 	const [isOpen, setIsOpen] = createSignal(false);
-	const [shownDate, setShownDate] = createSignal(props.initialDate || new Date());
-	const [selectedDate, setSelectedDate] = createSignal(props.initialDate || new Date());
+	const [shownDate, setShownDate] = createSignal(
+		props.initialDate || props.value || new Date()
+	);
+	// const [selectedDate, setSelectedDate] = createSignal(props.initialDate || new Date());
 
 	const daysGrid = (date: Date) => getDaysGrid(date);
+
+	createRenderEffect(() => console.log(shownDate()));
 
 	return (
 		<div class="date-picker" ref={props.ref} onClick={e => console.log(props.ref)}>
@@ -52,6 +65,7 @@ export default function DatePicker_v2(props: Props) {
 						ref={inputRef!}
 						class="date-input"
 						type="text"
+						placeholder={props.placeholder}
 						onFocus={e => {
 							if (!inputRef.value) {
 								labelRef.classList.toggle("is-focused");
@@ -64,6 +78,9 @@ export default function DatePicker_v2(props: Props) {
 								outlineRef.classList.toggle("is-focused");
 							}
 						}}
+						onInput={props.onInput}
+						onChange={props.onChange}
+						// value={props.value.toLocaleDateString(props.locale)}
 					/>
 					<button class="input-icon" onClick={e => setIsOpen(true)}>
 						{props.icon}
@@ -82,12 +99,24 @@ export default function DatePicker_v2(props: Props) {
 			<Show when={isOpen()}>
 				<div class="calendar-popup">
 					<header class="calendar-header">
-						<h3>Julho</h3>
+						<h3>{props.value.toLocaleDateString(props.locale)}</h3>
 					</header>
 
 					<div class="calendar-grid">
 						<For each={daysGrid(props.value)}>
-							{d => <div class="calendar-cell">{d.day}</div>}
+							{d => (
+								<div
+									class="calendar-cell"
+									onClick={e => {
+										props.onDateSelected(d.date);
+
+										if (props.closeAfterClick) {
+											setIsOpen(false);
+										}
+									}}>
+									{d.day}
+								</div>
+							)}
 						</For>
 					</div>
 				</div>

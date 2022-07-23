@@ -4,9 +4,13 @@
 	box-sizing: border-box;
 }
 
-h1,h2,h3,h4,p {
-    margin: 0;
-    padding: 0;
+h1,
+h2,
+h3,
+h4,
+p {
+	margin: 0;
+	padding: 0;
 }
 
 .date-picker {
@@ -33,14 +37,15 @@ label.date-input-wrapper {
 span.input-label {
 	font-size: 13px;
 	position: absolute;
-	left: 4px;
+	left: 2px;
+	top: 2px;
 	transition: all 0.3s;
 	color: rgba(255, 255, 255, 0.4);
 	pointer-events: none;
 }
 
 span.input-label.is-focused {
-	transform: translate(-8px, -18px) scale(0.84);
+	transform: translate(-6px, -20px) scale(0.84);
 	color: red;
 }
 
@@ -99,6 +104,15 @@ input.date-input {
 	font-size: 15px;
 }
 
+input.date-input::placeholder {
+	opacity: 0;
+	transition: 0.3s;
+}
+input.date-input:focus::placeholder {
+	color: #999;
+	opacity: 1;
+}
+
 button.input-icon {
 	display: flex;
 	color: #fff;
@@ -115,11 +129,15 @@ button.input-icon {
 	position: absolute;
 	right: 0px;
 	top: -8px;
+
+	outline: none;
 	cursor: pointer;
 }
 
-button.input-icon:hover {
-	background: rgba(255, 255, 255, 0.25);
+button.input-icon:hover,
+button.input-icon:focus,
+.calendar-cell:hover  {
+	background: rgba(255, 255, 255, 0.1);
 }
 
 div.hint-container {
@@ -130,7 +148,7 @@ small.hint {
 	font-variant: small-caps;
 
 	position: absolute;
-	left: 20px;
+	left: 18px;
 }
 
 div.calendar-popup {
@@ -148,8 +166,11 @@ div.calendar-grid {
 }
 
 .calendar-cell {
+	border: none;
+	border-radius: 50%;
 	padding: 0.5rem;
 }
+
 
 .date-picker-overlay {
 	background-color: greenyellow;
