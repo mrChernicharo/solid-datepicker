@@ -10,6 +10,7 @@ import {
 import { Portal } from "solid-js/web";
 import { DatePickerType } from "../App";
 import { getDaysGrid } from "../utils/helpers";
+import { getDateFormat } from "../utils/algo.js";
 import "./datepicker_v2.css";
 
 // dateClass={higlight20thDay}
@@ -46,6 +47,9 @@ interface Props {
 export default function DatePicker_v2(props: Props) {
 	let inputRef, labelRef, outlineRef, cellsRefs;
 
+	const dateFormat = getDateFormat(props.value, props.locale, props.delimiter);
+	console.log({ dateFormat });
+
 	const [isOpen, setIsOpen] = createSignal(false);
 	const [shownDate, setShownDate] = createSignal(
 		props.initialDate || props.value || new Date()
@@ -53,6 +57,9 @@ export default function DatePicker_v2(props: Props) {
 	// const [selectedDate, setSelectedDate] = createSignal(props.initialDate || new Date());
 
 	const daysGrid = (date: Date) => getDaysGrid(date);
+	const isValidDate = (str: string) => {
+		// let [] = str.split(props.delimiter)
+	};
 
 	createRenderEffect(() => console.log(shownDate()));
 
@@ -103,6 +110,10 @@ export default function DatePicker_v2(props: Props) {
 							console.log(v);
 
 							e.currentTarget.value = v;
+
+							// if (isValidDate(v)) {
+							//     props.onDateSelected(v);
+							// }
 
 							props.onInput(e);
 						}}

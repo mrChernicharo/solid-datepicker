@@ -39,6 +39,8 @@ const higlight20thDay = (d: Date | null) => {
 
 export default function App() {
 	const [selectedDate, setSelectedDate] = createSignal(initialDate);
+	const [selectedDate2, setSelectedDate2] = createSignal(new Date());
+	const [selectedDate3, setSelectedDate3] = createSignal(new Date());
 
 	let datepickerRef;
 	// let datepickerRef2;
@@ -63,8 +65,9 @@ export default function App() {
 					initialDate={new Date()}
 					min={minDate}
 					max={maxDate}
-					placeholder={"placeholder"}
-					hint={"dd/mm/aaaa"}
+					placeholder={"29/04/1987"}
+					hint={"brazilian"}
+					// hint={"dd/mm/aaaa"}
 					delimiter={"/"}
 					applyMask={true}
 					filter={weekendFilter}
@@ -86,21 +89,52 @@ export default function App() {
 				/>
 
 				<DatePicker_v2
+					closeAfterClick={true}
 					ref={datepickerRef}
-					value={new Date()}
+					value={selectedDate2()}
 					type={"datePicker"}
 					color={color}
-					locale={lang}
+					locale={"en"}
 					icon={<FaCalendarAlt size={16} />}
 					initialDate={initialDate}
 					min={minDate}
 					max={maxDate}
-					placeholder={"29/04/1987"}
-					hint={"dd/mm/aaaa"}
-					delimiter={"#"}
+					placeholder={"04 29 1987"}
+					hint={"american"}
+					delimiter={" "}
 					applyMask={true}
 					filter={weekendFilter}
-					onDateSelected={console.log} // both input and calendar
+					onDateSelected={d => setSelectedDate2(d)} // both input and calendar
+					onInput={console.log} // input input
+					onChange={console.log} // input change
+					label="DatePicker 2"
+					disabled={false}
+					inputDisabled={false}
+					calendarDisabled={false}
+					monthButtons={true}
+					yearButtons={true}
+					touchUIMode={false}
+					calendarOnly={false} // no input, calendar only
+					dateClass={higlight20thDay}
+				/>
+
+				<DatePicker_v2
+					closeAfterClick={false}
+					ref={datepickerRef}
+					value={selectedDate3()}
+					type={"datePicker"}
+					color={color}
+					locale={"de"}
+					icon={<FaCalendarAlt size={16} />}
+					initialDate={initialDate}
+					min={minDate}
+					max={maxDate}
+					placeholder={"1987-04-29"}
+					hint={"ISO"}
+					delimiter={"."}
+					applyMask={true}
+					filter={weekendFilter}
+					onDateSelected={d => setSelectedDate3(d)} // both input and calendar
 					onInput={console.log} // input input
 					onChange={console.log} // input change
 					label="DatePicker 2"
