@@ -48,7 +48,8 @@ export default function DatePicker_v2(props: Props) {
 	let inputRef, labelRef, outlineRef, cellsRefs;
 
 	const dateFormat = getDateFormat(props.value, props.locale, props.delimiter);
-	console.log({ dateFormat });
+	const dateSchema = dateFormat.replaceAll(props.delimiter, ""); // YMD | MDY | DMY
+	console.log({ dateFormat, dateSchema });
 
 	const [isOpen, setIsOpen] = createSignal(false);
 	const [shownDate, setShownDate] = createSignal(
@@ -58,7 +59,14 @@ export default function DatePicker_v2(props: Props) {
 
 	const daysGrid = (date: Date) => getDaysGrid(date);
 	const isValidDate = (str: string) => {
-		// let [] = str.split(props.delimiter)
+		const schema = {
+			Y: "year",
+			M: "month",
+			D: "day",
+		};
+		let splitValues = str.split(props.delimiter);
+
+		console.log("isValidDate", { str, splitValues, dateSchema });
 	};
 
 	createRenderEffect(() => console.log(shownDate()));
@@ -91,23 +99,40 @@ export default function DatePicker_v2(props: Props) {
 							let v = e.currentTarget.value;
 
 							if (props.applyMask) {
+								let digitsAndDelimiterRegex, dayMonthRegex, yearRegex;
 								let delimiter = props.delimiter;
-
-								// prettier-ignore
-								let digitsAndDelimiterRegex = new RegExp(`[^${delimiter}0-9]`);
-								let dayMonthRegex = new RegExp(/(\d{2})(\d)/);
-								// prettier-ignore
-								let yearRegex = new RegExp(`(\d+${delimiter}\d+${delimiter})(\d)`);
+								digitsAndDelimiterRegex = new RegExp(
+									`[^${delimiter}0-9]`
+								);
 
 								v = v.replace(digitsAndDelimiterRegex, "");
-								// prettier-ignore
-								v = v.length < 7 ? v.replace(dayMonthRegex, `$1${delimiter}$2`) : v;
 
-								v = v.replace(yearRegex, "$1$2");
+								if (dateSchema === "YMD") {
+									// TODO yyyy-mm-dd mask:
+									yearRegex = /(\d{4})(\d)/;
+									dayMonthRegex = new RegExp(
+										`(\\d{4}${delimiter}\\d{2})(\\d)`,
+										"g"
+									);
+									console.log(dayMonthRegex);
 
+									v = v.replace(yearRegex, `$1${delimiter}$2`);
+									v = v.replace(dayMonthRegex, `$1${delimiter}$2`);
+								} else {
+									dayMonthRegex = new RegExp(/(\d{2})(\d)/);
+									yearRegex = new RegExp(
+										`(\d+${delimiter}\d+${delimiter})(\d)`
+									);
+
+									// prettier-ignore
+									v = v.length < 7 ? v.replace(dayMonthRegex, `$1${delimiter}$2`) : v;
+
+									v = v.replace(yearRegex, "$1$2");
+								}
 								v = v.length > 10 ? v.slice(0, 10) : v;
 							}
-							console.log(v);
+							// console.log(v);
+							isValidDate(v);
 
 							e.currentTarget.value = v;
 

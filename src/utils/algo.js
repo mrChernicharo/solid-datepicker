@@ -11,7 +11,7 @@ const date = new Date(new Date(2022,1,1).setFullYear(19))
   */
 export function getDateFormat(d, locale, delimiter) {
    let localeDate,
-       formatedDate,
+       formattedDate,
        splitDate,
        dayA,
        monthA,
@@ -19,7 +19,7 @@ export function getDateFormat(d, locale, delimiter) {
        dateB,
        testDate,
        splitTestDate,
-       formatedTestDate,
+       formattedTestDate,
        notMonth,
        year,
        day,
@@ -34,9 +34,9 @@ export function getDateFormat(d, locale, delimiter) {
   localeDate = d.toLocaleDateString(locale);
   delimiter = delimiter ? delimiter : localeDate.replace(/\d/g, "")[0];
   
-  formatedDate = localeDate.replace(/\D/g, delimiter);
+  formattedDate = localeDate.replace(/\D/g, delimiter);
   
-  splitDate = formatedDate.split(delimiter).map(Number);
+  splitDate = formattedDate.split(delimiter).map(Number);
   
   dayA = d.getDate();
   monthA = d.getMonth() + 1;
@@ -52,8 +52,8 @@ export function getDateFormat(d, locale, delimiter) {
     // compare to another date and find out who's month and who's day
     dateB = new Date(d.getFullYear(), d.getMonth() + 1, d.getDate());
     testDate = dateB.toLocaleDateString(locale); // date + 1 month
-    formatedTestDate = testDate.replace(/\D/g, delimiter);
-    splitTestDate = formatedTestDate.split(delimiter)
+    formattedTestDate = testDate.replace(/\D/g, delimiter);
+    splitTestDate = formattedTestDate.split(delimiter)
     
     yearlessSplit = splitTestDate.filter(d => d.length !== 4).map(Number);
     notMonth = yearlessSplit.find(d => d !== month);
@@ -79,31 +79,7 @@ export function getDateFormat(d, locale, delimiter) {
         dateSchema.push(delimiter);
     }  
   }
-  
-  //   console.log(
-  //   {  
-  //     d,
-  //     yearlessSplit,
-  //     // dateB,
-  //     // testDate,
-  //     // notMonth,
-  //     locale,
-  //     splitTestDate,
-  //     // monthB,
-  //     dateSchema,
-  //     formatedDate,
-  //     // monthA,
-  //     localeDate,
-  //     delimiter,
-  //     // splitDate,
-  //     // day,
-  //     // month,
-  //     // year,
-  //     // dayIndex,
-  //     // monthIndex,
-  //     // yearIndex,
-  //   }
-  // );
+
   
   return dateSchema.join('')
   

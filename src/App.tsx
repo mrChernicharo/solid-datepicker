@@ -105,8 +105,10 @@ export default function App() {
 					applyMask={true}
 					filter={weekendFilter}
 					onDateSelected={d => setSelectedDate2(d)} // both input and calendar
-					onInput={console.log} // input input
-					onChange={console.log} // input change
+					// onInput={console.log} // input input
+					onInput={e => {}} // input input
+					// onInput={console.log} // input input
+					onChange={e => {}} // input change
 					label="DatePicker 2"
 					disabled={false}
 					inputDisabled={false}
@@ -117,7 +119,6 @@ export default function App() {
 					calendarOnly={false} // no input, calendar only
 					dateClass={higlight20thDay}
 				/>
-
 				<DatePicker_v2
 					closeAfterClick={false}
 					ref={datepickerRef}
@@ -130,14 +131,49 @@ export default function App() {
 					min={minDate}
 					max={maxDate}
 					placeholder={"1987-04-29"}
-					hint={"ISO"}
+					hint={"german"}
 					delimiter={"."}
 					applyMask={true}
 					filter={weekendFilter}
 					onDateSelected={d => setSelectedDate3(d)} // both input and calendar
-					onInput={console.log} // input input
-					onChange={console.log} // input change
+					// onInput={console.log} // input input
+					onInput={e => {}} // input input
+					// onInput={console.log} // input input
+					onChange={e => {}} // input change
 					label="DatePicker 2"
+					disabled={false}
+					inputDisabled={false}
+					calendarDisabled={false}
+					monthButtons={true}
+					yearButtons={true}
+					touchUIMode={false}
+					calendarOnly={false} // no input, calendar only
+					dateClass={higlight20thDay}
+				/>
+
+				<DatePicker_v2
+					ref={datepickerRef}
+					value={selectedDate()}
+					type={"datePicker"}
+					color={color}
+					locale={"jpn"}
+					icon={<FaCalendarAlt size={16} />}
+					initialDate={new Date()}
+					min={minDate}
+					max={maxDate}
+					placeholder={"1987-04-29"}
+					hint={"japanese"}
+					// hint={"dd/mm/aaaa"}
+					delimiter={"-"}
+					applyMask={true}
+					filter={weekendFilter}
+					onDateSelected={d => setSelectedDate(d)} // both input and calendar
+					// onInput={console.log} // input input
+					onInput={e => {}} // input input
+					// onInput={console.log} // input input
+					onChange={e => {}} // input change
+					closeAfterClick={false}
+					label="DatePicker label"
 					disabled={false}
 					inputDisabled={false}
 					calendarDisabled={false}
