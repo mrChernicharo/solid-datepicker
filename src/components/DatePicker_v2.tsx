@@ -7,6 +7,7 @@ import "./datepicker_v2.css";
 // dateClass={higlight20thDay}
 interface Props {
 	ref: any;
+	value: Date;
 	color: string;
 	icon: JSXElement;
 	hint: string;
@@ -69,18 +70,26 @@ export default function DatePicker_v2(props: Props) {
 					</button>
 				</label>
 
-				<small ref={outlineRef} class="date-input-outline"></small>
+				<div ref={outlineRef} class="date-input-outline"></div>
 			</div>
 
-			<Show when={props.hint}>
-				<div class="hint">{/* <span>{props.hint}</span> */}</div>
-			</Show>
+			<div class="hint-container">
+				<Show when={props.hint}>
+					<small class="hint">{props.hint}</small>
+				</Show>
+			</div>
 
 			<Show when={isOpen()}>
-				<div class="calendar-pane">
-					<For each={daysGrid(shownDate())}>
-						{d => <div class="calendar-cell">{d.day}</div>}
-					</For>
+				<div class="calendar-popup">
+					<header class="calendar-header">
+						<h3>Julho</h3>
+					</header>
+
+					<div class="calendar-grid">
+						<For each={daysGrid(props.value)}>
+							{d => <div class="calendar-cell">{d.day}</div>}
+						</For>
+					</div>
 				</div>
 			</Show>
 

@@ -39,6 +39,7 @@ const higlight20thDay = (d: Date | null) => {
 
 export default function App() {
 	let datepickerRef;
+	let datepickerRef2;
 	// datepickerRef.open()
 	// datepickerRef.close()
 
@@ -48,8 +49,10 @@ export default function App() {
 		<div class={s.App}>
 			{/* <DatePicker_v1 /> */}
 			<h1>DatePicker</h1>
+
 			<DatePicker_v2
 				ref={datepickerRef}
+				value={new Date()}
 				type={"datePicker"}
 				color={color}
 				locale={lang}
@@ -75,7 +78,8 @@ export default function App() {
 			/>
 
 			<DatePicker_v2
-				ref={datepickerRef}
+				ref={datepickerRef2}
+				value={new Date()}
 				type={"datePicker"}
 				color={color}
 				locale={lang}
@@ -89,7 +93,7 @@ export default function App() {
 				onDateSelected={console.log} // both input and calendar
 				onInput={console.log} // input input
 				onChange={console.log} // input change
-				label="DatePicker label"
+				label="DatePicker 2"
 				disabled={false}
 				inputDisabled={false}
 				calendarDisabled={false}

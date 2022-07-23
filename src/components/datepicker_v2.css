@@ -1,5 +1,18 @@
+*,
+::after *,
+::before * {
+	box-sizing: border-box;
+}
+
+h1,h2,h3,h4,p {
+    margin: 0;
+    padding: 0;
+}
+
 .date-picker {
 	font-size: 16px;
+	position: relative;
+	display: inline-block;
 	/* border: 1px solid red; */
 }
 
@@ -27,11 +40,11 @@ span.input-label {
 }
 
 span.input-label.is-focused {
-	transform: translate(-12px, -18px) scale(0.84);
+	transform: translate(-8px, -18px) scale(0.84);
 	color: red;
 }
 
-small.date-input-outline {
+div.date-input-outline {
 	bottom: 0;
 	height: 1px;
 	width: 100%;
@@ -40,7 +53,7 @@ small.date-input-outline {
 	background-color: rgba(255, 255, 255, 0.2);
 }
 
-small.date-input-outline::after {
+div.date-input-outline::after {
 	content: "";
 	width: 50%;
 	height: 2px;
@@ -49,7 +62,7 @@ small.date-input-outline::after {
 	right: 0;
 }
 
-small.date-input-outline::before {
+div.date-input-outline::before {
 	content: "";
 	width: 50%;
 	height: 2px;
@@ -58,25 +71,23 @@ small.date-input-outline::before {
 	left: 0;
 }
 
-.date-input-field:hover > small.date-input-outline {
+.date-input-field:hover > div.date-input-outline {
 	background-color: rgba(255, 255, 255, 0.4);
 	height: 2px;
 	transition: 0.2s;
 }
 
-small.date-input-outline.is-focused {
+div.date-input-outline.is-focused {
 	background-color: red !important;
 	height: 2px !important;
-	/* animation: name duration timing-function delay iteration-count direction fill-mode; */
 }
-small.date-input-outline.is-focused::after,
-small.date-input-outline.is-focused::before {
+div.date-input-outline.is-focused::after,
+div.date-input-outline.is-focused::before {
 	animation: underline-enter 0.2s ease-in forwards;
 }
-small.date-input-outline:not(.is-focused)::after,
-small.date-input-outline:not(.is-focused)::before {
+div.date-input-outline:not(.is-focused)::after,
+div.date-input-outline:not(.is-focused)::before {
 	animation: underline-leave 0.2s ease-in forwards;
-
 }
 
 input.date-input {
@@ -111,13 +122,26 @@ button.input-icon:hover {
 	background: rgba(255, 255, 255, 0.25);
 }
 
-.hint {
-	text-align: left;
-	font-variant: small-caps;
+div.hint-container {
+	height: 16px;
 }
 
-.calendar-pane {
+small.hint {
+	font-variant: small-caps;
+
+	position: absolute;
+	left: 20px;
+}
+
+div.calendar-popup {
+	background-color: #3c3b46;
 	border: 1px solid rgba(255, 255, 255, 0.2);
+	position: absolute;
+	transform: translateY(-16px);
+	z-index: 2;
+}
+
+div.calendar-grid {
 	font-size: 12px;
 	display: grid;
 	grid-template-columns: repeat(7, 1fr);
@@ -148,7 +172,6 @@ button.input-icon:hover {
 	}
 }
 
-
 @keyframes underline-leave {
 	100% {
 		width: 50%;
@@ -159,4 +182,3 @@ button.input-icon:hover {
 		opacity: 0.7;
 	}
 }
-
