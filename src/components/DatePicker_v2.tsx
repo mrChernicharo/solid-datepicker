@@ -34,7 +34,7 @@ interface Props {
 export default function DatePicker_v2(props: Props) {
 	let inputRef, labelRef, outlineRef;
 
-	const [isOpen, setIsOpen] = createSignal(true);
+	const [isOpen, setIsOpen] = createSignal(false);
 	const [shownDate, setShownDate] = createSignal(props.initialDate || new Date());
 	const [selectedDate, setSelectedDate] = createSignal(props.initialDate || new Date());
 
@@ -42,7 +42,7 @@ export default function DatePicker_v2(props: Props) {
 
 	return (
 		<div class="date-picker" ref={props.ref} onClick={e => console.log(props.ref)}>
-			<div class="date-input-container">
+			<div class="date-input-field" onClick={e => inputRef.focus()}>
 				<label class="date-input-wrapper">
 					<span ref={labelRef!} class="input-label">
 						{props.label}
@@ -69,13 +69,11 @@ export default function DatePicker_v2(props: Props) {
 					</button>
 				</label>
 
-				<div ref={outlineRef} class="date-input-outline"></div>
+				<small ref={outlineRef} class="date-input-outline"></small>
 			</div>
 
 			<Show when={props.hint}>
-				<div class="hint">
-					<span>{props.hint}</span>
-				</div>
+				<div class="hint">{/* <span>{props.hint}</span> */}</div>
 			</Show>
 
 			<Show when={isOpen()}>

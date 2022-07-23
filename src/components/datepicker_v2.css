@@ -3,57 +3,112 @@
 	/* border: 1px solid red; */
 }
 
-.date-input-container {
-	border: 1px solid green;
-    padding: 1rem 1rem .75rem;
-    position: relative;
-    background-color: rgba(255,255,255, 0.1);
-
+.date-input-field {
+	padding: 1.25rem 1rem 0.75rem;
+	position: relative;
+	background-color: rgba(255, 255, 255, 0.1);
+	border-top-left-radius: 0.35rem;
+	border-top-right-radius: 0.35rem;
 }
 
 label.date-input-wrapper {
-    position: relative;
+	position: relative;
 	display: flex;
 	background-color: transparent;
 }
 
 span.input-label {
-    font-size: 13px;
-    position: absolute;
-    left: 4px;
-    top: 2px;
-    transition: transform .3s;
+	font-size: 13px;
+	position: absolute;
+	left: 4px;
+	transition: all 0.3s;
+	color: rgba(255, 255, 255, 0.4);
+	pointer-events: none;
 }
 
 span.input-label.is-focused {
-    transform: translate(-7px, -18px) scale(.84);
+	transform: translate(-12px, -18px) scale(0.84);
+	color: red;
 }
 
-div.date-input-outline {
-    bottom: 0;
-    width: 100%;
-    height: 3px;
-    position: absolute;
+small.date-input-outline {
+	bottom: 0;
+	height: 1px;
+	width: 100%;
+	position: absolute;
+	left: 0;
+	background-color: rgba(255, 255, 255, 0.2);
 }
 
-div.date-input-outline.is-focused {
-    background-color: red;
-    left: 0;
-    animation: underline .2s ease-in forwards;
-    /* animation: name duration timing-function delay iteration-count direction fill-mode; */
+small.date-input-outline::after {
+	content: "";
+	width: 50%;
+	height: 2px;
+	background-color: blue;
+	position: absolute;
+	right: 0;
+}
+
+small.date-input-outline::before {
+	content: "";
+	width: 50%;
+	height: 2px;
+	background-color: green;
+	position: absolute;
+	left: 0;
+}
+
+.date-input-field:hover > small.date-input-outline {
+	background-color: rgba(255, 255, 255, 0.4);
+	height: 2px;
+	transition: 0.2s;
+}
+
+small.date-input-outline.is-focused {
+	background-color: red !important;
+	height: 2px !important;
+	/* animation: name duration timing-function delay iteration-count direction fill-mode; */
+}
+small.date-input-outline.is-focused::after,
+small.date-input-outline.is-focused::before {
+	animation: underline-enter 0.2s ease-in forwards;
+}
+small.date-input-outline:not(.is-focused)::after,
+small.date-input-outline:not(.is-focused)::before {
+	animation: underline-leave 0.2s ease-in forwards;
+
 }
 
 input.date-input {
 	display: flex;
-	width: 100%;
 	background-color: transparent;
-    color: #fff;
-    border: none;
-    outline: none;
+	color: #fff;
+	border: none;
+	outline: none;
+	font-size: 15px;
 }
 
 button.input-icon {
 	display: flex;
+	color: #fff;
+	background: rgba(255, 255, 255, 0);
+	border: none;
+	border-radius: 50%;
+	height: 32px;
+	width: 32px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: 0.2s;
+
+	position: absolute;
+	right: 0px;
+	top: -8px;
+	cursor: pointer;
+}
+
+button.input-icon:hover {
+	background: rgba(255, 255, 255, 0.25);
 }
 
 .hint {
@@ -62,7 +117,7 @@ button.input-icon {
 }
 
 .calendar-pane {
-	border: 1px solid blue;
+	border: 1px solid rgba(255, 255, 255, 0.2);
 	font-size: 12px;
 	display: grid;
 	grid-template-columns: repeat(7, 1fr);
@@ -82,14 +137,26 @@ button.input-icon {
 	opacity: 0.01;
 }
 
-
-@keyframes underline {
-    0% {
-        width: 0;
-        opacity: .3;
-    }
-    100% {
-        width: 100%;
-        opacity: .7;
-    }
+@keyframes underline-enter {
+	0% {
+		width: 50%;
+		opacity: 0.3;
+	}
+	100% {
+		width: 0%;
+		opacity: 0.7;
+	}
 }
+
+
+@keyframes underline-leave {
+	100% {
+		width: 50%;
+		opacity: 0.3;
+	}
+	0% {
+		width: 0%;
+		opacity: 0.7;
+	}
+}
+

@@ -63,7 +63,33 @@ export default function App() {
 				onDateSelected={console.log} // both input and calendar
 				onInput={console.log} // input input
 				onChange={console.log} // input change
-				label="datePicker"
+				label="DatePicker label"
+				disabled={false}
+				inputDisabled={false}
+				calendarDisabled={false}
+				monthButtons={true}
+				yearButtons={true}
+				touchUIMode={false}
+				calendarOnly={false} // no input, calendar only
+				dateClass={higlight20thDay}
+			/>
+
+			<DatePicker_v2
+				ref={datepickerRef}
+				type={"datePicker"}
+				color={color}
+				locale={lang}
+				icon={<FaCalendarAlt size={16} />}
+				initialDate={initialDate}
+				min={minDate}
+				max={maxDate}
+				placeholder={"29/04/1987"}
+				hint={"dd/mm/aaaa"}
+				filter={weekendFilter}
+				onDateSelected={console.log} // both input and calendar
+				onInput={console.log} // input input
+				onChange={console.log} // input change
+				label="DatePicker label"
 				disabled={false}
 				inputDisabled={false}
 				calendarDisabled={false}
