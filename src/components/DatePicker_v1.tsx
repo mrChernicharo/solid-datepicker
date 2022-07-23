@@ -31,7 +31,7 @@ import {
 let lang = "pt-BR";
 const today = new Date(new Date().setHours(0, 0, 0));
 
-export default function CalendarV1() {
+export default function DatePicker_v1() {
 	let inputRef;
 	const [dateStr, setDateStr] = createSignal("");
 	const [selectedDate, setSelectedDate] = createSignal(today);
