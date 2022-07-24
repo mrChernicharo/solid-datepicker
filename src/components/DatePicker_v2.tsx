@@ -16,7 +16,7 @@ import "./datepicker_v2.css";
 // dateClass={higlight20thDay}
 interface Props {
 	ref: any;
-	value: Date;
+	value: Date | null;
 	color: string;
 	icon: JSXElement;
 	hint: string;
@@ -25,7 +25,7 @@ interface Props {
 	max: Date;
 	delimiter: string;
 	filter: (d: Date) => boolean;
-	onDateSelected: (d: Date) => void; // both input and calenda;
+	onDateSelected: (d: Date | null) => void; // both input and calenda;
 	onInput: (e: any) => void; // input input;
 	onChange: (e: any) => void; // input chang;
 	dateClass: (d: Date) => string;
@@ -45,11 +45,11 @@ interface Props {
 }
 
 export default function DatePicker_v2(props: Props) {
-	let inputRef, labelRef, outlineRef, cellsRefs;
+	let inputRef, labelRef, outlineRef, calendarPopupRef, cellsRefs;
 
 	const dateFormat = getDateFormat(props.value, props.locale, props.delimiter);
 	const dateSchema = dateFormat.replaceAll(props.delimiter, ""); // YMD | MDY | DMY
-	console.log({ dateFormat, dateSchema });
+	// console.log({ dateFormat, dateSchema });
 
 	const [isOpen, setIsOpen] = createSignal(false);
 	const [shownDate, setShownDate] = createSignal(
@@ -57,16 +57,40 @@ export default function DatePicker_v2(props: Props) {
 	);
 	// const [selectedDate, setSelectedDate] = createSignal(props.initialDate || new Date());
 
-	const daysGrid = (date: Date) => getDaysGrid(date);
-	const isValidDate = (str: string) => {
+	const daysGrid = (date: Date) => getDaysGrid(date, props.locale, props.delimiter);
+
+	const parseDateString = (str: string) => {
 		const schema = {
 			Y: "year",
 			M: "month",
 			D: "day",
 		};
+		const values = {
+			day: "",
+			month: "",
+			year: "",
+		};
 		let splitValues = str.split(props.delimiter);
 
-		console.log("isValidDate", { str, splitValues, dateSchema });
+		for (let i = 0; i < 3; i++) {
+			values[schema[dateSchema[i]]] = splitValues[i];
+		}
+		const { year, month, day } = values;
+
+		return { year: +year, month: +month - 1, day: +day };
+	};
+
+	const isValidDate = (str: string) => {
+		const { year, month, day } = parseDateString(str);
+
+		// console.log("isValidDate", { str, dateSchema, year, month, day });
+
+		if (day > 31) return false;
+		if (month > 11) return false;
+
+		const date = new Date(new Date(year, month, day).setFullYear(year));
+
+		if (!isNaN(date.getTime())) return true;
 	};
 
 	createRenderEffect(() => console.log(shownDate()));
@@ -84,19 +108,28 @@ export default function DatePicker_v2(props: Props) {
 						type="text"
 						placeholder={props.placeholder}
 						onFocus={e => {
-							if (!inputRef.value) {
-								labelRef.classList.toggle("is-focused");
-								outlineRef.classList.toggle("is-focused");
-							}
+							// if (
+							// 	!inputRef.value ||
+							// 	(inputRef.value &&
+							// 		!labelRef.classList.contains("is-focused"))
+							// )
+							// {
+							labelRef.classList.add("is-focused");
+							outlineRef.classList.add("is-focused");
+							// }
 						}}
 						onBlur={e => {
-							if (!inputRef.value) {
-								labelRef.classList.toggle("is-focused");
-								outlineRef.classList.toggle("is-focused");
+							console.log({ value: props.value, input: inputRef.value });
+							if (!props.value) {
+								// if (!inputRef.value) {
+								labelRef.classList.remove("is-focused");
+								outlineRef.classList.remove("is-focused");
 							}
 						}}
 						onInput={e => {
 							let v = e.currentTarget.value;
+
+							if (!v) return props.onDateSelected(null);
 
 							if (props.applyMask) {
 								let digitsAndDelimiterRegex, dayMonthRegex, yearRegex;
@@ -114,14 +147,13 @@ export default function DatePicker_v2(props: Props) {
 										`(\\d{4}${delimiter}\\d{2})(\\d)`,
 										"g"
 									);
-									console.log(dayMonthRegex);
 
 									v = v.replace(yearRegex, `$1${delimiter}$2`);
 									v = v.replace(dayMonthRegex, `$1${delimiter}$2`);
 								} else {
 									dayMonthRegex = new RegExp(/(\d{2})(\d)/);
 									yearRegex = new RegExp(
-										`(\d+${delimiter}\d+${delimiter})(\d)`
+										`(\\d+${delimiter}\\d+${delimiter})(\\d)`
 									);
 
 									// prettier-ignore
@@ -131,14 +163,23 @@ export default function DatePicker_v2(props: Props) {
 								}
 								v = v.length > 10 ? v.slice(0, 10) : v;
 							}
-							// console.log(v);
-							isValidDate(v);
 
 							e.currentTarget.value = v;
 
-							// if (isValidDate(v)) {
-							//     props.onDateSelected(v);
-							// }
+							if (isValidDate(v)) {
+								const { year, month, day } = parseDateString(v);
+								const date = new Date(
+									new Date(year, month, day).setFullYear(year)
+								);
+
+								console.log("ValidDate", { v, date });
+
+								props.onDateSelected(date);
+							} else {
+								// set error???
+								console.log("invalidDate", { v });
+								props.onDateSelected(null);
+							}
 
 							props.onInput(e);
 						}}
@@ -164,13 +205,13 @@ export default function DatePicker_v2(props: Props) {
 			</div>
 
 			<Show when={isOpen()}>
-				<div class="calendar-popup">
+				<div ref={calendarPopupRef} class="calendar-popup">
 					<header class="calendar-header">
-						<h3>{props.value.toLocaleDateString(props.locale)}</h3>
+						<h3>{props.value?.toLocaleDateString(props.locale)}</h3>
 					</header>
 
 					<div class="calendar-grid">
-						<For each={daysGrid(props.value)}>
+						<For each={daysGrid(props.value || new Date())}>
 							{d => {
 								let cellsRef;
 								const cellElement = (
@@ -179,6 +220,8 @@ export default function DatePicker_v2(props: Props) {
 										id={d.date.toLocaleDateString(props.locale)}
 										class="calendar-cell"
 										onClick={e => {
+											inputRef.focus();
+											inputRef.value = d.dateStr;
 											props.onDateSelected(d.date);
 
 											if (props.closeAfterClick) {

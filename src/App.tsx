@@ -38,7 +38,8 @@ const higlight20thDay = (d: Date | null) => {
 };
 
 export default function App() {
-	const [selectedDate, setSelectedDate] = createSignal(initialDate);
+	const [selectedDate, setSelectedDate] = createSignal<Date | null>(null);
+	// const [selectedDate, setSelectedDate] = createSignal(initialDate);
 	const [selectedDate2, setSelectedDate2] = createSignal(new Date());
 	const [selectedDate3, setSelectedDate3] = createSignal(new Date());
 
@@ -88,7 +89,7 @@ export default function App() {
 					dateClass={higlight20thDay}
 				/>
 
-				<DatePicker_v2
+				{/* <DatePicker_v2
 					closeAfterClick={true}
 					ref={datepickerRef}
 					value={selectedDate2()}
@@ -149,9 +150,9 @@ export default function App() {
 					touchUIMode={false}
 					calendarOnly={false} // no input, calendar only
 					dateClass={higlight20thDay}
-				/>
+				/> */}
 
-				<DatePicker_v2
+				{/* <DatePicker_v2
 					ref={datepickerRef}
 					value={selectedDate()}
 					type={"datePicker"}
@@ -182,7 +183,7 @@ export default function App() {
 					touchUIMode={false}
 					calendarOnly={false} // no input, calendar only
 					dateClass={higlight20thDay}
-				/>
+				/> */}
 			</div>
 		</div>
 	);

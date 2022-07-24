@@ -4,7 +4,7 @@ const date = new Date(new Date(2022,1,1).setFullYear(19))
 
  /**
   * takes a date and returns its string scheme representation respecting locale and delimiter
-  * @param {Date} d whatever date
+  * @param {Date | null} d whatever date
   * @param {string | null | undefined} locale locale code
   * @param {string | null | undefined} delimiter delimiter token
   * @return {string} locale date string representation. Ex: M/D/Y, D.M.Y, Y-M-D etc.
@@ -29,6 +29,8 @@ export function getDateFormat(d, locale, delimiter) {
        yearlessSplit
   
   
+  if (!d) return ''
+
   locale = locale ? locale : 'en'; // falsy or invalid defaults to en
   
   localeDate = d.toLocaleDateString(locale);

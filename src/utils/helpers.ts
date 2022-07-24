@@ -67,7 +67,7 @@ export function parseDate(dateStr: string) {
 	return date;
 }
 
-export function getDaysGrid(date: Date) {
+export function getDaysGrid(date: Date, locale = "en", delimiter = "/") {
 	console.time("getDaysGrid");
 	const dateMonth = date.getMonth();
 	const dateYear = date.getFullYear();
@@ -91,7 +91,9 @@ export function getDaysGrid(date: Date) {
 		const d = new Date(dateYear, dateMonth, i);
 		days.push({
 			date: d,
-			dateStr: d.toLocaleDateString("pt-BR"),
+			dateStr: d
+				.toLocaleDateString(locale)
+				.replaceAll(/[-/.@#$%^&*|;:\s]/g, delimiter),
 			weekDay: d.getDay(),
 			day: i,
 		});
@@ -112,7 +114,9 @@ export function getDaysGrid(date: Date) {
 
 		initialDaysFromNextMonth.push({
 			date: nextDate,
-			dateStr: nextDate.toLocaleDateString("pt-BR"),
+			dateStr: nextDate
+				.toLocaleDateString(locale)
+				.replaceAll(/[-/.@#$%^&*|;:\s]/g, delimiter),
 			weekday: nextDate.getDay(),
 			day: initialDay,
 		});
@@ -133,7 +137,9 @@ export function getDaysGrid(date: Date) {
 
 		lastDaysFromPrevMonth.unshift({
 			date: prevDate,
-			dateStr: prevDate.toLocaleDateString("pt-BR"),
+			dateStr: prevDate
+				.toLocaleDateString(locale)
+				.replaceAll(/[-/.@#$%^&*|;:\s]/g, delimiter),
 			weekday: prevDate.getDay(),
 			day: lastDay,
 		});
