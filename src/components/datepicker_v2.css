@@ -17,7 +17,7 @@ p {
 	font-size: 16px;
 	position: relative;
 	display: inline-block;
-	/* border: 1px solid red; */
+	/* border: 1px solid lightcoral; */
 }
 
 .date-input-field {
@@ -46,7 +46,7 @@ span.input-label {
 
 span.input-label.is-focused {
 	transform: translate(-6px, -16px) scale(0.84);
-	color: red;
+	color: lightcoral;
 }
 
 div.date-input-outline {
@@ -83,7 +83,7 @@ div.date-input-outline::before {
 }
 
 div.date-input-outline.is-focused {
-	background-color: red !important;
+	background-color: lightcoral !important;
 	height: 2px !important;
 }
 div.date-input-outline.is-focused::after,
@@ -114,13 +114,13 @@ input.date-input:focus::placeholder {
 }
 
 button.input-icon {
-	display: flex;
 	color: #fff;
 	background: rgba(255, 255, 255, 0);
 	border: none;
 	border-radius: 50%;
 	height: 32px;
 	width: 32px;
+
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -133,10 +133,27 @@ button.input-icon {
 	outline: none;
 	cursor: pointer;
 }
+div.calendar-btn-group button {
+	color: #fff;
+	background: rgba(255, 255, 255, 0);
+	border: none;
+	border-radius: 50%;
+	height: 32px;
+	width: 32px;
+	
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: 0.2s;
+
+	outline: none;
+	cursor: pointer;
+}
 
 button.input-icon:hover,
 button.input-icon:focus,
-.calendar-cell:hover  {
+.calendar-cell:hover,
+div.calendar-btn-group button:hover  {
 	background: rgba(255, 255, 255, 0.1);
 }
 
@@ -156,21 +173,57 @@ div.calendar-popup {
 	border: 1px solid rgba(255, 255, 255, 0.2);
 	position: absolute;
 	transform: translateY(-16px);
-	z-index: 2;
+	z-index: 1000;
 }
+
+header.calendar-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0.5rem;
+}
+header.calendar-header h3 {
+	font-size: 16px;
+	width: 120px;
+}
+
+div.calendar-btn-group {
+	display: inherit;
+}
+
 
 div.calendar-grid {
 	font-size: 12px;
 	display: grid;
 	grid-template-columns: repeat(7, 1fr);
+	padding: 0.5rem;
+}
+
+.weekday-cell {
+	/* border: 1px solid; */
+	height: 24px;
+
 }
 
 .calendar-cell {
 	border: none;
 	border-radius: 50%;
-	padding: 0.5rem;
+	width: 36px;
+	height: 36px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	/* padding: 0.5rem; */
+	color:rgba(255, 255, 255, 0.6);
+	cursor: pointer;
 }
 
+.calendar-cell.current-month-cell {
+	color: #fff
+}
+.calendar-cell.selected-date {
+	background-color: lightcoral;
+}
 
 .date-picker-overlay {
 	background-color: green;

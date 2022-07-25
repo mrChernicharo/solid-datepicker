@@ -82,8 +82,10 @@ export function getDateFormat(d, locale, delimiter) {
     }  
   }
 
-  
-  return dateSchema.join('')
+  const result =  dateSchema.join('')
+
+  // console.log({result, dateSchema, year, yearIndex, splitDate})
+  return result
   
   
   

@@ -1,3 +1,11 @@
+const ID_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-";
+
+export const idMaker = () =>
+	Array(12)
+		.fill(0)
+		.map(item => ID_CHARS.split("")[Math.round(Math.random() * ID_CHARS.length)])
+		.join("");
+
 export const months = [
 	"janeiro",
 	"fevereiro",
@@ -12,6 +20,13 @@ export const months = [
 	"novembro",
 	"dezembro",
 ];
+export const getWeekdays = (
+	locale = "en",
+	weekday: "long" | "short" | "narrow" = "narrow"
+) => {
+	const format = new Intl.DateTimeFormat(locale, { weekday }).format;
+	return [...Array(7).keys()].map(day => format(new Date(Date.UTC(2021, 5, day))));
+};
 
 export const weekdays = ["dom", "seg", "ter", "qua", "qui", "sex", "sab"];
 

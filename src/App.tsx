@@ -3,7 +3,9 @@ import {
 	FaAddressBook,
 	FaCalendar,
 	FaCalendarAlt,
+	FaHeart,
 	FaSolidCalendarAlt,
+	FaSolidChevronDown,
 } from "solid-icons/fa";
 import { createEffect, createSignal } from "solid-js";
 import s from "./App.module.css";
@@ -39,12 +41,10 @@ const higlight20thDay = (d: Date | null) => {
 
 export default function App() {
 	const [selectedDate, setSelectedDate] = createSignal<Date | null>(null);
-	// const [selectedDate, setSelectedDate] = createSignal(initialDate);
-	const [selectedDate2, setSelectedDate2] = createSignal(new Date());
-	const [selectedDate3, setSelectedDate3] = createSignal(new Date());
+	const [selectedDate2, setSelectedDate2] = createSignal<Date | null>(null);
+	const [selectedDate3, setSelectedDate3] = createSignal<Date | null>(null);
 
 	let datepickerRef;
-	// let datepickerRef2;
 	// datepickerRef.open()
 	// datepickerRef.close()
 
@@ -82,21 +82,20 @@ export default function App() {
 					disabled={false}
 					inputDisabled={false}
 					calendarDisabled={false}
-					monthButtons={true}
-					yearButtons={true}
+					showYearButtons={false}
 					touchUIMode={false}
 					calendarOnly={false} // no input, calendar only
 					dateClass={higlight20thDay}
 				/>
 
-				{/* <DatePicker_v2
+				<DatePicker_v2
 					closeAfterClick={true}
 					ref={datepickerRef}
 					value={selectedDate2()}
 					type={"datePicker"}
 					color={color}
 					locale={"en"}
-					icon={<FaCalendarAlt size={16} />}
+					icon={<FaHeart size={16} />}
 					initialDate={initialDate}
 					min={minDate}
 					max={maxDate}
@@ -114,8 +113,7 @@ export default function App() {
 					disabled={false}
 					inputDisabled={false}
 					calendarDisabled={false}
-					monthButtons={true}
-					yearButtons={true}
+					showYearButtons={true}
 					touchUIMode={false}
 					calendarOnly={false} // no input, calendar only
 					dateClass={higlight20thDay}
@@ -127,7 +125,7 @@ export default function App() {
 					type={"datePicker"}
 					color={color}
 					locale={"de"}
-					icon={<FaCalendarAlt size={16} />}
+					icon={<FaSolidChevronDown size={16} />}
 					initialDate={initialDate}
 					min={minDate}
 					max={maxDate}
@@ -145,20 +143,19 @@ export default function App() {
 					disabled={false}
 					inputDisabled={false}
 					calendarDisabled={false}
-					monthButtons={true}
-					yearButtons={true}
+					showYearButtons={true}
 					touchUIMode={false}
 					calendarOnly={false} // no input, calendar only
 					dateClass={higlight20thDay}
-				/> */}
+				/>
 
-				{/* <DatePicker_v2
+				<DatePicker_v2
 					ref={datepickerRef}
 					value={selectedDate()}
 					type={"datePicker"}
 					color={color}
 					locale={"jpn"}
-					icon={<FaCalendarAlt size={16} />}
+					icon={<FaCalendar size={16} />}
 					initialDate={new Date()}
 					min={minDate}
 					max={maxDate}
@@ -178,12 +175,11 @@ export default function App() {
 					disabled={false}
 					inputDisabled={false}
 					calendarDisabled={false}
-					monthButtons={true}
-					yearButtons={true}
+					showYearButtons={true}
 					touchUIMode={false}
 					calendarOnly={false} // no input, calendar only
 					dateClass={higlight20thDay}
-				/> */}
+				/>
 			</div>
 		</div>
 	);
