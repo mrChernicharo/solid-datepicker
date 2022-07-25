@@ -25,6 +25,7 @@ import {
 	FaSolidAngleLeft,
 	FaSolidAngleRight,
 } from "solid-icons/fa";
+import { Transition } from "solid-transition-group";
 
 // dateClass={higlight20thDay}
 interface Props {
@@ -37,6 +38,7 @@ interface Props {
 	min: Date;
 	max: Date;
 	delimiter: string;
+	width: number;
 	filter: (d: Date) => boolean;
 	onDateSelected: (d: Date | null) => void; // both input and calenda;
 	onInput: (e: any) => void; // input input;
@@ -58,7 +60,7 @@ interface Props {
 
 export default function DatePicker_v2(props: Props) {
 	let inputRef, labelRef, outlineRef, calendarPopupRef, cellsRefs;
-	let timeout, windowWidth;
+	let timeout;
 	const id = `calendar-popup-${idMaker()}`;
 
 	const dateFormat = getDateFormat(
@@ -122,11 +124,12 @@ export default function DatePicker_v2(props: Props) {
 		if (!isNaN(date.getTime())) return true;
 	};
 
-	// createEffect(() => {
-	// 	if (props.value && props.value.getTime() !== shownDate().getTime()) {
-	// 		console.log("shownDate", shownDate().toLocaleDateString(props.locale));
-	// 	}
-	// });
+	createRenderEffect(() => {
+		// 	if (props.value && props.value.getTime() !== shownDate().getTime()) {
+		// 		console.log("shownDate", shownDate().toLocaleDateString(props.locale));
+		// 	}
+		console.log(isOpen());
+	});
 
 	function handleInput(e) {
 		let v = e.currentTarget.value;
@@ -231,7 +234,7 @@ export default function DatePicker_v2(props: Props) {
 
 	return (
 		<div class="date-picker" ref={props.ref} onClick={e => {}}>
-			<div class="date-input-field" onClick={e => inputRef.focus()}>
+			<div class="date-input-field" onClick={e => {}}>
 				<label class="date-input-wrapper">
 					<span ref={labelRef!} class="input-label">
 						{props.label}
@@ -242,12 +245,16 @@ export default function DatePicker_v2(props: Props) {
 						type="text"
 						placeholder={props.placeholder}
 						onFocus={e => {
-							clearTimeout(timeout);
-							labelRef.classList.add("is-focused");
-							outlineRef.classList.add("is-focused");
+							console.log(labelRef.classList.contains("is-focused"));
+
+							if (!labelRef.classList.contains("is-focused")) {
+								clearTimeout(timeout);
+								labelRef.classList.add("is-focused");
+								outlineRef.classList.add("is-focused");
+							}
 						}}
 						onBlur={e => {
-							if (!props.value) {
+							if (!props.value && !inputRef.value.length) {
 								timeout = setTimeout(() => {
 									labelRef.classList.remove("is-focused");
 									outlineRef.classList.remove("is-focused");
@@ -261,8 +268,8 @@ export default function DatePicker_v2(props: Props) {
 					<button
 						class="input-icon"
 						onClick={e => {
-							inputRef.focus();
 							setIsOpen(true);
+							// inputRef.focus();
 						}}>
 						{props.icon}
 					</button>
@@ -277,79 +284,104 @@ export default function DatePicker_v2(props: Props) {
 				</Show>
 			</div>
 
-			<Show when={isOpen()}>
-				<div ref={calendarPopupRef} id={id} class={`calendar-popup`}>
-					<header class="calendar-header">
-						<div class="calendar-btn-group">
-							<Show when={props.showYearButtons}>
-								<button onClick={yearDecrement}>
-									<FaSolidAngleDoubleLeft size={16} />
-								</button>
-							</Show>
-							<button onClick={monthDecrement}>
-								<FaSolidAngleLeft size={16} />
-							</button>
-						</div>
-						<h3>{currentMonthYear()}</h3>
+			<Transition
+				onEnter={(el, done) => {
+					const isLeft = el.getBoundingClientRect().x < window.innerWidth / 2;
 
-						<div class="calendar-btn-group">
-							<button onClick={monthIncrement}>
-								<FaSolidAngleRight size={16} />
-							</button>
-							<Show when={props.showYearButtons}>
-								<button onClick={yearIncrement}>
-									<FaSolidAngleDoubleRight size={16} />
+					el.classList.add(isLeft ? "left" : "right");
+				}}
+				onExit={(el, done) => {
+					const a = el.animate([{ opacity: 1 }, { opacity: 0 }], {
+						duration: 200,
+					});
+					a.finished.then(done);
+				}}>
+				<Show when={isOpen()}>
+					<div ref={calendarPopupRef} id={id} class={`calendar-popup`}>
+						<header class="calendar-header">
+							<div class="calendar-btn-group">
+								<Show when={props.showYearButtons}>
+									<button onClick={yearDecrement}>
+										<FaSolidAngleDoubleLeft size={16} />
+									</button>
+								</Show>
+								<button onClick={monthDecrement}>
+									<FaSolidAngleLeft size={16} />
 								</button>
-							</Show>
-						</div>
-					</header>
+							</div>
+							<h3>{currentMonthYear()}</h3>
 
-					<div class="calendar-grid">
-						<For each={getWeekdays(props.locale, "narrow")}>
-							{weekDay => <div class="weekday-cell">{weekDay}</div>}
-						</For>
-						<For each={daysGrid(shownDate() || new Date())}>
-							{d => {
-								let cellsRef;
-								const cellElement = (
-									<div
-										ref={cellsRef}
-										id={d.date.toLocaleDateString(props.locale)}
-										// prettier-ignore
-										class={`
+							<div class="calendar-btn-group">
+								<button onClick={monthIncrement}>
+									<FaSolidAngleRight size={16} />
+								</button>
+								<Show when={props.showYearButtons}>
+									<button onClick={yearIncrement}>
+										<FaSolidAngleDoubleRight size={16} />
+									</button>
+								</Show>
+							</div>
+						</header>
+
+						<div class="calendar-grid">
+							<For each={getWeekdays(props.locale, "narrow")}>
+								{weekDay => <div class="weekday-cell">{weekDay}</div>}
+							</For>
+							<For each={daysGrid(shownDate() || new Date())}>
+								{d => {
+									let cellsRef;
+									const cellElement = (
+										<div
+											ref={cellsRef}
+											id={d.date.toLocaleDateString(props.locale)}
+											// prettier-ignore
+											class={`
                                             calendar-cell 
                                             ${isCurrentMonth(d.date, shownDate()) ? "current-month-cell" : "" }
                                             ${props.value ? isSameDate(d.date, props.value) ? "selected-date" : "" : ""}
                                             `}
-										onClick={e => {
-											inputRef.focus();
-											inputRef.value = d.dateStr;
-											props.onDateSelected(d.date);
+											onClick={e => {
+												inputRef.focus();
+												inputRef.value = d.dateStr;
+												props.onDateSelected(d.date);
 
-											if (props.closeAfterClick) {
-												setIsOpen(false);
-											}
-										}}>
-										{d.day}
-									</div>
-								);
+												if (props.closeAfterClick) {
+													setIsOpen(false);
+												}
+											}}>
+											<button>{d.day}</button>
+										</div>
+									);
 
-								return cellElement;
-							}}
-						</For>
+									return cellElement;
+								}}
+							</For>
+						</div>
 					</div>
-				</div>
-			</Show>
+				</Show>
+			</Transition>
 
 			<Show when={isOpen()}>
-				<Portal
+				<div
+					class="date-picker-overlay"
+					onClick={e => {
+						setIsOpen(false);
+						// console.log(e.bubbles);
+						// console.log(e.composedPath());
+					}}></div>
+				{/* <Portal
 					children={
-						<div
-							class="date-picker-overlay"
-							onClick={e => setIsOpen(false)}></div>
+						
 					}
-				/>
+				/> */}
 			</Show>
 		</div>
 	);
 }
+
+// (
+//     e: MouseEvent & {
+//         currentTarget: HTMLDivElement;
+//         target: Element;
+//     }
+// )

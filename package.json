@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "solid-icons": "^0.5.0",
-    "solid-js": "^1.4.7"
+    "solid-js": "^1.4.7",
+    "solid-transition-group": "^0.0.10"
   }
 }

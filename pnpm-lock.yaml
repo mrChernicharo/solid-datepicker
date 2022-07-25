@@ -3,6 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   solid-icons: ^0.5.0
   solid-js: ^1.4.7
+  solid-transition-group: ^0.0.10
   typescript: ^4.7.4
   vite: ^3.0.0
   vite-plugin-solid: ^2.3.0
@@ -10,6 +11,7 @@ specifiers:
 dependencies:
   solid-icons: 0.5.0_solid-js@1.4.7
   solid-js: 1.4.7
+  solid-transition-group: 0.0.10_solid-js@1.4.7
 
 devDependencies:
   typescript: 4.7.4
@@ -816,6 +818,14 @@ packages:
       '@babel/types': 7.18.8
       solid-js: 1.4.7
     dev: true
+
+  /solid-transition-group/0.0.10_solid-js@1.4.7:
+    resolution: {integrity: sha512-b3O9z6BUP60CG1WnTdqFuvHms0reDNYwQF+eAEEaSaoDEmiOu9+Lu7zQgWGySJjaAdSAClhmFCmx/eAjQgfIoA==}
+    peerDependencies:
+      solid-js: ^1.0.0
+    dependencies:
+      solid-js: 1.4.7
+    dev: false
 
   /source-map-js/1.0.2:
     resolution: {integrity: sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw==}

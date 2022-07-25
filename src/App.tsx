@@ -57,6 +57,7 @@ export default function App() {
 
 			<div>
 				<DatePicker_v2
+					width={200}
 					ref={datepickerRef}
 					value={selectedDate()}
 					type={"datePicker"}
@@ -89,6 +90,7 @@ export default function App() {
 				/>
 
 				<DatePicker_v2
+					width={400}
 					closeAfterClick={true}
 					ref={datepickerRef}
 					value={selectedDate2()}
@@ -119,6 +121,7 @@ export default function App() {
 					dateClass={higlight20thDay}
 				/>
 				<DatePicker_v2
+					width={300}
 					closeAfterClick={false}
 					ref={datepickerRef}
 					value={selectedDate3()}
@@ -149,7 +152,7 @@ export default function App() {
 					dateClass={higlight20thDay}
 				/>
 
-				<DatePicker_v2
+				{/* <DatePicker_v2
 					ref={datepickerRef}
 					value={selectedDate()}
 					type={"datePicker"}
@@ -179,7 +182,7 @@ export default function App() {
 					touchUIMode={false}
 					calendarOnly={false} // no input, calendar only
 					dateClass={higlight20thDay}
-				/>
+				/> */}
 			</div>
 		</div>
 	);

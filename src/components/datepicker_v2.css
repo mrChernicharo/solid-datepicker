@@ -113,27 +113,7 @@ input.date-input:focus::placeholder {
 	opacity: 1;
 }
 
-button.input-icon {
-	color: #fff;
-	background: rgba(255, 255, 255, 0);
-	border: none;
-	border-radius: 50%;
-	height: 32px;
-	width: 32px;
-
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	transition: 0.2s;
-
-	position: absolute;
-	right: 0px;
-	top: -8px;
-
-	outline: none;
-	cursor: pointer;
-}
-div.calendar-btn-group button {
+button {
 	color: #fff;
 	background: rgba(255, 255, 255, 0);
 	border: none;
@@ -150,10 +130,22 @@ div.calendar-btn-group button {
 	cursor: pointer;
 }
 
+button.input-icon {
+	position: absolute;
+	right: 0px;
+	top: -8px;
+}
+
+div.calendar-cell button:focus,
+div.calendar-btn-group button:focus-visible {
+	background: rgba(255, 255, 255, 0.1);
+	
+}
+
 button.input-icon:hover,
 button.input-icon:focus,
 .calendar-cell:hover,
-div.calendar-btn-group button:hover  {
+div.calendar-btn-group button:hover {
 	background: rgba(255, 255, 255, 0.1);
 }
 
@@ -171,9 +163,32 @@ small.hint {
 div.calendar-popup {
 	background-color: #3c3b46;
 	border: 1px solid rgba(255, 255, 255, 0.2);
-	position: absolute;
-	transform: translateY(-16px);
+	position: fixed;
+	
+	/* position: absolute; */
+	/* top: calc(50% + 50px); */
+	/* transform: translateY(-16px); */
+	
 	z-index: 1000;
+	opacity: 0;
+	margin-top: -16px;
+	
+	transition: .6s;
+	
+	/* animation: name duration timing-function delay iteration-count direction fill-mode; */
+	/* animation: calendar-show 1s forwards; */
+	/* transform: translate(-20px); */
+}
+div.calendar-popup.left {
+	opacity: 1;
+	/* left: 0; */
+	/* transform: translate(0px); */
+
+}
+div.calendar-popup.right {
+	opacity: 1;
+	/* right: 0; */
+	/* transform: translate(0px); */
 }
 
 header.calendar-header {
@@ -181,6 +196,7 @@ header.calendar-header {
 	justify-content: space-between;
 	align-items: center;
 	padding: 0.5rem;
+
 }
 header.calendar-header h3 {
 	font-size: 16px;
@@ -191,11 +207,12 @@ div.calendar-btn-group {
 	display: inherit;
 }
 
-
 div.calendar-grid {
 	font-size: 12px;
 	display: grid;
 	grid-template-columns: repeat(7, 1fr);
+	background-color: 1px solid rgba(255, 255, 255, 0.2);
+
 	padding: 0.5rem;
 }
 
@@ -216,6 +233,7 @@ div.calendar-grid {
 	/* padding: 0.5rem; */
 	color:rgba(255, 255, 255, 0.6);
 	cursor: pointer;
+
 }
 
 .calendar-cell.current-month-cell {
@@ -233,6 +251,7 @@ div.calendar-grid {
 	width: 1000vw;
 	height: 1000vh;
 	opacity: 0.01;
+	z-index: 900;
 }
 
 @keyframes underline-enter {
@@ -254,5 +273,17 @@ div.calendar-grid {
 	0% {
 		width: 0%;
 		opacity: 0.7;
+	}
+}
+
+@keyframes calendar-show {
+	0% {
+		transform: scale(.6);
+		/* height: 0; */
+	}
+	100% {
+		transform: scale(1);
+		/* height: 100%; */
+
 	}
 }
