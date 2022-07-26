@@ -173,6 +173,7 @@ export default function DatePicker(props: DatepickerProps) {
 
 		switch (e.code) {
 			// case "Enter": {
+			// 	// e.currentTarget.focus();
 			// 	break;
 			// }
 			case "Tab": {
@@ -285,6 +286,15 @@ export default function DatePicker(props: DatepickerProps) {
 		// 	console.log(shownDate(), cellsRefs);
 	});
 
+	createEffect(() => {
+		if (props.value) {
+			clearTimeout(timeout);
+			labelRef.classList.add("is-focused");
+			outlineRef.classList.add("is-focused");
+			setInputFocused(true);
+		}
+	});
+
 	return (
 		<div class="date-picker" ref={props.ref} onClick={e => {}}>
 			<div
@@ -309,20 +319,19 @@ export default function DatePicker(props: DatepickerProps) {
 						placeholder={props.placeholder}
 						onFocus={e => {
 							clearTimeout(timeout);
-							if (inputRef) {
-								labelRef.classList.add("is-focused");
-								outlineRef.classList.add("is-focused");
-								setInputFocused(true);
-							}
+							labelRef.classList.add("is-focused");
+							outlineRef.classList.add("is-focused");
+							setInputFocused(true);
 						}}
 						onBlur={e => {
-							if (!props.value && !inputRef.value.length) {
-								timeout = setTimeout(() => {
+							console.log(props.value, inputRef.value.length);
+							timeout = setTimeout(() => {
+								if (props.value === null && inputRef.value.length === 0) {
 									labelRef.classList.remove("is-focused");
 									outlineRef.classList.remove("is-focused");
 									setInputFocused(false);
-								}, 300);
-							}
+								}
+							}, 300);
 						}}
 						onKeyDown={e => {
 							if (e.code === "ArrowDown") {
@@ -534,14 +543,11 @@ export default function DatePicker(props: DatepickerProps) {
 											}}
 											onClick={e => {
 												if (props.closeAfterClick) {
+													setIsOpen(false);
 													inputRef.focus();
 												}
 												inputRef.value = d.dateStr;
 												props.onDateSelected(d.date);
-
-												if (props.closeAfterClick) {
-													setIsOpen(false);
-												}
 											}}
 											onKeyDown={e => handleCellKeyDown(e, d)}>
 											<button>{d.day}</button>
