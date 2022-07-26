@@ -20,6 +20,7 @@ import {
 } from "./icons";
 
 const bg = "#3c3b46";
+const outlineColor = "rgba(255, 255, 255, 0.65)";
 
 const DEFAULT_PROPS: Props = {
 	ref: null,
@@ -280,7 +281,9 @@ export default function DatePicker(props: Props) {
 				<div
 					ref={outlineRef}
 					class="date-input-outline"
-					style={{ background: inputFocused() ? props.color : bg }}></div>
+					style={{
+						background: inputFocused() ? props.color : outlineColor,
+					}}></div>
 			</div>
 
 			<div class="hint-container">
