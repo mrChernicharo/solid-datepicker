@@ -10,14 +10,14 @@ import {
 	maskInput,
 } from "./helpers";
 import "./style.css";
-import {
-	FaCalendar,
-	FaSolidAngleDoubleLeft,
-	FaSolidAngleDoubleRight,
-	FaSolidAngleLeft,
-	FaSolidAngleRight,
-} from "solid-icons/fa";
 import { Transition } from "solid-transition-group";
+import {
+	DEFAULT_ICON,
+	MONTH_DECREMENT_ICON,
+	MONTH_INCREMENT_ICON,
+	YEAR_DECREMENT_ICON,
+	YEAR_INCREMENT_ICON,
+} from "./icons";
 
 const bg = "#3c3b46";
 
@@ -25,7 +25,7 @@ const DEFAULT_PROPS: Props = {
 	ref: null,
 	value: null,
 	color: "#009898",
-	icon: <FaCalendar />,
+	icon: DEFAULT_ICON,
 	hint: "",
 	initialDate: new Date(),
 	min: null,
@@ -309,22 +309,26 @@ export default function DatePicker(props: Props) {
 							<div class="calendar-btn-group">
 								<Show when={props.showYearButtons}>
 									<button onClick={yearDecrement}>
-										<FaSolidAngleDoubleLeft size={16} />
+										{/* <FaSolidAngleDoubleLeft size={16} /> */}
+										<YEAR_DECREMENT_ICON />
 									</button>
 								</Show>
 								<button onClick={monthDecrement}>
-									<FaSolidAngleLeft size={16} />
+									{/* <FaSolidAngleLeft size={16} /> */}
+									<MONTH_DECREMENT_ICON />
 								</button>
 							</div>
 							<h3>{currentMonthYear()}</h3>
 
 							<div class="calendar-btn-group">
 								<button onClick={monthIncrement}>
-									<FaSolidAngleRight size={16} />
+									{/* <FaSolidAngleRight size={16} /> */}
+									<MONTH_INCREMENT_ICON />
 								</button>
 								<Show when={props.showYearButtons}>
 									<button onClick={yearIncrement}>
-										<FaSolidAngleDoubleRight size={16} />
+										{/* <FaSolidAngleDoubleRight size={16} /> */}
+										<YEAR_INCREMENT_ICON />
 									</button>
 								</Show>
 							</div>

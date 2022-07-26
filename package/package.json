@@ -1,0 +1,38 @@
+{
+  "name": "solid-datepicker",
+  "version": "1.0.0",
+  "description": "Customizable Datepicker for SolidJS",
+  "main": "index.tsx",
+  "author": "melodev",
+  "license": "MIT",
+  "scripts": {
+    "start": "vite",
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview"
+  },
+  "devDependencies": {
+    "typescript": "^4.7.4",
+    "vite": "^3.0.0",
+    "vite-plugin-solid": "^2.3.0"
+  },
+  "dependencies": {
+    "solid-transition-group": "^0.0.10"
+  },
+  "peerDependencies": {
+    "solid-js": "^1.4.7"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mrChernicharo/solid-datepicker.git"
+  },
+  "keywords": [
+    "solidjs",
+    "datepicker",
+    "calendar"
+  ],
+  "bugs": {
+    "url": "https://github.com/mrChernicharo/solid-datepicker/issues"
+  },
+  "homepage": "https://github.com/mrChernicharo/solid-datepicker#readme"
+}

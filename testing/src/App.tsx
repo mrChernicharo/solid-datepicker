@@ -7,7 +7,7 @@ import {
 } from "solid-icons/fa";
 import { createEffect, createSignal } from "solid-js";
 import s from "./App.module.css";
-import DatePicker_v2 from "../../package";
+import DatePicker_v2 from "solid-datepicker";
 
 export type DatePickerType =
 	| "monthYearPicker"
@@ -90,7 +90,7 @@ export default function App() {
 					value={selectedDate2()}
 					type={"datePicker"}
 					locale={"en"}
-					icon={<FaHeart size={16} />}
+					// icon={<FaHeart size={16} />}
 					initialDate={initialDate}
 					min={minDate}
 					max={maxDate}
