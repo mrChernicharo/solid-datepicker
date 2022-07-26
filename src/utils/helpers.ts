@@ -6,6 +6,13 @@ export type DatePickerType =
 	| "dateRange"
 	| "timeRange";
 
+export type DateCell = {
+	date: Date;
+	dateStr: string;
+	day: number;
+	weekday: number;
+};
+
 const ID_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-";
 
 export const idMaker = () =>
@@ -101,13 +108,13 @@ export function getDaysGrid(date: Date, locale = "en", delimiter = "/") {
 			dateStr: d
 				.toLocaleDateString(locale)
 				.replaceAll(/[-/.@#$%^&*|;:\s]/g, delimiter),
-			weekDay: d.getDay(),
+			weekday: d.getDay(),
 			day: i,
 		});
 	}
 
-	let firstRowOffset = days[0].weekDay;
-	let lastRowOffset = 6 - days.at(-1).weekDay;
+	let firstRowOffset = days[0].weekday;
+	let lastRowOffset = 6 - days.at(-1).weekday;
 
 	const initialDaysFromNextMonth: any[] = [];
 	let initialDay = 1;

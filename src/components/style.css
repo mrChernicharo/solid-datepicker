@@ -213,7 +213,13 @@ div.calendar-grid {
 	height: 24px;
 }
 
-.calendar-cell {
+div.calendar-cell {
+	visibility: hidden;
+}
+
+.calendar-cell.current-month-cell {
+	visibility: visible;
+	color: #fff;
 	border: none;
 	border-radius: 50%;
 	width: 36px;
@@ -224,10 +230,6 @@ div.calendar-grid {
 	/* padding: 0.5rem; */
 	color: rgba(255, 255, 255, 0.6);
 	cursor: pointer;
-}
-
-.calendar-cell.current-month-cell {
-	color: #fff;
 }
 .calendar-cell.selected-date {
 	/* background-color: var(--primary-color); */

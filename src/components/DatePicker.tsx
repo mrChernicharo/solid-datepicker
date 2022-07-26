@@ -1,4 +1,4 @@
-import { createSignal, For, JSXElement, mergeProps, Show } from "solid-js";
+import { createEffect, createSignal, For, JSXElement, mergeProps, Show } from "solid-js";
 import { Transition } from "solid-transition-group";
 import "./style.css";
 import {
@@ -10,6 +10,7 @@ import {
 	isSameDate,
 	getDateFormat,
 	maskInput,
+	DateCell,
 } from "../utils/helpers";
 import {
 	DEFAULT_ICON,
@@ -85,8 +86,9 @@ interface Props {
 export default function DatePicker(props: Props) {
 	props = mergeProps(DEFAULT_PROPS, props);
 
-	let inputRef, labelRef, outlineRef, calendarPopupRef, cellsRefs;
-	let timeout;
+	let inputRef, labelRef, outlineRef, calendarPopupRef;
+	let timeout, grid;
+	let cellsRefs: any = [];
 	const id = `calendar-popup-${idMaker()}`;
 
 	const dateFormat = getDateFormat(
@@ -111,7 +113,12 @@ export default function DatePicker(props: Props) {
 	);
 	const [inputFocused, setInputFocused] = createSignal(false);
 
-	const daysGrid = (date: Date) => getDaysGrid(date, props.locale, props.delimiter);
+	const daysGrid = (date: Date | null): DateCell[] => {
+		let d = date || new Date();
+		grid = getDaysGrid(d, props.locale, props.delimiter);
+		grid;
+		return grid;
+	};
 
 	const parseDateString = (str: string) => {
 		const schema = {
@@ -171,12 +178,68 @@ export default function DatePicker(props: Props) {
 		props.onInput(e);
 	}
 
+	function handleCellKeyDown(e: KeyboardEvent, d: DateCell) {
+		const cellIndex: number = cellsRefs.findIndex(
+			ref => ref.firstChild.textContent === d.day.toString()
+		);
+
+		const lastSunday = grid.findLast(cell => cell.weekday === 0).day;
+		const firstSaturday = grid.find(cell => cell.weekday === 6).day;
+
+		const lastCell = cellsRefs.at(-1);
+		console.log({
+			// 	d,
+			// 	lastCell,
+			// 	currCell: e.currentTarget,
+			// 	cellIndex,
+			// 	grid,
+			// 	cellsRefs,
+			firstSaturday,
+			lastSunday,
+		});
+
+		switch (e.code) {
+			case "ArrowUp": {
+				if (cellIndex - 7 < 0) {
+					if (cellIndex >= firstSaturday) {
+						cellsRefs[0].firstChild.focus();
+					}
+				} else {
+					cellsRefs[cellIndex - 7].firstChild.focus();
+				}
+				break;
+			}
+			case "ArrowRight": {
+				if (cellIndex + 1 >= +lastCell.firstChild.textContent) return;
+				if (d.weekday < 6) cellsRefs[cellIndex + 1].firstChild.focus();
+				break;
+			}
+			case "ArrowDown": {
+				if (cellIndex + 7 >= +lastCell.firstChild.textContent) {
+					if (cellIndex < lastSunday) {
+						lastCell.firstChild.focus();
+					}
+				} else {
+					cellsRefs[cellIndex + 7].firstChild.focus();
+				}
+				break;
+			}
+			case "ArrowLeft": {
+				if (cellIndex - 1 < 0) return;
+				if (d.weekday > 0) cellsRefs[cellIndex - 1].firstChild.focus();
+				break;
+			}
+			default:
+		}
+	}
+
 	const yearDecrement = e => {
+		cellsRefs = [];
 		const timestamp = shownDate().getTime() - 1000 * 60 * 60 * 24 * 365.25;
 		setShownDate(new Date(timestamp));
 	};
-
 	const monthDecrement = e => {
+		cellsRefs = [];
 		const currentDay = shownDate().getDate();
 		const currentMonth = shownDate().getMonth();
 		const currentYear = shownDate().getFullYear();
@@ -192,6 +255,8 @@ export default function DatePicker(props: Props) {
 		setShownDate(prevDate);
 	};
 	const monthIncrement = e => {
+		cellsRefs = [];
+
 		const currentDay = shownDate().getDate();
 		const currentMonth = shownDate().getMonth();
 		const currentYear = shownDate().getFullYear();
@@ -218,9 +283,14 @@ export default function DatePicker(props: Props) {
 		setShownDate(nextDate);
 	};
 	const yearIncrement = e => {
+		cellsRefs = [];
 		const timestamp = shownDate().getTime() + 1000 * 60 * 60 * 24 * 365.25;
 		setShownDate(new Date(timestamp));
 	};
+
+	// createEffect(() => {
+	// 	console.log(shownDate(), cellsRefs);
+	// });
 	return (
 		<div class="date-picker" ref={props.ref} onClick={e => {}}>
 			<div
@@ -258,6 +328,13 @@ export default function DatePicker(props: Props) {
 									outlineRef.classList.remove("is-focused");
 									setInputFocused(false);
 								}, 300);
+							}
+						}}
+						onKeyDown={e => {
+							if (e.code === "ArrowDown") {
+								setIsOpen(true);
+								setInputFocused(false);
+								cellsRefs[0].firstChild.focus();
 							}
 						}}
 						onInput={handleInput}
@@ -306,7 +383,7 @@ export default function DatePicker(props: Props) {
 					a.finished.then(done);
 				}}>
 				<Show when={isOpen()}>
-					<div ref={calendarPopupRef} id={id} class={`calendar-popup`}>
+					<div ref={calendarPopupRef} id={id} class="calendar-popup">
 						<header class="calendar-header">
 							<div class="calendar-btn-group">
 								<Show when={props.showYearButtons}>
@@ -334,21 +411,22 @@ export default function DatePicker(props: Props) {
 
 						<div class="calendar-grid">
 							<For each={getWeekdays(props.locale, "narrow")}>
-								{weekDay => <div class="weekday-cell">{weekDay}</div>}
+								{weekday => <div class="weekday-cell">{weekday}</div>}
 							</For>
-							<For each={daysGrid(shownDate() || new Date())}>
+							<For each={daysGrid(shownDate())}>
 								{d => {
-									let cellsRef;
+									console.log("hey");
+									let cellRef;
+
 									const cellElement = (
 										<div
-											ref={cellsRef}
-											id={d.date.toLocaleDateString(props.locale)}
+											ref={cellRef}
+											id={idMaker()}
 											// prettier-ignore
-											class={`
-                                               calendar-cell
-                                               ${isCurrentMonth(d.date, shownDate()) ? "current-month-cell" : "" }
-                                               ${props.value ? isSameDate(d.date, props.value) ? "selected-date" : "" : ""}
-                                           `}
+											classList={{ 
+												"current-month-cell": isCurrentMonth(d.date, shownDate()), 
+												"selected-date": !!props.value && isSameDate(d.date, props.value), 
+												"calendar-cell": true }}
 											style={{
 												background:
 													props.value &&
@@ -364,10 +442,13 @@ export default function DatePicker(props: Props) {
 												if (props.closeAfterClick) {
 													setIsOpen(false);
 												}
-											}}>
+											}}
+											onKeyDown={e => handleCellKeyDown(e, d)}>
 											<button>{d.day}</button>
 										</div>
 									);
+									cellRef.classList.contains("current-month-cell") &&
+										cellsRefs.push(cellRef);
 
 									return cellElement;
 								}}
