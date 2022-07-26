@@ -1,3 +1,5 @@
+import { JSXElement } from "solid-js";
+
 export type DatePickerType =
 	| "monthYearPicker"
 	| "datePicker"
@@ -12,6 +14,36 @@ export type DateCell = {
 	day: number;
 	weekday: number;
 };
+
+export interface DatepickerProps {
+	ref: any;
+	value: Date | null;
+	color?: string;
+	icon?: JSXElement;
+	hint?: string;
+	initialDate?: Date;
+	min?: Date | null;
+	max?: Date | null;
+	delimiter?: string;
+	inputWidth?: number;
+	filter?: (d: Date) => boolean;
+	onDateSelected: (d: Date | null) => void; // both input and calenda;
+	onInput: (e: any) => void; // input input;
+	onChange?: (e: any) => void; // input chang;
+	dateClass?: (d: Date) => string;
+	label?: string;
+	placeholder?: string;
+	applyMask?: boolean;
+	disabled?: boolean;
+	inputDisabled?: boolean;
+	calendarDisabled?: boolean;
+	closeAfterClick?: boolean;
+	showYearButtons?: boolean;
+	locale?: string;
+	type?: DatePickerType;
+	touchUIMode?: boolean;
+	calendarOnly?: boolean; // no input, calendar onl;
+}
 
 const ID_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-";
 
