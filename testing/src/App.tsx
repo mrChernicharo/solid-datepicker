@@ -2,7 +2,7 @@
 import { FaCalendarAlt, FaHeart } from "solid-icons/fa";
 import { createEffect, createSignal } from "solid-js";
 import s from "./App.module.css";
-import DatePicker_v2 from "./components/DatePicker_v2";
+import DatePicker_v2 from "../../package";
 
 export type DatePickerType =
 	| "monthYearPicker"

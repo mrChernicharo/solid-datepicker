@@ -1,5 +1,4 @@
 import { createSignal, For, JSXElement, mergeProps, Show } from "solid-js";
-import { Portal } from "solid-js/web";
 import {
 	getDaysGrid,
 	getWeekdays,
@@ -10,7 +9,7 @@ import {
 	getDateFormat,
 	maskInput,
 } from "./helpers";
-import "./components/datepicker_v2.css";
+import "./style.css";
 import {
 	FaCalendar,
 	FaSolidAngleDoubleLeft,
@@ -96,6 +95,7 @@ export default function DatePicker(props: Props) {
 		| "DMY"
 		| "MDY"
 		| "YMD"; // YMD | MDY | DMY
+
 	const currentMonthYear = () =>
 		(shownDate() || new Date()).toLocaleDateString(props.locale, {
 			month: "short",
