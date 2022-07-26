@@ -19,6 +19,8 @@ import {
 } from "solid-icons/fa";
 import { Transition } from "solid-transition-group";
 
+const bg = "#3c3b46";
+
 const DEFAULT_PROPS: Props = {
 	ref: null,
 	value: null,
@@ -242,11 +244,11 @@ export default function DatePicker(props: Props) {
 						type="text"
 						placeholder={props.placeholder}
 						onFocus={e => {
+							clearTimeout(timeout);
 							if (!inputFocused()) {
-								setInputFocused(true);
-								clearTimeout(timeout);
 								labelRef.classList.add("is-focused");
 								outlineRef.classList.add("is-focused");
+								setInputFocused(true);
 							}
 						}}
 						onBlur={e => {
@@ -279,7 +281,7 @@ export default function DatePicker(props: Props) {
 				<div
 					ref={outlineRef}
 					class="date-input-outline"
-					style={{ background: inputFocused() ? props.color : "" }}></div>
+					style={{ background: inputFocused() ? props.color : bg }}></div>
 			</div>
 
 			<div class="hint-container">
@@ -290,7 +292,8 @@ export default function DatePicker(props: Props) {
 
 			<Transition
 				onEnter={(el, done) => {
-					const isLeft = el.getBoundingClientRect().x < window.innerWidth / 2;
+					// push it left only if too close from the edge
+					const isLeft = el.getBoundingClientRect().x < window.innerWidth - 270;
 
 					el.classList.add(isLeft ? "left" : "right");
 				}}
@@ -347,8 +350,9 @@ export default function DatePicker(props: Props) {
 											style={{
 												background:
 													props.value &&
-													isSameDate(d.date, props.value) &&
-													props.color,
+													isSameDate(d.date, props.value)
+														? props.color
+														: bg,
 											}}
 											onClick={e => {
 												inputRef.focus();

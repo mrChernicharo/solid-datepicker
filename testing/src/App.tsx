@@ -1,5 +1,10 @@
 // import { Component, createEffect, createMemo, createSignal, For, Show } from "solid-js";
-import { FaCalendarAlt, FaHeart } from "solid-icons/fa";
+import {
+	FaCalendarAlt,
+	FaHeart,
+	FaSolidChevronCircleDown,
+	FaSolidChevronDown,
+} from "solid-icons/fa";
 import { createEffect, createSignal } from "solid-js";
 import s from "./App.module.css";
 import DatePicker_v2 from "../../package";
@@ -32,8 +37,9 @@ export default function App() {
 	const [selectedDate, setSelectedDate] = createSignal<Date | null>(null);
 	const [selectedDate2, setSelectedDate2] = createSignal<Date | null>(null);
 	const [selectedDate3, setSelectedDate3] = createSignal<Date | null>(null);
+	const [selectedDate4, setSelectedDate4] = createSignal<Date | null>(null);
 
-	let datepickerRef, datepickerRef2, datepickerRef3;
+	let datepickerRef, datepickerRef2, datepickerRef3, datepickerRef4;
 	// datepickerRef.open()
 	// datepickerRef.close()
 
@@ -107,15 +113,15 @@ export default function App() {
 					calendarOnly={false} // no input, calendar only
 					dateClass={higlight20thDay}
 				/>
-				{/* <DatePicker_v2
+				<DatePicker_v2
 					inputWidth={300}
 					closeAfterClick={false}
-					ref={datepickerRef}
+					ref={datepickerRef3}
 					value={selectedDate3()}
 					type={"datePicker"}
 					color={color}
 					locale={"de"}
-					icon={<FaSolidChevronDown size={16} />}
+					icon={<FaSolidChevronCircleDown size={16} />}
 					initialDate={initialDate}
 					min={minDate}
 					max={maxDate}
@@ -137,15 +143,15 @@ export default function App() {
 					touchUIMode={false}
 					calendarOnly={false} // no input, calendar only
 					dateClass={higlight20thDay}
-				/> */}
+				/>
 
 				<DatePicker_v2
-					ref={datepickerRef3}
+					ref={datepickerRef4}
 					inputWidth={180}
-					value={selectedDate3()}
+					value={selectedDate4()}
 					color={"orange"}
 					onInput={console.log}
-					onDateSelected={setSelectedDate3}
+					onDateSelected={setSelectedDate4}
 				/>
 
 				<div>{selectedDate3()?.toDateString()}</div>

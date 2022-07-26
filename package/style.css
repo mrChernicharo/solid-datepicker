@@ -1,3 +1,6 @@
+ /* #3c3b46; */
+ /* rgba(255, 255, 255, 0.2); */
+ 
 *,
 ::after *,
 ::before * {
@@ -161,7 +164,7 @@ small.hint {
 div.calendar-popup {
 	background-color: #3c3b46;
 	border: 1px solid rgba(255, 255, 255, 0.2);
-	position: fixed;
+	position: absolute;
 
 	z-index: 1000;
 	opacity: 0;
@@ -175,12 +178,12 @@ div.calendar-popup {
 }
 div.calendar-popup.left {
 	opacity: 1;
-	/* left: 0; */
+	left: 0;
 	/* transform: translate(0px); */
 }
 div.calendar-popup.right {
 	opacity: 1;
-	/* right: 0; */
+	right: 0;
 	/* transform: translate(0px); */
 }
 
@@ -234,7 +237,6 @@ div.calendar-grid {
 }
 
 .date-picker-overlay {
-	/* background-color: green; */
 	position: fixed;
 	top: 0;
 	left: 0;
