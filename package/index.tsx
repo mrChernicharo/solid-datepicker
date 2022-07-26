@@ -1,29 +1,16 @@
-export {};
-
-import {
-	Component,
-	createEffect,
-	createRenderEffect,
-	createSignal,
-	For,
-	JSXElement,
-	mergeProps,
-	onMount,
-	Ref,
-	Show,
-} from "solid-js";
+import { createSignal, For, JSXElement, mergeProps, Show } from "solid-js";
 import { Portal } from "solid-js/web";
-import { DatePickerType } from "../App";
 import {
 	getDaysGrid,
 	getWeekdays,
 	idMaker,
 	isCurrentMonth,
+	DatePickerType,
 	isSameDate,
-} from "../utils/helpers";
-import { getDateFormat } from "../utils/algo.js";
-import "./datepicker_v2.css";
-import s from "./datepicker.module.css";
+	getDateFormat,
+	maskInput,
+} from "./helpers";
+import "./components/datepicker_v2.css";
 import {
 	FaCalendar,
 	FaSolidAngleDoubleLeft,
@@ -32,7 +19,6 @@ import {
 	FaSolidAngleRight,
 } from "solid-icons/fa";
 import { Transition } from "solid-transition-group";
-import { parseDateString } from "../../package/helpers";
 
 const DEFAULT_PROPS: Props = {
 	ref: null,
@@ -64,7 +50,6 @@ const DEFAULT_PROPS: Props = {
 	calendarOnly: false, // no input, calendar onl;
 };
 
-// dateClass={higlight20thDay}
 interface Props {
 	ref: any;
 	value: Date | null;
@@ -95,7 +80,7 @@ interface Props {
 	calendarOnly?: boolean; // no input, calendar onl;
 }
 
-export default function DatePicker_v2(props: Props) {
+export default function DatePicker(props: Props) {
 	props = mergeProps(DEFAULT_PROPS, props);
 
 	let inputRef, labelRef, outlineRef, calendarPopupRef, cellsRefs;
@@ -104,10 +89,13 @@ export default function DatePicker_v2(props: Props) {
 
 	const dateFormat = getDateFormat(
 		props.value || new Date(),
-		props.locale,
-		props.delimiter
+		props.locale || "en",
+		props.delimiter || "/"
 	);
-	const dateSchema = dateFormat.replaceAll(props.delimiter, ""); // YMD | MDY | DMY
+	const dateSchema = dateFormat.replaceAll(props.delimiter || "/", "") as
+		| "DMY"
+		| "MDY"
+		| "YMD"; // YMD | MDY | DMY
 	const currentMonthYear = () =>
 		(shownDate() || new Date()).toLocaleDateString(props.locale, {
 			month: "short",
@@ -122,14 +110,29 @@ export default function DatePicker_v2(props: Props) {
 
 	const daysGrid = (date: Date) => getDaysGrid(date, props.locale, props.delimiter);
 
-	const isValidDate = (str: string) => {
-		const { year, month, day } = parseDateString(
-			str,
-			props.delimiter || "/",
-			dateSchema
-		);
+	const parseDateString = (str: string) => {
+		const schema = {
+			Y: "year",
+			M: "month",
+			D: "day",
+		};
+		const values = {
+			day: "",
+			month: "",
+			year: "",
+		};
+		let splitValues = str.split(props.delimiter || "/");
 
-		// console.log("isValidDate", { str, dateSchema, year, month, day });
+		for (let i = 0; i < 3; i++) {
+			values[schema[dateSchema[i]]] = splitValues[i];
+		}
+		const { year, month, day } = values;
+
+		return { year: +year, month: +month - 1, day: +day };
+	};
+
+	const isValidDate = (str: string) => {
+		const { year, month, day } = parseDateString(str);
 
 		if (day > 31) return false;
 		if (month > 11) return false;
@@ -139,55 +142,21 @@ export default function DatePicker_v2(props: Props) {
 		if (!isNaN(date.getTime())) return true;
 	};
 
-	// createRenderEffect(() => {
-	// 	// 	if (props.value && props.value.getTime() !== shownDate().getTime()) {
-	// 	// 		console.log("shownDate", shownDate().toLocaleDateString(props.locale));
-	// 	// 	}
-	// 	console.log(isOpen());
-	// });
-
 	function handleInput(e) {
-		let v: string = e.currentTarget.value;
+		let v = e.currentTarget.value;
 
 		if (!v) return props.onDateSelected(null);
 
 		if (props.applyMask) {
-			let digitsAndDelimiterRegex, dayMonthRegex, yearRegex;
-			let delimiter = props.delimiter;
-			digitsAndDelimiterRegex = new RegExp(`[^${delimiter}0-9]`);
-
-			v = v.replace(digitsAndDelimiterRegex, "");
-
-			if (dateSchema === "YMD") {
-				// TODO yyyy-mm-dd mask:
-				yearRegex = /(\d{4})(\d)/;
-				dayMonthRegex = new RegExp(`(\\d{4}${delimiter}\\d{2})(\\d)`, "g");
-
-				v = v.replace(yearRegex, `$1${delimiter}$2`);
-				v = v.replace(dayMonthRegex, `$1${delimiter}$2`);
-			} else {
-				dayMonthRegex = new RegExp(/(\d{2})(\d)/);
-				yearRegex = new RegExp(`(\\d+${delimiter}\\d+${delimiter})(\\d)`);
-
-				// prettier-ignore
-				v = v.length < 7 ? v.replace(dayMonthRegex, `$1${delimiter}$2`) : v;
-
-				v = v.replace(yearRegex, "$1$2");
-			}
+			v = maskInput(v, dateSchema, props.delimiter || "/");
 			v = v.length > 10 ? v.slice(0, 10) : v;
 		}
 
 		e.currentTarget.value = v;
 
 		if (isValidDate(v)) {
-			const { year, month, day } = parseDateString(
-				v,
-				props.delimiter || "/",
-				dateSchema
-			);
+			const { year, month, day } = parseDateString(v);
 			const date = new Date(new Date(year, month, day).setFullYear(year));
-
-			// console.log("ValidDate", { v, date });
 
 			props.onDateSelected(date);
 			setShownDate(date);
@@ -250,12 +219,6 @@ export default function DatePicker_v2(props: Props) {
 		const timestamp = shownDate().getTime() + 1000 * 60 * 60 * 24 * 365.25;
 		setShownDate(new Date(timestamp));
 	};
-
-	onMount(() => {
-		// let r = document.querySelector(":root") as any;
-		// r.style.setProperty("--primary-color", props.color);
-		// console.log(r, r.style);
-	});
 	return (
 		<div class="date-picker" ref={props.ref} onClick={e => {}}>
 			<div
@@ -377,7 +340,7 @@ export default function DatePicker_v2(props: Props) {
 											id={d.date.toLocaleDateString(props.locale)}
 											// prettier-ignore
 											class={`
-                                                calendar-cell
+                                                calendar-cell 
                                                 ${isCurrentMonth(d.date, shownDate()) ? "current-month-cell" : "" }
                                                 ${props.value ? isSameDate(d.date, props.value) ? "selected-date" : "" : ""}
                                             `}
@@ -389,7 +352,6 @@ export default function DatePicker_v2(props: Props) {
 											}}
 											onClick={e => {
 												inputRef.focus();
-												// setInputFocused(true);
 												inputRef.value = d.dateStr;
 												props.onDateSelected(d.date);
 
@@ -414,22 +376,8 @@ export default function DatePicker_v2(props: Props) {
 					class="date-picker-overlay"
 					onClick={e => {
 						setIsOpen(false);
-						// console.log(e.bubbles);
-						// console.log(e.composedPath());
 					}}></div>
-				{/* <Portal
-					children={
-
-					}
-				/> */}
 			</Show>
 		</div>
 	);
 }
-
-// // (
-// //     e: MouseEvent & {
-// //         currentTarget: HTMLDivElement;
-// //         target: Element;
-// //     }
-// // )

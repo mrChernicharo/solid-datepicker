@@ -1,19 +1,8 @@
 // import { Component, createEffect, createMemo, createSignal, For, Show } from "solid-js";
-import {
-	FaAddressBook,
-	FaCalendar,
-	FaCalendarAlt,
-	FaHeart,
-	FaSolidCalendarAlt,
-	FaSolidChevronDown,
-} from "solid-icons/fa";
+import { FaCalendarAlt, FaHeart } from "solid-icons/fa";
 import { createEffect, createSignal } from "solid-js";
 import s from "./App.module.css";
-import Icon from "./assets/Icon";
-import DatePicker_v1 from "./components/DatePicker_v1";
 import DatePicker_v2 from "./components/DatePicker_v2";
-// let lang = "en";
-let lang = "pt-BR";
 
 export type DatePickerType =
 	| "monthYearPicker"
@@ -23,7 +12,7 @@ export type DatePickerType =
 	| "dateRange"
 	| "timeRange";
 
-const color = "#0098ae";
+const color = "red";
 const minDate = new Date(2022, 5, 31);
 const initialDate = new Date(2022, 6, 13);
 const maxDate = new Date(2022, 6, 22);
@@ -44,7 +33,7 @@ export default function App() {
 	const [selectedDate2, setSelectedDate2] = createSignal<Date | null>(null);
 	const [selectedDate3, setSelectedDate3] = createSignal<Date | null>(null);
 
-	let datepickerRef;
+	let datepickerRef, datepickerRef2, datepickerRef3;
 	// datepickerRef.open()
 	// datepickerRef.close()
 
@@ -52,12 +41,11 @@ export default function App() {
 
 	return (
 		<div class={s.App}>
-			{/* <DatePicker_v1 /> */}
 			<h1>DatePicker</h1>
 
 			<div>
 				<DatePicker_v2
-					width={200}
+					inputWidth={200}
 					ref={datepickerRef}
 					value={selectedDate()}
 					type={"datePicker"}
@@ -90,12 +78,11 @@ export default function App() {
 				/>
 
 				<DatePicker_v2
-					width={400}
+					inputWidth={400}
 					closeAfterClick={true}
-					ref={datepickerRef}
+					ref={datepickerRef2}
 					value={selectedDate2()}
 					type={"datePicker"}
-					color={color}
 					locale={"en"}
 					icon={<FaHeart size={16} />}
 					initialDate={initialDate}
@@ -120,8 +107,8 @@ export default function App() {
 					calendarOnly={false} // no input, calendar only
 					dateClass={higlight20thDay}
 				/>
-				<DatePicker_v2
-					width={300}
+				{/* <DatePicker_v2
+					inputWidth={300}
 					closeAfterClick={false}
 					ref={datepickerRef}
 					value={selectedDate3()}
@@ -150,39 +137,18 @@ export default function App() {
 					touchUIMode={false}
 					calendarOnly={false} // no input, calendar only
 					dateClass={higlight20thDay}
+				/> */}
+
+				<DatePicker_v2
+					ref={datepickerRef3}
+					inputWidth={180}
+					value={selectedDate3()}
+					color={"orange"}
+					onInput={console.log}
+					onDateSelected={setSelectedDate3}
 				/>
 
-				{/* <DatePicker_v2
-					ref={datepickerRef}
-					value={selectedDate()}
-					type={"datePicker"}
-					color={color}
-					locale={"jpn"}
-					icon={<FaCalendar size={16} />}
-					initialDate={new Date()}
-					min={minDate}
-					max={maxDate}
-					placeholder={"1987-04-29"}
-					hint={"japanese"}
-					// hint={"dd/mm/aaaa"}
-					delimiter={"-"}
-					applyMask={true}
-					filter={weekendFilter}
-					onDateSelected={d => setSelectedDate(d)} // both input and calendar
-					// onInput={console.log} // input input
-					onInput={e => {}} // input input
-					// onInput={console.log} // input input
-					onChange={e => {}} // input change
-					closeAfterClick={false}
-					label="DatePicker label"
-					disabled={false}
-					inputDisabled={false}
-					calendarDisabled={false}
-					showYearButtons={true}
-					touchUIMode={false}
-					calendarOnly={false} // no input, calendar only
-					dateClass={higlight20thDay}
-				/> */}
+				<div>{selectedDate3()?.toDateString()}</div>
 			</div>
 		</div>
 	);

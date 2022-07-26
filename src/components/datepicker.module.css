@@ -1,0 +1,7 @@
+:root {
+	--primary-color: purple;
+	/* --width: 200px; */
+}
+.selectedDate {
+	background-color: var(--primary-color);
+}
