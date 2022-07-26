@@ -160,18 +160,27 @@ export default function DatePicker(props: DatepickerProps) {
 		firstSaturday = grid.find(cell => cell.weekday === 6).day;
 		const lastCell = cellsRefs.at(-1);
 
-		console.log({
-			d,
-			lastCell,
-			currCell: e.currentTarget,
-			cellIndex,
-			grid,
-			// 	cellsRefs,
-			// firstSaturday,
-			// lastSunday,
-		});
+		// console.log({
+		// 	d,
+		// 	lastCell,
+		// 	currCell: e.currentTarget,
+		// 	cellIndex,
+		// 	grid,
+		// 	// 	cellsRefs,
+		// 	// firstSaturday,
+		// 	// lastSunday,
+		// });
 
 		switch (e.code) {
+			// case "Enter": {
+			// 	break;
+			// }
+			case "Tab": {
+				if (cellIndex + 1 === +lastCell.firstChild.textContent) {
+					setIsOpen(false);
+				}
+				break;
+			}
 			case "ArrowUp": {
 				if (cellIndex - 7 < 0) {
 					if (cellIndex >= firstSaturday) {
@@ -264,10 +273,18 @@ export default function DatePicker(props: DatepickerProps) {
 	};
 
 	createEffect(() => {
+		console.log(isOpen());
+
+		if (!isOpen()) {
+			cellsRefs = [];
+		}
+
+		console.log({ activeElement: document.activeElement });
 		// console.log(inputFocused());
 		// inputRef.focus();
 		// 	console.log(shownDate(), cellsRefs);
 	});
+
 	return (
 		<div class="date-picker" ref={props.ref} onClick={e => {}}>
 			<div
@@ -287,12 +304,12 @@ export default function DatePicker(props: DatepickerProps) {
 					</span>
 					<input
 						ref={inputRef}
-						class="date-input"
+						id={"date-input"}
 						type="text"
 						placeholder={props.placeholder}
 						onFocus={e => {
 							clearTimeout(timeout);
-							if (!inputFocused()) {
+							if (inputRef) {
 								labelRef.classList.add("is-focused");
 								outlineRef.classList.add("is-focused");
 								setInputFocused(true);
@@ -313,12 +330,8 @@ export default function DatePicker(props: DatepickerProps) {
 								if (!isOpen()) {
 									setIsOpen(true);
 								}
-								// inputRef.blur();
-								setInputFocused(false);
-								// calendarPopupRef.focus();
-								console.log({ c: cellsRefs[0] });
+								inputRef.blur();
 								cellsRefs[0].firstChild.focus();
-								// setTimeout(() => , 300);
 							}
 						}}
 						onInput={handleInput}
@@ -335,8 +348,7 @@ export default function DatePicker(props: DatepickerProps) {
 								setIsOpen(!isOpen());
 							}
 							if (e.code === "ArrowDown") {
-								// e.preventDefault(); // prevent input focus
-								setInputFocused(false);
+								inputRef.blur();
 								setIsOpen(true);
 								cellsRefs[0].firstChild.focus();
 							}
@@ -381,11 +393,13 @@ export default function DatePicker(props: DatepickerProps) {
 										ref={yearDecrBtn}
 										onClick={yearDecrement}
 										onKeyDown={e => {
+											console.log(document.activeElement);
+
 											switch (e.code) {
 												case "ArrowUp": {
 													setIsOpen(false);
 													inputRef.focus();
-													setInputFocused(true);
+													// setInputFocused(true);
 													break;
 												}
 												case "ArrowRight": {
@@ -404,11 +418,13 @@ export default function DatePicker(props: DatepickerProps) {
 									ref={monthDecrBtn}
 									onClick={monthDecrement}
 									onKeyDown={e => {
+										console.log(document.activeElement);
+
 										switch (e.code) {
 											case "ArrowUp": {
 												setIsOpen(false);
 												inputRef.focus();
-												setInputFocused(true);
+												// setInputFocused(true);
 												break;
 											}
 											case "ArrowLeft": {
@@ -434,11 +450,13 @@ export default function DatePicker(props: DatepickerProps) {
 									ref={monthIncrBtn}
 									onClick={monthIncrement}
 									onKeyDown={e => {
+										console.log(document.activeElement);
+
 										switch (e.code) {
 											case "ArrowUp": {
 												setIsOpen(false);
 												inputRef.focus();
-												setInputFocused(true);
+												// setInputFocused(true);
 												break;
 											}
 											case "ArrowLeft": {
@@ -463,11 +481,13 @@ export default function DatePicker(props: DatepickerProps) {
 										ref={yearIncrBtn}
 										onClick={yearIncrement}
 										onKeyDown={e => {
+											console.log(document.activeElement);
+
 											switch (e.code) {
 												case "ArrowUp": {
 													setIsOpen(false);
 													inputRef.focus();
-													setInputFocused(true);
+													// setInputFocused(true);
 													break;
 												}
 												case "ArrowLeft": {
@@ -513,7 +533,9 @@ export default function DatePicker(props: DatepickerProps) {
 														: bg,
 											}}
 											onClick={e => {
-												inputRef.focus();
+												if (props.closeAfterClick) {
+													inputRef.focus();
+												}
 												inputRef.value = d.dateStr;
 												props.onDateSelected(d.date);
 
@@ -525,6 +547,7 @@ export default function DatePicker(props: DatepickerProps) {
 											<button>{d.day}</button>
 										</div>
 									);
+
 									cellRef.classList.contains("current-month-cell") &&
 										cellsRefs.push(cellRef);
 

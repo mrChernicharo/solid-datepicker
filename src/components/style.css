@@ -94,7 +94,7 @@ div.date-input-outline:not(.is-focused)::before {
 	animation: underline-leave 0.2s ease-in forwards;
 }
 
-input.date-input {
+input#date-input {
 	display: flex;
 	background-color: transparent;
 	color: #fff;
@@ -103,11 +103,11 @@ input.date-input {
 	font-size: 15px;
 }
 
-input.date-input::placeholder {
+input#date-input::placeholder {
 	opacity: 0;
 	transition: 0.3s;
 }
-input.date-input:focus::placeholder {
+input#date-input:focus::placeholder {
 	color: #999;
 	opacity: 1;
 }
