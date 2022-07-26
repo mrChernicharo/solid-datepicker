@@ -1,4 +1,6 @@
 import { createSignal, For, JSXElement, mergeProps, Show } from "solid-js";
+import { Transition } from "solid-transition-group";
+import "./style.css";
 import {
 	getDaysGrid,
 	getWeekdays,
@@ -9,8 +11,6 @@ import {
 	getDateFormat,
 	maskInput,
 } from "../utils/helpers";
-import "./style.css";
-import { Transition } from "solid-transition-group";
 import {
 	DEFAULT_ICON,
 	MONTH_DECREMENT_ICON,
@@ -152,22 +152,21 @@ export default function DatePicker(props: Props) {
 		if (props.applyMask) {
 			v = maskInput(v, dateSchema, props.delimiter || "/");
 			v = v.length > 10 ? v.slice(0, 10) : v;
+
+			e.currentTarget.value = v;
+
+			if (isValidDate(v)) {
+				const { year, month, day } = parseDateString(v);
+				const date = new Date(new Date(year, month, day).setFullYear(year));
+
+				props.onDateSelected(date);
+				setShownDate(date);
+			} else {
+				// set error???
+				// console.log("invalidDate", { v });
+				props.onDateSelected(null);
+			}
 		}
-
-		e.currentTarget.value = v;
-
-		if (isValidDate(v)) {
-			const { year, month, day } = parseDateString(v);
-			const date = new Date(new Date(year, month, day).setFullYear(year));
-
-			props.onDateSelected(date);
-			setShownDate(date);
-		} else {
-			// set error???
-			// console.log("invalidDate", { v });
-			props.onDateSelected(null);
-		}
-
 		props.onInput(e);
 	}
 
@@ -309,12 +308,10 @@ export default function DatePicker(props: Props) {
 							<div class="calendar-btn-group">
 								<Show when={props.showYearButtons}>
 									<button onClick={yearDecrement}>
-										{/* <FaSolidAngleDoubleLeft size={16} /> */}
 										<YEAR_DECREMENT_ICON />
 									</button>
 								</Show>
 								<button onClick={monthDecrement}>
-									{/* <FaSolidAngleLeft size={16} /> */}
 									<MONTH_DECREMENT_ICON />
 								</button>
 							</div>
@@ -322,12 +319,10 @@ export default function DatePicker(props: Props) {
 
 							<div class="calendar-btn-group">
 								<button onClick={monthIncrement}>
-									{/* <FaSolidAngleRight size={16} /> */}
 									<MONTH_INCREMENT_ICON />
 								</button>
 								<Show when={props.showYearButtons}>
 									<button onClick={yearIncrement}>
-										{/* <FaSolidAngleDoubleRight size={16} /> */}
 										<YEAR_INCREMENT_ICON />
 									</button>
 								</Show>

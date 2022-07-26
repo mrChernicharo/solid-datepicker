@@ -1,3 +1,11 @@
+export type DatePickerType =
+	| "monthYearPicker"
+	| "datePicker"
+	| "timePicker"
+	| "datetimePicker"
+	| "dateRange"
+	| "timeRange";
+
 const ID_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-";
 
 export const idMaker = () =>
@@ -6,20 +14,6 @@ export const idMaker = () =>
 		.map(item => ID_CHARS.split("")[Math.round(Math.random() * ID_CHARS.length)])
 		.join("");
 
-export const months = [
-	"janeiro",
-	"fevereiro",
-	"março",
-	"abril",
-	"maio",
-	"junho",
-	"julho",
-	"agosto",
-	"setembro",
-	"outubro",
-	"novembro",
-	"dezembro",
-];
 export const getWeekdays = (
 	locale = "en",
 	weekday: "long" | "short" | "narrow" = "narrow"
@@ -28,40 +22,38 @@ export const getWeekdays = (
 	return [...Array(7).keys()].map(day => format(new Date(Date.UTC(2021, 5, day))));
 };
 
-export const weekdays = ["dom", "seg", "ter", "qua", "qui", "sex", "sab"];
-
 export const placeholderText: { [key: string]: string } = {
 	en: "mm/dd/yyyy",
 	"pt-BR": "dd/mm/aaaa",
 };
 
-export function inputMask(maskType: string, val: string) {
-	// prettier-ignore
-	switch (maskType) {
-		case "date": {
-            let v: string;
-            
-            if (val.length > 10) {
-                v = val.slice(0, -1)
-                return v
-            }
+export function maskInput(
+	val: string,
+	dateSchema: "DMY" | "MDY" | "YMD",
+	delimiter: string
+) {
+	let v, digitsAndDelimiterRegex, dayMonthRegex, yearRegex;
+	digitsAndDelimiterRegex = new RegExp(`[^${delimiter}0-9]`);
 
-			v = val;
-			v = v.replace(/\D/g, ""); //Remove tudo o que não é dígito
+	v = val.replace(digitsAndDelimiterRegex, "");
 
-			v = v.replace(/(\d{2})(\d)/, "$1/$2");      //Coloca barra entre o 2o e o 3o dígitos
-			v = v.replace(/(\d{2})(\d)/, "$1/$2");      //de novo (para o segundo bloco de números)
+	if (dateSchema === "YMD") {
+		yearRegex = /(\d{4})(\d)/;
+		dayMonthRegex = new RegExp(`(\\d{4}${delimiter}\\d{2})(\\d)`, "g");
 
-			// v=v.replace(/\D/g,"")                    //Remove tudo o que não é dígito
-			// v=v.replace(/(\d{3})(\d)/,"$1.$2")       //Coloca um ponto entre o terceiro e o quarto dígitos
-			// v=v.replace(/(\d{3})(\d)/,"$1.$2")       //Coloca um ponto entre o terceiro e o quarto dígitos
-			//                                          //de novo (para o segundo bloco de números)
-			// v=v.replace(/(\d{3})(\d{1,2})$/,"$1-$2") //Coloca um hífen entre o terceiro e o quarto dígitos
-			return v || "";
-		}
-		default:
-			return "";
+		v = v.replace(yearRegex, `$1${delimiter}$2`);
+		v = v.replace(dayMonthRegex, `$1${delimiter}$2`);
+	} else {
+		dayMonthRegex = new RegExp(/(\d{2})(\d)/);
+		yearRegex = new RegExp(`(\\d+${delimiter}\\d+${delimiter})(\\d)`);
+
+		// prettier-ignore
+		v = v.length < 7 ? v.replace(dayMonthRegex, `$1${delimiter}$2`) : v;
+		v = v.replace(yearRegex, "$1$2");
 	}
+	v = v.length > 10 ? v.slice(0, 10) : v;
+
+	return v;
 }
 
 export function parseDate(dateStr: string) {
@@ -163,8 +155,6 @@ export function getDaysGrid(date: Date, locale = "en", delimiter = "/") {
 		--firstRowOffset;
 	}
 
-	// console.log({ lastDaysFromPrevMonth, initialDaysFromNextMonth });
-
 	// get last days from previous month
 	const res = [...lastDaysFromPrevMonth, ...days, ...initialDaysFromNextMonth];
 	console.timeEnd("getDaysGrid");
@@ -178,3 +168,110 @@ export const isSameDate = (d: Date, selectedDate: Date) =>
 
 export const isCurrentMonth = (d: Date, selectedDate: Date) =>
 	d.getMonth() === selectedDate.getMonth();
+
+export const parseDateString = (
+	str: string,
+	delimiter: string,
+	dateSchema: "DMY" | "MDY" | "YMD"
+) => {
+	const schema = {
+		Y: "year",
+		M: "month",
+		D: "day",
+	};
+	const values = {
+		day: "",
+		month: "",
+		year: "",
+	};
+	let splitValues = str.split(delimiter || "/");
+
+	for (let i = 0; i < 3; i++) {
+		values[schema[dateSchema[i]]] = splitValues[i];
+	}
+	const { year, month, day } = values;
+
+	return { year: +year, month: +month - 1, day: +day };
+};
+
+export function getDateFormat(d: Date, locale: string, delimiter: string) {
+	let localeDate,
+		formattedDate,
+		splitDate,
+		dayA,
+		monthA,
+		month,
+		dateB,
+		testDate,
+		splitTestDate,
+		formattedTestDate,
+		notMonth,
+		year,
+		day,
+		dayIndex,
+		monthIndex,
+		yearIndex,
+		yearlessSplit;
+
+	if (!d) return "";
+
+	locale = locale ? locale : "en"; // falsy or invalid defaults to en
+
+	localeDate = d.toLocaleDateString(locale);
+	delimiter = delimiter ? delimiter : localeDate.replace(/\d/g, "")[0];
+
+	formattedDate = localeDate.replace(/\D/g, delimiter);
+
+	splitDate = formattedDate.split(delimiter).map(Number);
+
+	dayA = d.getDate();
+	monthA = d.getMonth() + 1;
+	month = splitDate.find(_d => _d === monthA);
+	day = splitDate.find(_d => _d === dayA);
+	year = d.getFullYear();
+
+	dayIndex = splitDate.findIndex(v => v === day);
+	monthIndex = splitDate.findIndex(v => v === month);
+	yearIndex = splitDate.findIndex(v => v === year);
+
+	if (day === month) {
+		// compare to another date and find out who's month and who's day
+		dateB = new Date(d.getFullYear(), d.getMonth() + 1, d.getDate());
+		testDate = dateB.toLocaleDateString(locale); // date + 1 month
+		formattedTestDate = testDate.replace(/\D/g, delimiter);
+		splitTestDate = formattedTestDate.split(delimiter);
+
+		yearlessSplit = splitTestDate.filter(d => d.length !== 4).map(Number);
+		notMonth = yearlessSplit.find(d => d !== month);
+
+		month = yearlessSplit.find(d => d !== notMonth);
+
+		monthIndex =
+			yearIndex === 0
+				? yearlessSplit.findIndex(v => v === notMonth) + 1
+				: yearlessSplit.findIndex(v => v === notMonth);
+		dayIndex =
+			yearIndex === 0
+				? yearlessSplit.findIndex(v => v !== notMonth) + 1
+				: yearlessSplit.findIndex(v => v !== notMonth);
+	}
+
+	const dateSchema: string[] = [];
+	const schema = {
+		[dayIndex]: "D",
+		[monthIndex]: "M",
+		[yearIndex]: "Y",
+	};
+
+	for (let i = 0; i < 3; i++) {
+		dateSchema.push(schema[i]);
+		if (i < 2) {
+			dateSchema.push(delimiter);
+		}
+	}
+
+	const result = dateSchema.join("");
+
+	// console.log({result, dateSchema, year, yearIndex, splitDate})
+	return result;
+}

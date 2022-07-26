@@ -1,26 +1,9 @@
-// import { Component, createEffect, createMemo, createSignal, For, Show } from "solid-js";
-import {
-	FaAddressBook,
-	FaCalendar,
-	FaCalendarAlt,
-	FaHeart,
-	FaSolidCalendarAlt,
-	FaSolidChevronDown,
-} from "solid-icons/fa";
+import { FaCalendarAlt, FaHeart, FaSolidChevronDown } from "solid-icons/fa";
 import { createEffect, createSignal } from "solid-js";
 import s from "./App.module.css";
-import Icon from "./assets/Icon";
 import DatePicker from "./components/DatePicker";
 // let lang = "en";
 let lang = "pt-BR";
-
-export type DatePickerType =
-	| "monthYearPicker"
-	| "datePicker"
-	| "timePicker"
-	| "datetimePicker"
-	| "dateRange"
-	| "timeRange";
 
 const color = "#0098ae";
 const minDate = new Date(2022, 5, 31);
@@ -94,7 +77,7 @@ export default function App() {
 					ref={datepickerRef}
 					value={selectedDate2()}
 					type={"datePicker"}
-					color={color}
+					color={"orange"}
 					locale={"en"}
 					icon={<FaHeart size={16} />}
 					initialDate={initialDate}
@@ -125,7 +108,7 @@ export default function App() {
 					ref={datepickerRef}
 					value={selectedDate3()}
 					type={"datePicker"}
-					color={color}
+					color={"red"}
 					locale={"de"}
 					icon={<FaSolidChevronDown size={16} />}
 					initialDate={initialDate}
@@ -150,38 +133,6 @@ export default function App() {
 					calendarOnly={false} // no input, calendar only
 					dateClass={higlight20thDay}
 				/>
-
-				{/* <DatePicker
-					ref={datepickerRef}
-					value={selectedDate()}
-					type={"datePicker"}
-					color={color}
-					locale={"jpn"}
-					icon={<FaCalendar size={16} />}
-					initialDate={new Date()}
-					min={minDate}
-					max={maxDate}
-					placeholder={"1987-04-29"}
-					hint={"japanese"}
-					// hint={"dd/mm/aaaa"}
-					delimiter={"-"}
-					applyMask={true}
-					filter={weekendFilter}
-					onDateSelected={d => setSelectedDate(d)} // both input and calendar
-					// onInput={console.log} // input input
-					onInput={e => {}} // input input
-					// onInput={console.log} // input input
-					onChange={e => {}} // input change
-					closeAfterClick={false}
-					label="DatePicker label"
-					disabled={false}
-					inputDisabled={false}
-					calendarDisabled={false}
-					showYearButtons={true}
-					touchUIMode={false}
-					calendarOnly={false} // no input, calendar only
-					dateClass={higlight20thDay}
-				/> */}
 			</div>
 		</div>
 	);

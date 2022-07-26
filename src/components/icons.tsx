@@ -1,7 +1,7 @@
 export const DEFAULT_ICON = () => (
 	<svg
 		fill="currentColor"
-		strokewidth="0"
+		stroke-width="0"
 		xmlns="http://www.w3.org/2000/svg"
 		stroke="none"
 		viewBox="0 0 448 512"
@@ -15,11 +15,10 @@ export const DEFAULT_ICON = () => (
 export const MONTH_INCREMENT_ICON = () => (
 	<svg
 		fill="currentColor"
-		strokewidth="0"
+		stroke-width="0"
 		xmlns="http://www.w3.org/2000/svg"
 		stroke="none"
 		viewBox="0 0 256 512"
-		size="16"
 		height="16"
 		width="16"
 		style="overflow: visible;">
@@ -30,11 +29,10 @@ export const MONTH_INCREMENT_ICON = () => (
 export const MONTH_DECREMENT_ICON = () => (
 	<svg
 		fill="currentColor"
-		strokewidth="0"
+		stroke-width="0"
 		xmlns="http://www.w3.org/2000/svg"
 		stroke="none"
 		viewBox="0 0 256 512"
-		size="16"
 		height="16"
 		width="16"
 		style="overflow: visible;">
@@ -45,11 +43,10 @@ export const MONTH_DECREMENT_ICON = () => (
 export const YEAR_INCREMENT_ICON = () => (
 	<svg
 		fill="currentColor"
-		strokewidth="0"
+		stroke-width="0"
 		xmlns="http://www.w3.org/2000/svg"
 		stroke="none"
 		viewBox="0 0 448 512"
-		size="16"
 		height="16"
 		width="16"
 		style="overflow: visible;">
@@ -59,11 +56,10 @@ export const YEAR_INCREMENT_ICON = () => (
 export const YEAR_DECREMENT_ICON = () => (
 	<svg
 		fill="currentColor"
-		strokewidth="0"
+		stroke-width="0"
 		xmlns="http://www.w3.org/2000/svg"
 		stroke="none"
 		viewBox="0 0 448 512"
-		size="16"
 		height="16"
 		width="16"
 		style="overflow: visible;">
