@@ -10,8 +10,7 @@ import {
 import { createEffect, createSignal } from "solid-js";
 import s from "./App.module.css";
 import Icon from "./assets/Icon";
-import DatePicker_v1 from "./components/DatePicker_v1";
-import DatePicker_v2 from "./components/DatePicker_v2";
+import DatePicker from "./components/DatePicker";
 // let lang = "en";
 let lang = "pt-BR";
 
@@ -56,8 +55,8 @@ export default function App() {
 			<h1>DatePicker</h1>
 
 			<div>
-				<DatePicker_v2
-					width={200}
+				<DatePicker
+					inputWidth={200}
 					ref={datepickerRef}
 					value={selectedDate()}
 					type={"datePicker"}
@@ -89,8 +88,8 @@ export default function App() {
 					dateClass={higlight20thDay}
 				/>
 
-				<DatePicker_v2
-					width={400}
+				<DatePicker
+					inputWidth={400}
 					closeAfterClick={true}
 					ref={datepickerRef}
 					value={selectedDate2()}
@@ -120,8 +119,8 @@ export default function App() {
 					calendarOnly={false} // no input, calendar only
 					dateClass={higlight20thDay}
 				/>
-				<DatePicker_v2
-					width={300}
+				<DatePicker
+					inputWidth={300}
 					closeAfterClick={false}
 					ref={datepickerRef}
 					value={selectedDate3()}
@@ -152,7 +151,7 @@ export default function App() {
 					dateClass={higlight20thDay}
 				/>
 
-				{/* <DatePicker_v2
+				{/* <DatePicker
 					ref={datepickerRef}
 					value={selectedDate()}
 					type={"datePicker"}
