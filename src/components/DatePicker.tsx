@@ -172,10 +172,12 @@ export default function DatePicker(props: DatepickerProps) {
 		// });
 
 		switch (e.code) {
-			// case "Enter": {
-			// 	// e.currentTarget.focus();
-			// 	break;
-			// }
+			case "Escape": {
+				console.log("esc!!!");
+				inputRef.focus();
+				setIsOpen(false);
+				break;
+			}
 			case "Tab": {
 				if (cellIndex + 1 === +lastCell.firstChild.textContent) {
 					setIsOpen(false);
@@ -225,9 +227,9 @@ export default function DatePicker(props: DatepickerProps) {
 	};
 	const monthDecrement = e => {
 		cellsRefs = [];
-		const currentDay = shownDate().getDate();
-		const currentMonth = shownDate().getMonth();
-		const currentYear = shownDate().getFullYear();
+		const currentDay = shownDate().getDate(),
+			currentMonth = shownDate().getMonth(),
+			currentYear = shownDate().getFullYear();
 
 		const prevMonth = currentMonth === 0 ? 11 : currentMonth - 1;
 
@@ -242,9 +244,9 @@ export default function DatePicker(props: DatepickerProps) {
 	const monthIncrement = e => {
 		cellsRefs = [];
 
-		const currentDay = shownDate().getDate();
-		const currentMonth = shownDate().getMonth();
-		const currentYear = shownDate().getFullYear();
+		const currentDay = shownDate().getDate(),
+			currentMonth = shownDate().getMonth(),
+			currentYear = shownDate().getFullYear();
 
 		const nextMonth = currentMonth === 11 ? 0 : currentMonth + 1;
 
@@ -281,9 +283,6 @@ export default function DatePicker(props: DatepickerProps) {
 		}
 
 		console.log({ activeElement: document.activeElement });
-		// console.log(inputFocused());
-		// inputRef.focus();
-		// 	console.log(shownDate(), cellsRefs);
 	});
 
 	createEffect(() => {
@@ -334,6 +333,13 @@ export default function DatePicker(props: DatepickerProps) {
 							}, 300);
 						}}
 						onKeyDown={e => {
+							if (e.code === "Escape") {
+								setIsOpen(false);
+							}
+							if (e.code === "Enter") {
+								setIsOpen(!isOpen());
+							}
+
 							if (e.code === "ArrowDown") {
 								console.log("open that jazz");
 								if (!isOpen()) {
