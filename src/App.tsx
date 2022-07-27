@@ -62,9 +62,7 @@ export default function App() {
 					onChange={e => {}} // input change
 					closeAfterClick={false}
 					label="DatePicker label"
-					disabled={false}
-					inputDisabled={false}
-					calendarDisabled={false}
+					disabled
 					showYearButtons={false}
 					touchUIMode={false}
 					calendarOnly={false} // no input, calendar only
@@ -125,9 +123,7 @@ export default function App() {
 					// onInput={console.log} // input input
 					onChange={e => {}} // input change
 					label="DatePicker 2"
-					disabled={false}
-					inputDisabled={false}
-					calendarDisabled={false}
+					inputDisabled
 					showYearButtons={true}
 					touchUIMode={false}
 					calendarOnly={false} // no input, calendar only

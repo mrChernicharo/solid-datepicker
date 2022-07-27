@@ -195,7 +195,11 @@ export function getDaysGrid(date: Date, locale = "en", delimiter = "/") {
 	}
 
 	// get last days from previous month
-	const res = [...lastDaysFromPrevMonth, ...days, ...initialDaysFromNextMonth];
+	const res: DateCell[] = [
+		...lastDaysFromPrevMonth,
+		...days,
+		...initialDaysFromNextMonth,
+	];
 	console.timeEnd("getDaysGrid");
 
 	return res;

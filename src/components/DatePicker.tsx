@@ -57,9 +57,10 @@ const DEFAULT_PROPS: DatepickerProps = {
 export default function DatePicker(props: DatepickerProps) {
 	props = mergeProps(DEFAULT_PROPS, props);
 
-	let inputRef, labelRef, outlineRef, calendarPopupRef;
+	let inputRef, labelRef, outlineRef, calendarPopupRef, iconBtnRef;
 	let monthDecrBtn, monthIncrBtn, yearDecrBtn, yearIncrBtn;
-	let timeout, grid;
+	let timeout;
+	let grid: DateCell[] = [];
 	let cellsRefs: any = [];
 	let firstSaturday, lastSunday;
 	const id = `calendar-popup-${idMaker()}`;
@@ -89,7 +90,6 @@ export default function DatePicker(props: DatepickerProps) {
 	const daysGrid = (date: Date | null): DateCell[] => {
 		let d = date || new Date();
 		grid = getDaysGrid(d, props.locale, props.delimiter);
-		grid;
 		return grid;
 	};
 
@@ -156,20 +156,21 @@ export default function DatePicker(props: DatepickerProps) {
 			ref => ref.firstChild.textContent === d.day.toString()
 		);
 
-		lastSunday = grid.findLast(cell => cell.weekday === 0).day;
-		firstSaturday = grid.find(cell => cell.weekday === 6).day;
+		lastSunday = (grid as any).findLast(cell => cell.weekday === 0).day;
+		firstSaturday = (grid as any).find(cell => cell.weekday === 6).day;
 		const lastCell = cellsRefs.at(-1);
 
-		// console.log({
-		// 	d,
-		// 	lastCell,
-		// 	currCell: e.currentTarget,
-		// 	cellIndex,
-		// 	grid,
-		// 	// 	cellsRefs,
-		// 	// firstSaturday,
-		// 	// lastSunday,
-		// });
+		console.log({
+			// 	d,
+			// 	lastCell,
+			// 	currCell: e.currentTarget,
+			cellIndex,
+			grid,
+			g: grid[cellIndex],
+			// cellsRefs,
+			// 	// firstSaturday,
+			// 	// lastSunday,
+		});
 
 		switch (e.code) {
 			case "Escape": {
@@ -188,7 +189,43 @@ export default function DatePicker(props: DatepickerProps) {
 					if (cellIndex >= firstSaturday) {
 						cellsRefs[0].firstChild.focus();
 					} else {
-						monthIncrBtn.focus();
+						console.log({
+							weekday: d.weekday,
+							// 	lastCell,
+							// 	currCell: e.currentTarget,
+							cellIndex,
+							// grid,
+							// g: grid[cellIndex],
+							// cellsRefs,
+							// 	// firstSaturday,
+							// 	// lastSunday,
+						});
+
+						switch (d.weekday) {
+							case 0: {
+								props.showYearButtons
+									? yearDecrBtn.focus()
+									: monthDecrBtn.focus();
+								break;
+							}
+							case 1:
+							case 2: {
+								monthDecrBtn.focus();
+								break;
+							}
+							case 3:
+							case 4:
+							case 5: {
+								monthIncrBtn.focus();
+								break;
+							}
+							case 6: {
+								props.showYearButtons
+									? yearIncrBtn.focus()
+									: monthIncrBtn.focus();
+								break;
+							}
+						}
 					}
 				} else {
 					cellsRefs[cellIndex - 7].firstChild.focus();
@@ -274,6 +311,23 @@ export default function DatePicker(props: DatepickerProps) {
 		setShownDate(new Date(timestamp));
 	};
 
+	const getCellWeekday = el => {
+		const day = +el.firstChild.textContent;
+
+		if (!day) console.error("getCellWeekday errored out!");
+
+		return grid.findIndex(
+			o =>
+				o.day === day &&
+				o.date.getTime() ===
+					new Date(
+						shownDate().getFullYear(),
+						shownDate().getMonth(),
+						day
+					).getTime()
+		);
+	};
+
 	createEffect(() => {
 		console.log(isOpen());
 
@@ -299,9 +353,18 @@ export default function DatePicker(props: DatepickerProps) {
 				class="date-input-field"
 				style={{ width: props.inputWidth + "px" }}
 				onClick={e => {
+					if (props.inputDisabled) {
+						setIsOpen(true);
+						cellsRefs[0].firstChild.focus();
+					}
 					inputRef.focus();
 				}}>
-				<label class="date-input-wrapper">
+				<label
+					class="date-input-wrapper"
+					style={{
+						cursor:
+							props.disabled || props.inputDisabled ? "default" : "text",
+					}}>
 					<span
 						ref={labelRef!}
 						class="input-label"
@@ -361,11 +424,8 @@ export default function DatePicker(props: DatepickerProps) {
 						disabled={props.disabled || props.inputDisabled}
 					/>
 					<button
-						disabled={
-							props.disabled ||
-							props.inputDisabled ||
-							props.calendarDisabled
-						}
+						ref={iconBtnRef}
+						disabled={props.disabled || props.calendarDisabled}
 						class="input-icon"
 						onClick={e => {
 							setIsOpen(true);
@@ -426,8 +486,11 @@ export default function DatePicker(props: DatepickerProps) {
 											switch (e.code) {
 												case "ArrowUp": {
 													setIsOpen(false);
-													inputRef.focus();
-													// setInputFocused(true);
+													if (props.inputDisabled) {
+														iconBtnRef.focus();
+													} else {
+														inputRef.focus();
+													}
 													break;
 												}
 												case "ArrowRight": {
@@ -451,8 +514,11 @@ export default function DatePicker(props: DatepickerProps) {
 										switch (e.code) {
 											case "ArrowUp": {
 												setIsOpen(false);
-												inputRef.focus();
-												// setInputFocused(true);
+												if (props.inputDisabled) {
+													iconBtnRef.focus();
+												} else {
+													inputRef.focus();
+												}
 												break;
 											}
 											case "ArrowLeft": {
@@ -464,7 +530,20 @@ export default function DatePicker(props: DatepickerProps) {
 												break;
 											}
 											case "ArrowDown": {
-												cellsRefs[0].firstChild.focus();
+												console.log(getCellWeekday(cellsRefs[0]));
+												switch (getCellWeekday(cellsRefs[0])) {
+													case 0:
+														cellsRefs[1].firstChild.focus();
+														break;
+													case 1:
+													case 2:
+													case 3:
+													case 4:
+													case 5:
+													case 6:
+														cellsRefs[0].firstChild.focus();
+														break;
+												}
 											}
 										}
 									}}>
@@ -483,8 +562,11 @@ export default function DatePicker(props: DatepickerProps) {
 										switch (e.code) {
 											case "ArrowUp": {
 												setIsOpen(false);
-												inputRef.focus();
-												// setInputFocused(true);
+												if (props.inputDisabled) {
+													iconBtnRef.focus();
+												} else {
+													inputRef.focus();
+												}
 												break;
 											}
 											case "ArrowLeft": {
@@ -496,9 +578,33 @@ export default function DatePicker(props: DatepickerProps) {
 												break;
 											}
 											case "ArrowDown": {
-												cellsRefs[
-													firstSaturday - 1
-												].firstChild.focus();
+												// cellsRefs[0].firstChild.focus();
+												console.log(getCellWeekday(cellsRefs[0]));
+												// cellsRefs[
+												// 	firstSaturday - 1
+												// ].firstChild.focus();
+
+												switch (getCellWeekday(cellsRefs[0])) {
+													case 0:
+														cellsRefs[5].firstChild.focus();
+														break;
+													case 1:
+														cellsRefs[4].firstChild.focus();
+														break;
+													case 2:
+														cellsRefs[3].firstChild.focus();
+														break;
+													case 3:
+														cellsRefs[2].firstChild.focus();
+														break;
+													case 4:
+														cellsRefs[1].firstChild.focus();
+														break;
+													case 5:
+													case 6:
+														cellsRefs[0].firstChild.focus();
+														break;
+												}
 											}
 										}
 									}}>
@@ -514,8 +620,11 @@ export default function DatePicker(props: DatepickerProps) {
 											switch (e.code) {
 												case "ArrowUp": {
 													setIsOpen(false);
-													inputRef.focus();
-													// setInputFocused(true);
+													if (props.inputDisabled) {
+														iconBtnRef.focus();
+													} else {
+														inputRef.focus();
+													}
 													break;
 												}
 												case "ArrowLeft": {
@@ -523,9 +632,33 @@ export default function DatePicker(props: DatepickerProps) {
 													break;
 												}
 												case "ArrowDown": {
-													cellsRefs[
-														firstSaturday - 1
-													].firstChild.focus();
+													console.log(
+														getCellWeekday(cellsRefs[0])
+													);
+													switch (
+														getCellWeekday(cellsRefs[0])
+													) {
+														case 0:
+															cellsRefs[6].firstChild.focus();
+														case 1:
+															cellsRefs[5].firstChild.focus();
+															break;
+														case 2:
+															cellsRefs[4].firstChild.focus();
+															break;
+														case 3:
+															cellsRefs[3].firstChild.focus();
+															break;
+														case 4:
+															cellsRefs[2].firstChild.focus();
+															break;
+														case 5:
+															cellsRefs[1].firstChild.focus();
+															break;
+														case 6:
+															cellsRefs[0].firstChild.focus();
+															break;
+													}
 												}
 											}
 										}}>

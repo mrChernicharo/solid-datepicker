@@ -39,7 +39,6 @@ label.date-input-wrapper {
 	position: relative;
 	display: flex;
 	background-color: transparent;
-	cursor: text;
 }
 
 span.input-label {
