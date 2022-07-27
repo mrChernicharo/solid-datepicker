@@ -599,8 +599,9 @@ export default function DatePicker(props: DatepickerProps) {
 	});
 
 	return (
-		<DatePickerContainer ref={props.ref}>
+		<DatePickerContainer ref={props.ref} theme={props.theme}>
 			<InputField
+				theme={props.theme}
 				width={props.inputWidth}
 				onClick={e => {
 					if (props.inputDisabled) {
@@ -611,6 +612,7 @@ export default function DatePicker(props: DatepickerProps) {
 				}}
 			>
 				<InputWrapper
+					theme={props.theme}
 					cursor={
 						props.disabled || props.inputDisabled
 							? 'default'
@@ -621,6 +623,7 @@ export default function DatePicker(props: DatepickerProps) {
 					<InputLabel
 						ref={labelRef}
 						color={props.color}
+						theme={props.theme}
 						isFocused={inputFocused()}
 						isDisabled={
 							props.disabled ||
@@ -634,6 +637,7 @@ export default function DatePicker(props: DatepickerProps) {
 					<Input
 						ref={inputRef}
 						type="text"
+						theme={props.theme}
 						placeholder={props.placeholder}
 						onFocus={e => {
 							clearTimeout(timeout);
@@ -662,6 +666,7 @@ export default function DatePicker(props: DatepickerProps) {
 
 					{/* INPUT BUTTON */}
 					<InputButton
+						theme={props.theme}
 						ref={iconBtnRef}
 						disabled={props.disabled || props.calendarDisabled}
 						onClick={e => {
@@ -686,6 +691,7 @@ export default function DatePicker(props: DatepickerProps) {
 				<InputOutline
 					ref={outlineRef}
 					class="outline"
+					theme={props.theme}
 					isFocused={inputFocused()}
 					color={props.color}
 				/>
@@ -703,10 +709,10 @@ export default function DatePicker(props: DatepickerProps) {
 
 			<Transition onEnter={enterTransition} onExit={exitTransition}>
 				<Show when={isOpen()}>
-					<CalendarPopup ref={calendarPopupRef}>
+					<CalendarPopup ref={calendarPopupRef} theme={props.theme}>
 						{/* CALENDAR HEADER */}
-						<CalendarHeader>
-							<CalendarButtonGroup>
+						<CalendarHeader theme={props.theme}>
+							<CalendarButtonGroup theme={props.theme}>
 								<Show when={props.showYearButtons}>
 									<button
 										ref={yearDecrBtn}
@@ -728,7 +734,7 @@ export default function DatePicker(props: DatepickerProps) {
 							{/* CALENDAR MONTH YEAR */}
 							<h3>{getCurrentMonthYear()}</h3>
 
-							<CalendarButtonGroup>
+							<CalendarButtonGroup theme={props.theme}>
 								<button
 									ref={monthIncrBtn}
 									onClick={monthIncrement}
@@ -749,10 +755,10 @@ export default function DatePicker(props: DatepickerProps) {
 						</CalendarHeader>
 
 						{/* DATE CELLS */}
-						<CalendarGrid>
+						<CalendarGrid theme={props.theme}>
 							<For each={getWeekdays(props.locale, 'narrow')}>
 								{weekday => (
-									<WeekdayCell class="weekday-cell">
+									<WeekdayCell theme={props.theme}>
 										{weekday}
 									</WeekdayCell>
 								)}
@@ -764,6 +770,7 @@ export default function DatePicker(props: DatepickerProps) {
 
 									const cellElement = (
 										<CalendarCell
+											theme={props.theme}
 											ref={cellRef}
 											id={idMaker()}
 											class="calendar-cell"

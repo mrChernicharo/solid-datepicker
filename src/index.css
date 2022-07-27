@@ -30,9 +30,9 @@ code {
 .App {
 	text-align: center;
 	background-color: #282c34;
-	background-color: white;
+	/* background-color: white; */
 	color: white;
-	color: #282c34;
+	/* color: #282c34; */
 	min-height: 100vh;
 	display: flex;
 	flex-direction: column;

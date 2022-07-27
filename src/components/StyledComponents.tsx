@@ -46,14 +46,16 @@ const lightColors = {
 const color = (theme: Theme, color: DatepickerColor) =>
 	theme === 'dark' ? darkColors[color] : lightColors[color];
 
-const DatePickerContainer = styled('div')`
+const DatePickerContainer = styled('div')(
+	(props: any) => `
 	font-size: 16px;
 	position: relative;
 	display: inline-block;
 
 	button {
-		color: ${lightColors.text};
+		color: ${color(props.theme, 'text')};
 		background: transparent;
+
 		border: none;
 		border-radius: 50%;
 		height: 32px;
@@ -66,14 +68,16 @@ const DatePickerContainer = styled('div')`
 
 		outline: none;
 		cursor: pointer;
+
 	}
-`;
+`
+);
 
 const InputField = styled('div')(
 	(props: any) => `
 	padding: 1.25rem 1rem 0.75rem;
 	position: relative;
-	background-color: ${lightColors.bg};
+	background-color: ${color(props.theme, 'bg')};
 	border-top-left-radius: 0.35rem;
 	border-top-right-radius: 0.35rem;
 	width: ${props.width}px;
@@ -102,20 +106,21 @@ const InputLabel = styled('div')(
 	transition: all 0.3s;
 	color: ${
 		props.isDisabled
-			? lightColors.textMedium
+			? color(props.theme, 'textMedium')
 			: props.isFocused
 			? props.color
-			: lightColors.text
+			: color(props.theme, 'text')
 	};
 	pointer-events: none;
-	transform: ${props.isFocused ? `translate(-6px, -16px) scale(0.84);` : ''}
+	transform: ${props.isFocused ? `translate(-6px, -16px) scale(0.84);` : ''};
 `
 );
 
-const Input = styled('input')`
+const Input = styled('input')(
+	(props: any) => `
 	display: flex;
 	background-color: transparent;
-	color: ${lightColors.text};
+	color: ${color(props.theme, 'text')};
 	border: none;
 	outline: none;
 	font-size: 15px;
@@ -126,26 +131,29 @@ const Input = styled('input')`
 	}
 
 	&:focus::placeholder {
-		color: ${lightColors.textDark};
+		color: ${color(props.theme, 'textDark')};
 		opacity: 1;
 	}
-`;
+`
+);
 
-const InputButton = styled('button')`
+const InputButton = styled('button')(
+	(props: any) => `
 	position: absolute;
 	right: 0px;
 	top: -8px;
 
 	&:hover:not(:disabled),
 	&:focus:not(:disabled) {
-		background: ${lightColors.bgMedium};
+		background: ${color(props.theme, 'bgMedium')};
 	}
 
 	&:disabled {
 		cursor: default;
-		color: ${lightColors.textMedium};
+		color: ${color(props.theme, 'textMedium')};
 	}
-`;
+`
+);
 
 const InputOutline = styled('div')(
 	(props: any) => `
@@ -154,8 +162,10 @@ const InputOutline = styled('div')(
 	width: 100%;
 	position: absolute;
 	left: 0;
-    color: ${lightColors.text};
-    background: ${props.isFocused ? props.color : lightColors.textSecondary};
+    color: ${color(props.theme, 'text')};
+    background: ${
+		props.isFocused ? props.color : color(props.theme, 'textSecondary')
+	};
     transition: .2s;
 
     &::before {
@@ -202,12 +212,15 @@ const HintText = styled('div')`
 	left: 18px;
 `;
 
-const WeekdayCell = styled('div')`
-	color: ${lightColors.text};
+const WeekdayCell = styled('div')(
+	(props: any) => `
+	color: ${color(props.theme, 'text')};
 	height: 24px;
-`;
+`
+);
 
-const CalendarHeader = styled('div')`
+const CalendarHeader = styled('div')(
+	(props: any) => `
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -216,12 +229,14 @@ const CalendarHeader = styled('div')`
 	h3 {
 		font-size: 16px;
 		width: 120px;
-		color: ${lightColors.text};
+		color: ${color(props.theme, 'text')};
 	}
-`;
+`
+);
 
-const CalendarPopup = styled('div')`
-	background-color: ${lightColors.bg};
+const CalendarPopup = styled('div')(
+	(props: any) => `
+	background-color: ${color(props.theme, 'bg')};
 	position: absolute;
 	z-index: 1000;
 	margin-top: -18px;
@@ -237,16 +252,19 @@ const CalendarPopup = styled('div')`
 		opacity: 1;
 		right: 0;
 	}
-`;
+`
+);
 
-const CalendarButtonGroup = styled('div')`
+const CalendarButtonGroup = styled('div')(
+	(props: any) => `
 	display: inherit;
 
 	button:focus,
 	button:hover {
-		background: ${lightColors.bgMedium};
+		background: ${color(props.theme, 'bgMedium')};
 	}
-`;
+`
+);
 const CalendarCell = styled('div')(
 	(props: any) => `
 
@@ -261,25 +279,31 @@ const CalendarCell = styled('div')(
 	visibility: ${props.isVisible ? 'visible' : 'hidden'};
 	background: ${props.isSelected ? props.color : 'transparent'};
 	button {
-		color: ${props.disabled ? lightColors.textSecondary : lightColors.text};
+		color: ${
+			props.disabled
+				? color(props.theme, 'textSecondary')
+				: color(props.theme, 'text')
+		};
 		cursor: ${props.disabled ? 'default' : 'pointer'};
 	}
 
 	button:focus,
 	button:hover {
-		background: ${props.disabled ? 'transparent' : lightColors.bgMedium};
+		background: ${props.disabled ? 'transparent' : color(props.theme, 'bgMedium')};
 	}
 `
 );
 
-const CalendarGrid = styled('div')`
+const CalendarGrid = styled('div')(
+	(props: any) => `
 	font-size: 12px;
 	display: grid;
 	grid-template-columns: repeat(7, 1fr);
-	background-color: 1px solid ${lightColors.textMedium};
+	background-color: 1px solid ${color(props.theme, 'textMedium')};
 
 	padding: 0.5rem;
-`;
+`
+);
 
 const Overlay = styled('div')`
 	position: fixed;
