@@ -33,10 +33,10 @@ import {
 	HintText,
 	WeekdayCell,
 	CalendarHeader,
+	InputOutline,
 } from "./StyledComponents";
 
 const bg = "#3c3b46";
-const outlineColor = "rgba(255, 255, 255, 0.65)";
 
 const DEFAULT_PROPS: DatepickerProps = {
 	ref: null,
@@ -597,12 +597,9 @@ export default function DatePicker(props: DatepickerProps) {
 						inputRef.focus();
 					}}>
 					<InputWrapper
-						style={{
-							cursor:
-								props.disabled || props.inputDisabled
-									? "default"
-									: "text",
-						}}>
+						cursor={
+							props.disabled || props.inputDisabled ? "default" : "text"
+						}>
 						{/* INPUT LABEL */}
 						<span
 							ref={labelRef}
@@ -678,12 +675,11 @@ export default function DatePicker(props: DatepickerProps) {
 						</InputButton>
 					</InputWrapper>
 
-					<div
+					<InputOutline
 						ref={outlineRef}
-						class="date-input-outline"
-						style={{
-							background: inputFocused() ? props.color : outlineColor,
-						}}></div>
+						isFocused={inputFocused()}
+						color={props.color}
+					/>
 				</div>
 
 				<HintContainer>

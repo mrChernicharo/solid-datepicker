@@ -9,21 +9,6 @@
 	--text-dark: #999;
 }
 
-*,
-::after *,
-::before * {
-	box-sizing: border-box;
-}
-
-h1,
-h2,
-h3,
-h4,
-p {
-	margin: 0;
-	padding: 0;
-}
-
 .date-input-field {
 	padding: 1.25rem 1rem 0.75rem;
 	position: relative;
@@ -32,14 +17,6 @@ p {
 	border-top-left-radius: 0.35rem;
 	border-top-right-radius: 0.35rem;
 }
-
-/* .date-input-field: */
-
-/* label.date-input-wrapper {
-	position: relative;
-	display: flex;
-	background-color: transparent;
-} */
 
 span.input-label {
 	font-size: 13px;
@@ -52,33 +29,6 @@ span.input-label {
 
 span.input-label.is-focused {
 	transform: translate(-6px, -16px) scale(0.84);
-}
-
-div.date-input-outline {
-	bottom: 0;
-	height: 1px;
-	width: 100%;
-	position: absolute;
-	left: 0;
-	color: var(--text-secondary);
-}
-
-div.date-input-outline::after {
-	content: "";
-	width: 50%;
-	height: 2px;
-	background-color: var(--bg);
-	position: absolute;
-	right: 0;
-}
-
-div.date-input-outline::before {
-	content: "";
-	width: 50%;
-	height: 2px;
-	background-color: var(--bg);
-	position: absolute;
-	left: 0;
 }
 
 input#date-input {
@@ -115,20 +65,6 @@ button {
 
 	outline: none;
 	cursor: pointer;
-}
-
-div.date-input-outline.is-focused {
-	height: 2px;
-}
-
-div.date-input-outline.is-focused::after,
-div.date-input-outline.is-focused::before {
-	animation: underline-enter 0.2s ease-in forwards;
-}
-
-div.date-input-outline:not(.is-focused)::after,
-div.date-input-outline:not(.is-focused)::before {
-	animation: underline-leave 0.2s ease-in forwards;
 }
 
 .date-input-field:hover > div.date-input-outline {
@@ -230,30 +166,6 @@ div.calendar-cell {
 	height: 1000vh;
 	opacity: 0.01;
 	z-index: 900;
-}
-
-@keyframes underline-enter {
-	0% {
-		width: 50%;
-		opacity: 0.3;
-	}
-
-	100% {
-		width: 0%;
-		opacity: 0.7;
-	}
-}
-
-@keyframes underline-leave {
-	100% {
-		width: 50%;
-		opacity: 0.3;
-	}
-
-	0% {
-		width: 0%;
-		opacity: 0.7;
-	}
 }
 
 @keyframes calendar-show {

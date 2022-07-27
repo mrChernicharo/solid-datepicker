@@ -1,4 +1,5 @@
-import { styled } from "solid-styled-components";
+import { JSXElement } from "solid-js";
+import { keyframes, styled } from "solid-styled-components";
 import { DatepickerColor, Theme } from "../utils/helpers";
 
 // const colors = (theme: Theme) => {
@@ -11,6 +12,25 @@ import { DatepickerColor, Theme } from "../utils/helpers";
 // 	textSecondary: rgba(255, 255, 255, 0.4);
 // 	textDark: #999;
 // }
+
+const underlineEnter = keyframes`
+0% {
+    width: 50%;
+}
+
+100% {
+    width: 0%;
+}
+`;
+
+const underlineLeave = keyframes`
+0% {
+    width: 0%;
+}
+
+100% {
+    width: 50%;
+}`;
 
 const darkColors = {
 	bg: "#3c3b46",
@@ -43,11 +63,14 @@ const DatePickerContainer = styled("div")`
 	display: inline-block;
 `;
 
-const InputWrapper = styled("label")`
-	position: relative;
-	display: flex;
-	background-color: transparent;
-`;
+const InputWrapper = styled("label")(
+	(props: any) => `
+    position: relative;
+    display: flex;
+    background-color: transparent;
+    cursor: ${props.cursor}
+`
+);
 
 const InputButton = styled("button")`
 	position: absolute;
@@ -64,6 +87,49 @@ const InputButton = styled("button")`
 		color: ${darkColors.textMedium};
 	}
 `;
+
+const InputOutline = styled("div")(
+	(props: any) => `
+	bottom: 0;
+	height: ${props.isFocused ? "2px" : "1px"};
+	width: 100%;
+	position: absolute;
+	left: 0;
+    color: ${darkColors.textSecondary};
+    background: ${props.isFocused ? props.color : darkColors.bgMedium};
+    transition: .2s;
+
+    &::before {
+        content: "";
+        width: 50%;
+        height: 2px;
+        background-color: #333;
+        position: absolute;
+        left: 0;
+
+        animation: ${
+			props.isFocused
+				? `${underlineEnter} 0.2s ease-in forwards;`
+				: `${underlineLeave} 0.2s ease-in forwards;`
+		}
+    }
+
+    &::after {
+        content: "";
+        width: 50%;
+        height: 2px;
+        background-color: #333;
+        position: absolute;
+        right: 0;
+
+        animation: ${
+			props.isFocused
+				? `${underlineEnter} 0.2s ease-in forwards;`
+				: `${underlineLeave} 0.2s ease-in forwards;`
+		}
+    }
+`
+);
 
 const HintContainer = styled("div")`
 	height: 16px;
@@ -95,4 +161,5 @@ export {
 	HintText,
 	WeekdayCell,
 	CalendarHeader,
+	InputOutline,
 };

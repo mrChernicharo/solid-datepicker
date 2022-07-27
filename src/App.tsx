@@ -26,7 +26,7 @@ export default function App() {
 	const [selectedDate3, setSelectedDate3] = createSignal<Date | null>(null);
 	const [selectedDate4, setSelectedDate4] = createSignal<Date | null>(null);
 
-	let datepickerRef;
+	let datepickerRef, datepickerRef2, datepickerRef3, datepickerRef4;
 	// datepickerRef.open()
 	// datepickerRef.close()
 
@@ -47,7 +47,7 @@ export default function App() {
 					locale={"pt-BR"}
 					icon={<FaCalendarAlt size={16} />}
 					initialDate={new Date()}
-					disabled
+					// disabled
 					// min={minDate}
 					// max={maxDate}
 					placeholder={"29/04/1987"}
@@ -73,7 +73,7 @@ export default function App() {
 				<DatePicker
 					inputWidth={400}
 					closeAfterClick={true}
-					ref={datepickerRef}
+					ref={datepickerRef2}
 					value={selectedDate2()}
 					type={"datePicker"}
 					color={"orange"}
@@ -105,7 +105,7 @@ export default function App() {
 				<DatePicker
 					inputWidth={300}
 					closeAfterClick={false}
-					ref={datepickerRef}
+					ref={datepickerRef3}
 					value={selectedDate3()}
 					type={"datePicker"}
 					color={"red"}
@@ -133,8 +133,9 @@ export default function App() {
 				/>
 
 				<DatePicker
+					ref={datepickerRef4}
 					value={selectedDate4()}
-					onDateSelected={d => setSelectedDate3(d)}
+					onDateSelected={d => setSelectedDate4(d)}
 					theme="dark"
 				/>
 			</div>
