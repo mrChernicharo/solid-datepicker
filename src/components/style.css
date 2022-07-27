@@ -1,9 +1,14 @@
 /* #3c3b46; */
 /* rgba(255, 255, 255, 0.2); */
-:root{
+:root {
 	--bg: #3c3b46;
-}
+	--bg-medium: rgba(255, 255, 255, 0.1);
 
+	--text: #fff;
+	--text-disabled: rgba(255, 255, 255, 0.2);
+	--text-secondary: rgba(255, 255, 255, 0.4);
+	--text-dark: #999;
+}
 
 *,
 ::after *,
@@ -29,10 +34,11 @@ p {
 .date-input-field {
 	padding: 1.25rem 1rem 0.75rem;
 	position: relative;
-	background-color: rgba(255, 255, 255, 0.1);
+	background-color: var(--bg-medium);
 	border-top-left-radius: 0.35rem;
 	border-top-right-radius: 0.35rem;
 }
+
 /* .date-input-field: */
 
 label.date-input-wrapper {
@@ -46,7 +52,7 @@ span.input-label {
 	position: absolute;
 	left: 2px;
 	transition: all 0.3s;
-	color: rgba(255, 255, 255, 0.4);
+	color: var(--text-secondary);
 	pointer-events: none;
 }
 
@@ -60,14 +66,14 @@ div.date-input-outline {
 	width: 100%;
 	position: absolute;
 	left: 0;
-	background-color: rgba(255, 255, 255, 0.4);
+	color: var(--text-secondary);
 }
 
 div.date-input-outline::after {
 	content: "";
 	width: 50%;
 	height: 2px;
-	background-color: #111;
+	background-color: var(--bg);
 	position: absolute;
 	right: 0;
 }
@@ -76,12 +82,10 @@ div.date-input-outline::before {
 	content: "";
 	width: 50%;
 	height: 2px;
-	background-color: #111;
+	background-color: var(--bg);
 	position: absolute;
 	left: 0;
 }
-
-
 
 input#date-input {
 	display: flex;
@@ -96,14 +100,15 @@ input#date-input::placeholder {
 	opacity: 0;
 	transition: 0.3s;
 }
+
 input#date-input:focus::placeholder {
-	color: #999;
+	color: var(--text-dark);
 	opacity: 1;
 }
 
 button {
 	color: #fff;
-	background: rgba(255, 255, 255, 0);
+	background: transparent;
 	border: none;
 	border-radius: 50%;
 	height: 32px;
@@ -124,14 +129,15 @@ button.input-icon {
 	top: -8px;
 }
 
-
 div.date-input-outline.is-focused {
 	height: 2px;
 }
+
 div.date-input-outline.is-focused::after,
 div.date-input-outline.is-focused::before {
 	animation: underline-enter 0.2s ease-in forwards;
 }
+
 div.date-input-outline:not(.is-focused)::after,
 div.date-input-outline:not(.is-focused)::before {
 	animation: underline-leave 0.2s ease-in forwards;
@@ -145,20 +151,19 @@ div.date-input-outline:not(.is-focused)::before {
 div.calendar-cell button:focus,
 div.calendar-cell button:hover,
 div.calendar-btn-group button:focus-visible {
-	background: rgba(255, 255, 255, 0.1);
+	background: var(--bg-medium);
 }
 
 button.input-icon:hover:not(:disabled),
 button.input-icon:focus:not(:disabled),
 div.calendar-btn-group button:hover {
-	background: rgba(255, 255, 255, 0.1);
+	background: var(--bg-medium);
 }
-
 
 input#date-input:disabled,
 button.input-icon:disabled {
 	cursor: default;
-	color:rgba(255, 255, 255, 0.2)
+	color: var(--text-medium);
 }
 
 div.hint-container {
@@ -173,8 +178,8 @@ small.hint {
 }
 
 div.calendar-popup {
-	background-color: #3c3b46;
-	border: 1px solid rgba(255, 255, 255, 0.2);
+	background-color: var(--bg);
+	border: 1px solid var(--text-medium);
 	position: absolute;
 
 	z-index: 1000;
@@ -183,10 +188,12 @@ div.calendar-popup {
 
 	transition: 0.3s;
 }
+
 div.calendar-popup.left {
 	opacity: 1;
 	left: 0;
 }
+
 div.calendar-popup.right {
 	opacity: 1;
 	right: 0;
@@ -198,6 +205,7 @@ header.calendar-header {
 	align-items: center;
 	padding: 0.5rem;
 }
+
 header.calendar-header h3 {
 	font-size: 16px;
 	width: 120px;
@@ -211,7 +219,7 @@ div.calendar-grid {
 	font-size: 12px;
 	display: grid;
 	grid-template-columns: repeat(7, 1fr);
-	background-color: 1px solid rgba(255, 255, 255, 0.2);
+	background-color: 1px solid var(--text-medium);
 
 	padding: 0.5rem;
 }
@@ -239,12 +247,17 @@ div.calendar-cell {
 	color: rgba(255, 255, 255, 0.6);
 	cursor: pointer;
 }
+
+.calendar-cell.current-month-cell.disabled {
+	pointer-events: none;
+	cursor: default;
+}
 .calendar-cell.current-month-cell > button:disabled {
-	color:rgba(255, 255, 255, 0.2);
+	color: var(--text-dark);
 }
 
 .calendar-cell.selected-date {
-	/* background-color: var(--primary-color); */
+	transition: 0.2s;
 }
 
 .date-picker-overlay {
@@ -262,6 +275,7 @@ div.calendar-cell {
 		width: 50%;
 		opacity: 0.3;
 	}
+
 	100% {
 		width: 0%;
 		opacity: 0.7;
@@ -273,6 +287,7 @@ div.calendar-cell {
 		width: 50%;
 		opacity: 0.3;
 	}
+
 	0% {
 		width: 0%;
 		opacity: 0.7;
@@ -284,6 +299,7 @@ div.calendar-cell {
 		transform: scale(0.6);
 		/* height: 0; */
 	}
+
 	100% {
 		transform: scale(1);
 		/* height: 100%; */

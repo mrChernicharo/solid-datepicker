@@ -47,8 +47,8 @@ export default function App() {
 					locale={"pt-BR"}
 					icon={<FaCalendarAlt size={16} />}
 					initialDate={new Date()}
-					min={minDate}
-					max={maxDate}
+					// min={minDate}
+					// max={maxDate}
 					placeholder={"29/04/1987"}
 					hint={"brazilian"}
 					// hint={"dd/mm/aaaa"}
@@ -62,7 +62,7 @@ export default function App() {
 					onChange={e => {}} // input change
 					closeAfterClick={false}
 					label="DatePicker label"
-					disabled
+					// disabled
 					showYearButtons={false}
 					touchUIMode={false}
 					calendarOnly={false} // no input, calendar only

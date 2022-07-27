@@ -699,6 +699,7 @@ export default function DatePicker(props: DatepickerProps) {
 											classList={{ 
 												"current-month-cell": isCurrentMonth(d.date, shownDate()), 
 												"selected-date": !!props.value && isSameDate(d.date, props.value), 
+												"disabled": disabled,
 												"calendar-cell": true }}
 											style={{
 												background:
