@@ -1,6 +1,6 @@
 import { createEffect, createSignal, For, mergeProps, onMount, Show } from "solid-js";
 import { Transition } from "solid-transition-group";
-import "./style.css";
+import "./datepicker.css";
 import {
 	getDaysGrid,
 	getWeekdays,
@@ -24,6 +24,16 @@ import {
 	YEAR_DECREMENT_ICON,
 	YEAR_INCREMENT_ICON,
 } from "./icons";
+
+import {
+	DatePickerContainer,
+	HintContainer,
+	InputButton,
+	InputWrapper,
+	HintText,
+	WeekdayCell,
+	CalendarHeader,
+} from "./StyledComponents";
 
 const bg = "#3c3b46";
 const outlineColor = "rgba(255, 255, 255, 0.65)";
@@ -59,39 +69,6 @@ const DEFAULT_PROPS: DatepickerProps = {
 	calendarOnly: false, // no input, calendar onl;
 };
 
-// const colors = (theme: Theme) => {
-// 	bg: theme === 'dark' ? '#3c3b46' : '#fff';
-// 	bgDark: theme === 'dark' ? '#282c34' : '#ccc';
-// 	bgMedium: theme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.9)';
-
-// 	text: #fff;
-// 	textDisabled: rgba(255, 255, 255, 0.2);
-// 	textSecondary: rgba(255, 255, 255, 0.4);
-// 	textDark: #999;
-// }
-
-const darkColors = {
-	bg: "#3c3b46",
-	bgDark: "#282c34",
-	bgMedium: "rgba(255, 255, 255, 0.1)",
-
-	text: "#fff",
-	textDisabled: "rgba(255, 255, 255, 0.2)",
-	textSecondary: "rgba(255, 255, 255, 0.4)",
-	textDark: "#999",
-};
-
-const lightColors = {
-	bg: "#fff",
-	bgDark: "#ddd",
-	bgMedium: "rgba(255, 255, 255, 0.9)",
-
-	text: "#000",
-	textDisabled: "rgba(255, 255, 255, 0.8)",
-	textSecondary: "rgba(255, 255, 255, 0.6)",
-	textDark: "#333",
-};
-
 export default function DatePicker(props: DatepickerProps) {
 	props = mergeProps(DEFAULT_PROPS, props);
 
@@ -102,8 +79,6 @@ export default function DatePicker(props: DatepickerProps) {
 	let cellsRefs: any = [];
 	let firstSaturday, lastSunday;
 
-	const color = (theme: Theme, color: DatepickerColor) =>
-		theme === "dark" ? darkColors[color] : lightColors[color];
 	// const id = `calendar-popup-${idMaker()}`;
 
 	const [isOpen, setIsOpen] = createSignal(false);
@@ -609,209 +584,220 @@ export default function DatePicker(props: DatepickerProps) {
 	});
 
 	return (
-		<div class="date-picker" ref={props.ref} onClick={e => {}}>
-			<div
-				class="date-input-field"
-				style={{ width: props.inputWidth + "px" }}
-				onClick={e => {
-					if (props.inputDisabled) {
-						setIsOpen(true);
-						cellsRefs[0].firstChild.focus();
-					}
-					inputRef.focus();
-				}}>
-				<label
-					class="date-input-wrapper"
-					style={{
-						cursor:
-							props.disabled || props.inputDisabled ? "default" : "text",
-					}}>
-					{/* INPUT LABEL */}
-					<span
-						ref={labelRef!}
-						class="input-label"
-						style={{
-							color:
-								props.disabled ||
-								(props.inputDisabled && inputRef.value.length === 0)
-									? "var(--text-disabled)"
-									: inputFocused()
-									? props.color
-									: "var(--text)",
-						}}>
-						{props.label}
-					</span>
-
-					{/* TEXT INPUT */}
-					<input
-						ref={inputRef}
-						id="date-input"
-						type="text"
-						placeholder={props.placeholder}
-						style={{
-							color:
-								props.inputDisabled && inputRef.value.length > 0
-									? "white"
-									: "",
-						}}
-						onFocus={e => {
-							clearTimeout(timeout);
-							labelRef.classList.add("is-focused");
-							outlineRef.classList.add("is-focused");
-							setInputFocused(true);
-						}}
-						onBlur={e => {
-							// console.log(props.value, inputRef.value.length);
-							timeout = setTimeout(() => {
-								if (props.value === null && inputRef.value.length === 0) {
-									labelRef.classList.remove("is-focused");
-									outlineRef.classList.remove("is-focused");
-									setInputFocused(false);
-								}
-							}, 300);
-						}}
-						onKeyDown={handleInputKeyDown}
-						onInput={handleInput}
-						onChange={props.onChange}
-						disabled={props.disabled || props.inputDisabled}
-					/>
-
-					{/* INPUT BUTTON */}
-					<button
-						ref={iconBtnRef}
-						disabled={props.disabled || props.calendarDisabled}
-						class="input-icon"
-						onClick={e => {
-							setIsOpen(true);
-						}}
-						onKeyDown={e => {
-							if (e.code === "Enter") {
-								e.preventDefault(); // prevent input focus
-								setIsOpen(!isOpen());
-							}
-							if (e.code === "ArrowDown") {
-								inputRef.blur();
-								setIsOpen(true);
-								cellsRefs[0].firstChild.focus();
-							}
-						}}>
-						{props.icon}
-					</button>
-				</label>
-
+		<DatePickerContainer>
+			<div class="date-picker" ref={props.ref} onClick={e => {}}>
 				<div
-					ref={outlineRef}
-					class="date-input-outline"
-					style={{
-						background: inputFocused() ? props.color : outlineColor,
-					}}></div>
-			</div>
+					class="date-input-field"
+					style={{ width: props.inputWidth + "px" }}
+					onClick={e => {
+						if (props.inputDisabled) {
+							setIsOpen(true);
+							cellsRefs[0].firstChild.focus();
+						}
+						inputRef.focus();
+					}}>
+					<InputWrapper
+						style={{
+							cursor:
+								props.disabled || props.inputDisabled
+									? "default"
+									: "text",
+						}}>
+						{/* INPUT LABEL */}
+						<span
+							ref={labelRef}
+							class="input-label"
+							style={{
+								color:
+									props.disabled ||
+									(props.inputDisabled && inputRef.value.length === 0)
+										? "var(--text-disabled)"
+										: inputFocused()
+										? props.color
+										: "var(--text)",
+							}}>
+							{props.label}
+						</span>
 
-			<div class="hint-container">
-				<Show when={props.hint}>
-					<small class="hint">{props.hint}</small>
-				</Show>
+						{/* TEXT INPUT */}
+						<input
+							ref={inputRef}
+							id="date-input"
+							type="text"
+							placeholder={props.placeholder}
+							style={{
+								color:
+									props.inputDisabled && inputRef.value.length > 0
+										? "white"
+										: "",
+							}}
+							onFocus={e => {
+								clearTimeout(timeout);
+								labelRef.classList.add("is-focused");
+								outlineRef.classList.add("is-focused");
+								setInputFocused(true);
+							}}
+							onBlur={e => {
+								// console.log(props.value, inputRef.value.length);
+								timeout = setTimeout(() => {
+									if (
+										props.value === null &&
+										inputRef.value.length === 0
+									) {
+										labelRef.classList.remove("is-focused");
+										outlineRef.classList.remove("is-focused");
+										setInputFocused(false);
+									}
+								}, 300);
+							}}
+							onKeyDown={handleInputKeyDown}
+							onInput={handleInput}
+							onChange={props.onChange}
+							disabled={props.disabled || props.inputDisabled}
+						/>
 
-				<Show when={hasError()}>
-					<small>Error!!!</small>
-				</Show>
-			</div>
+						{/* INPUT BUTTON */}
+						<InputButton
+							ref={iconBtnRef}
+							disabled={props.disabled || props.calendarDisabled}
+							onClick={e => {
+								setIsOpen(true);
+							}}
+							onKeyDown={e => {
+								if (e.code === "Enter") {
+									e.preventDefault(); // prevent input focus
+									setIsOpen(!isOpen());
+								}
+								if (e.code === "ArrowDown") {
+									inputRef.blur();
+									setIsOpen(true);
+									cellsRefs[0].firstChild.focus();
+								}
+							}}>
+							{props.icon}
+						</InputButton>
+					</InputWrapper>
 
-			<Transition onEnter={enterTransition} onExit={exitTransition}>
-				<Show when={isOpen()}>
-					<div ref={calendarPopupRef} class="calendar-popup">
-						{/* CALENDAR HEADER */}
-						<header class="calendar-header">
-							<div class="calendar-btn-group">
-								<Show when={props.showYearButtons}>
+					<div
+						ref={outlineRef}
+						class="date-input-outline"
+						style={{
+							background: inputFocused() ? props.color : outlineColor,
+						}}></div>
+				</div>
+
+				<HintContainer>
+					<Show when={props.hint}>
+						<HintText class="hint">{props.hint}</HintText>
+					</Show>
+
+					<Show when={hasError()}>
+						<HintText>Error!!!</HintText>
+					</Show>
+				</HintContainer>
+
+				<Transition onEnter={enterTransition} onExit={exitTransition}>
+					<Show when={isOpen()}>
+						<div ref={calendarPopupRef} class="calendar-popup">
+							{/* CALENDAR HEADER */}
+							<CalendarHeader>
+								<div class="calendar-btn-group">
+									<Show when={props.showYearButtons}>
+										<button
+											ref={yearDecrBtn}
+											onClick={yearDecrement}
+											onKeyDown={handleYearDecrKeyDown}>
+											<YEAR_DECREMENT_ICON />
+										</button>
+									</Show>
 									<button
-										ref={yearDecrBtn}
-										onClick={yearDecrement}
-										onKeyDown={handleYearDecrKeyDown}>
-										<YEAR_DECREMENT_ICON />
+										ref={monthDecrBtn}
+										onClick={monthDecrement}
+										onKeyDown={handleMonthDecrKeyDown}>
+										<MONTH_DECREMENT_ICON />
 									</button>
-								</Show>
-								<button
-									ref={monthDecrBtn}
-									onClick={monthDecrement}
-									onKeyDown={handleMonthDecrKeyDown}>
-									<MONTH_DECREMENT_ICON />
-								</button>
-							</div>
-							<h3>{getCurrentMonthYear()}</h3>
+								</div>
+								<h3>{getCurrentMonthYear()}</h3>
 
-							<div class="calendar-btn-group">
-								<button
-									ref={monthIncrBtn}
-									onClick={monthIncrement}
-									onKeyDown={handleMonthIncrKeyDown}>
-									<MONTH_INCREMENT_ICON />
-								</button>
-								<Show when={props.showYearButtons}>
+								<div class="calendar-btn-group">
 									<button
-										ref={yearIncrBtn}
-										onClick={yearIncrement}
-										onKeyDown={handleYearIncrKeyDown}>
-										<YEAR_INCREMENT_ICON />
+										ref={monthIncrBtn}
+										onClick={monthIncrement}
+										onKeyDown={handleMonthIncrKeyDown}>
+										<MONTH_INCREMENT_ICON />
 									</button>
-								</Show>
-							</div>
-						</header>
+									<Show when={props.showYearButtons}>
+										<button
+											ref={yearIncrBtn}
+											onClick={yearIncrement}
+											onKeyDown={handleYearIncrKeyDown}>
+											<YEAR_INCREMENT_ICON />
+										</button>
+									</Show>
+								</div>
+							</CalendarHeader>
 
-						{/* DATE CELLS */}
-						<div class="calendar-grid">
-							<For each={getWeekdays(props.locale, "narrow")}>
-								{weekday => <div class="weekday-cell">{weekday}</div>}
-							</For>
-							<For each={daysGrid(shownDate())}>
-								{d => {
-									let cellRef;
-									let disabled = checkIsDisabled(d);
+							{/* DATE CELLS */}
+							<div class="calendar-grid">
+								<For each={getWeekdays(props.locale, "narrow")}>
+									{weekday => (
+										<WeekdayCell class="weekday-cell">
+											{weekday}
+										</WeekdayCell>
+									)}
+								</For>
+								<For each={daysGrid(shownDate())}>
+									{d => {
+										let cellRef;
+										let disabled = checkIsDisabled(d);
 
-									const cellElement = (
-										<div
-											ref={cellRef}
-											id={idMaker()}
-											// prettier-ignore
-											classList={{ 
+										const cellElement = (
+											<div
+												ref={cellRef}
+												id={idMaker()}
+												// prettier-ignore
+												classList={{ 
 												"current-month-cell": isCurrentMonth(d.date, shownDate()), 
 												"selected-date": !!props.value && isSameDate(d.date, props.value), 
 												"disabled": disabled,
 												"calendar-cell": true }}
-											style={{
-												background:
-													props.value &&
-													isSameDate(d.date, props.value)
-														? props.color
-														: bg,
-											}}
-											onClick={e => handleCellClick(d)}
-											onKeyDown={e => handleCellKeyDown(e, d)}>
-											<button disabled={disabled}>{d.day}</button>
-										</div>
-									);
+												style={{
+													background:
+														props.value &&
+														isSameDate(d.date, props.value)
+															? props.color
+															: bg,
+												}}
+												onClick={e => handleCellClick(d)}
+												onKeyDown={e => handleCellKeyDown(e, d)}>
+												<button disabled={disabled}>
+													{d.day}
+												</button>
+											</div>
+										);
 
-									d.date.getMonth() === shownDate().getMonth() &&
-										cellsRefs.push(cellRef);
+										d.date.getMonth() === shownDate().getMonth() &&
+											cellsRefs.push(cellRef);
 
-									// cellRef.classList.contains("current-month-cell") &&
-									// 	cellsRefs.push(cellRef);
+										// cellRef.classList.contains("current-month-cell") &&
+										// 	cellsRefs.push(cellRef);
 
-									return cellElement;
-								}}
-							</For>
+										return cellElement;
+									}}
+								</For>
+							</div>
 						</div>
-					</div>
-				</Show>
-			</Transition>
+					</Show>
+				</Transition>
 
-			<Show when={isOpen()}>
-				<div
-					class="date-picker-overlay"
-					onClick={e => {
-						setIsOpen(false);
-					}}></div>
-			</Show>
-		</div>
+				<Show when={isOpen()}>
+					<div
+						class="date-picker-overlay"
+						onClick={e => {
+							setIsOpen(false);
+						}}></div>
+				</Show>
+			</div>
+		</DatePickerContainer>
 	);
 }

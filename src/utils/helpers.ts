@@ -23,7 +23,7 @@ export type DatepickerColor =
 	| "bgDark"
 	| "bgMedium"
 	| "text"
-	| "textDisabled"
+	| "textMedium"
 	| "textSecondary"
 	| "textDark";
 

@@ -47,6 +47,7 @@ export default function App() {
 					locale={"pt-BR"}
 					icon={<FaCalendarAlt size={16} />}
 					initialDate={new Date()}
+					disabled
 					// min={minDate}
 					// max={maxDate}
 					placeholder={"29/04/1987"}

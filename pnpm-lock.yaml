@@ -3,6 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   solid-icons: ^0.5.0
   solid-js: ^1.4.7
+  solid-styled-components: ^0.28.4
   solid-transition-group: ^0.0.10
   typescript: ^4.7.4
   vite: ^3.0.0
@@ -11,6 +12,7 @@ specifiers:
 dependencies:
   solid-icons: 0.5.0_solid-js@1.4.7
   solid-js: 1.4.7
+  solid-styled-components: 0.28.4_solid-js@1.4.7
   solid-transition-group: 0.0.10_solid-js@1.4.7
 
 devDependencies:
@@ -433,6 +435,10 @@ packages:
       safe-buffer: 5.1.2
     dev: true
 
+  /csstype/3.1.0:
+    resolution: {integrity: sha512-uX1KG+x9h5hIJsaKR9xHUeUraxf8IODOwq9JLNPq6BwB04a/xgpq3rcx47l5BZu5zBPlgD342tdke3Hom/nJRA==}
+    dev: false
+
   /debug/4.3.4:
     resolution: {integrity: sha512-PRWFHuSU3eDtQJPvnNY7Jcket1j0t5OuOsFzPPzsekD52Zl8qUfFIPEiswXqIvHWGVHOgX+7G/vCNNhehwxfkQ==}
     engines: {node: '>=6.0'}
@@ -689,6 +695,14 @@ packages:
     engines: {node: '>=4'}
     dev: true
 
+  /goober/2.1.10_csstype@3.1.0:
+    resolution: {integrity: sha512-7PpuQMH10jaTWm33sQgBQvz45pHR8N4l3Cu3WMGEWmHShAcTuuP7I+5/DwKo39fwti5A80WAjvqgz6SSlgWmGA==}
+    peerDependencies:
+      csstype: ^3.0.10
+    dependencies:
+      csstype: 3.1.0
+    dev: false
+
   /has-flag/3.0.0:
     resolution: {integrity: sha512-sKJf1+ceQBr4SMkvQnBDNDtf4TXpVhVGateu0t918bl30FnbE2m4vNLX+VWe/dpjlb+HugGYzW7uQXH98HPEYw==}
     engines: {node: '>=4'}
@@ -818,6 +832,16 @@ packages:
       '@babel/types': 7.18.8
       solid-js: 1.4.7
     dev: true
+
+  /solid-styled-components/0.28.4_solid-js@1.4.7:
+    resolution: {integrity: sha512-SGbXv5tLIs1qErr3x7M+HWE4lu+37C4myV8gbce7WnZumjBmM5sifKv/NulVeSf3nMRa3uwkAM14q7QmLGC2gQ==}
+    peerDependencies:
+      solid-js: ^1.4.4
+    dependencies:
+      csstype: 3.1.0
+      goober: 2.1.10_csstype@3.1.0
+      solid-js: 1.4.7
+    dev: false
 
   /solid-transition-group/0.0.10_solid-js@1.4.7:
     resolution: {integrity: sha512-b3O9z6BUP60CG1WnTdqFuvHms0reDNYwQF+eAEEaSaoDEmiOu9+Lu7zQgWGySJjaAdSAClhmFCmx/eAjQgfIoA==}

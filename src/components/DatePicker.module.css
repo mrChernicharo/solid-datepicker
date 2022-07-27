@@ -24,13 +24,13 @@ p {
 	padding: 0;
 }
 
-.date-picker {
+.datePicker {
 	font-size: 16px;
 	position: relative;
 	display: inline-block;
 }
 
-.date-input-field {
+.dateInputField {
 	padding: 1.25rem 1rem 0.75rem;
 	position: relative;
 	/* background-color: var(--bg-medium); */
@@ -39,15 +39,15 @@ p {
 	border-top-right-radius: 0.35rem;
 }
 
-/* .date-input-field: */
+/* .dateInput-field: */
 
-label.date-input-wrapper {
+.dateInputWrapper {
 	position: relative;
 	display: flex;
 	background-color: transparent;
 }
 
-span.input-label {
+.inputLabel {
 	font-size: 13px;
 	position: absolute;
 	left: 2px;
@@ -56,11 +56,11 @@ span.input-label {
 	pointer-events: none;
 }
 
-span.input-label.is-focused {
+.inputLabel.isFocused {
 	transform: translate(-6px, -16px) scale(0.84);
 }
 
-div.date-input-outline {
+.dateInputOutline {
 	bottom: 0;
 	height: 1px;
 	width: 100%;
@@ -69,7 +69,7 @@ div.date-input-outline {
 	color: var(--text-secondary);
 }
 
-div.date-input-outline::after {
+.dateInputOutline::after {
 	content: "";
 	width: 50%;
 	height: 2px;
@@ -78,7 +78,7 @@ div.date-input-outline::after {
 	right: 0;
 }
 
-div.date-input-outline::before {
+.dateInputOutline::before {
 	content: "";
 	width: 50%;
 	height: 2px;
@@ -87,7 +87,7 @@ div.date-input-outline::before {
 	left: 0;
 }
 
-input#date-input {
+#dateInput {
 	display: flex;
 	background-color: transparent;
 	color: #fff;
@@ -96,12 +96,12 @@ input#date-input {
 	font-size: 15px;
 }
 
-input#date-input::placeholder {
+#dateInput::placeholder {
 	opacity: 0;
 	transition: 0.3s;
 }
 
-input#date-input:focus::placeholder {
+#dateInput:focus::placeholder {
 	color: var(--text-dark);
 	opacity: 1;
 }
@@ -123,50 +123,50 @@ button {
 	cursor: pointer;
 }
 
-button.input-icon {
+button.inputIcon {
 	position: absolute;
 	right: 0px;
 	top: -8px;
 }
 
-div.date-input-outline.is-focused {
+div.dateInputOutline.isFocused {
 	height: 2px;
 }
 
-div.date-input-outline.is-focused::after,
-div.date-input-outline.is-focused::before {
+div.dateInputOutline.isFocused::after,
+div.dateInputOutline.isFocused::before {
 	animation: underline-enter 0.2s ease-in forwards;
 }
 
-div.date-input-outline:not(.is-focused)::after,
-div.date-input-outline:not(.is-focused)::before {
+div.dateInputOutline:not(.isFocused)::after,
+div.dateInputOutline:not(.isFocused)::before {
 	animation: underline-leave 0.2s ease-in forwards;
 }
 
-.date-input-field:hover > div.date-input-outline {
+.dateInputField:hover > div.dateInputOutline {
 	height: 2px;
 	transition: 0.2s;
 }
 
-div.calendar-cell button:focus,
-div.calendar-cell button:hover,
-div.calendar-btn-group button:focus-visible {
+div.calendarCell button:focus,
+div.calendarCell button:hover,
+div.calendarBtnGroup button:focus-visible {
 	background: var(--bg-medium);
 }
 
-button.input-icon:hover:not(:disabled),
-button.input-icon:focus:not(:disabled),
-div.calendar-btn-group button:hover {
+button.inputIcon:hover:not(:disabled),
+button.inputIcon:focus:not(:disabled),
+div.calendarBtnGroup button:hover {
 	background: var(--bg-medium);
 }
 
-input#date-input:disabled,
-button.input-icon:disabled {
+input#dateInput:disabled,
+button.inputIcon:disabled {
 	cursor: default;
 	color: var(--text-medium);
 }
 
-div.hint-container {
+div.hintContainer {
 	height: 16px;
 }
 
@@ -177,7 +177,7 @@ small.hint {
 	left: 18px;
 }
 
-div.calendar-popup {
+div.calendarPopup {
 	background-color: var(--bg);
 	border: 1px solid var(--text-medium);
 	position: absolute;
@@ -189,33 +189,33 @@ div.calendar-popup {
 	transition: 0.3s;
 }
 
-div.calendar-popup.left {
+div.calendarPopup.left {
 	opacity: 1;
 	left: 0;
 }
 
-div.calendar-popup.right {
+div.calendarPopup.right {
 	opacity: 1;
 	right: 0;
 }
 
-header.calendar-header {
+header.calendarHeader {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
 	padding: 0.5rem;
 }
 
-header.calendar-header h3 {
+header.calendarHeader h3 {
 	font-size: 16px;
 	width: 120px;
 }
 
-div.calendar-btn-group {
+div.calendarBtnGroup {
 	display: inherit;
 }
 
-div.calendar-grid {
+div.calendarGrid {
 	font-size: 12px;
 	display: grid;
 	grid-template-columns: repeat(7, 1fr);
@@ -224,16 +224,16 @@ div.calendar-grid {
 	padding: 0.5rem;
 }
 
-.weekday-cell {
+.weekdayCell {
 	/* border: 1px solid; */
 	height: 24px;
 }
 
-div.calendar-cell {
+div.calendarCell {
 	visibility: hidden;
 }
 
-.calendar-cell.current-month-cell {
+.calendarCell.currentMonthCell {
 	visibility: visible;
 	color: #fff;
 	border: none;
@@ -248,19 +248,19 @@ div.calendar-cell {
 	cursor: pointer;
 }
 
-.calendar-cell.current-month-cell.disabled {
+.calendarCell.currentMonthCell.disabled {
 	pointer-events: none;
 	cursor: default;
 }
-.calendar-cell.current-month-cell > button:disabled {
+.calendarCell.currentMonthCell > button:disabled {
 	color: var(--text-dark);
 }
 
-.calendar-cell.selected-date {
+.calendarCell.selected-date {
 	transition: 0.2s;
 }
 
-.date-picker-overlay {
+.datePickerOverlay {
 	position: fixed;
 	top: 0;
 	left: 0;

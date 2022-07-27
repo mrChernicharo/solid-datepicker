@@ -17,6 +17,7 @@
   "dependencies": {
     "solid-icons": "^0.5.0",
     "solid-js": "^1.4.7",
+    "solid-styled-components": "^0.28.4",
     "solid-transition-group": "^0.0.10"
   }
 }
