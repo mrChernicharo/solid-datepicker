@@ -173,7 +173,6 @@ export default function DatePicker(props: DatepickerProps) {
 
 		switch (e.code) {
 			case "Escape": {
-				console.log("esc!!!");
 				inputRef.focus();
 				setIsOpen(false);
 				break;
@@ -307,7 +306,12 @@ export default function DatePicker(props: DatepickerProps) {
 						ref={labelRef!}
 						class="input-label"
 						style={{
-							color: inputFocused() ? props.color : "white",
+							color:
+								props.disabled || props.inputDisabled
+									? "rgba(255, 255, 255, 0.2)"
+									: inputFocused()
+									? props.color
+									: "white",
 						}}>
 						{props.label}
 					</span>
@@ -337,11 +341,14 @@ export default function DatePicker(props: DatepickerProps) {
 								setIsOpen(false);
 							}
 							if (e.code === "Enter") {
+								if (props.disabled || props.calendarDisabled) return;
 								setIsOpen(!isOpen());
 							}
 
 							if (e.code === "ArrowDown") {
+								if (props.disabled || props.calendarDisabled) return;
 								console.log("open that jazz");
+
 								if (!isOpen()) {
 									setIsOpen(true);
 								}
@@ -351,8 +358,14 @@ export default function DatePicker(props: DatepickerProps) {
 						}}
 						onInput={handleInput}
 						onChange={props.onChange}
+						disabled={props.disabled || props.inputDisabled}
 					/>
 					<button
+						disabled={
+							props.disabled ||
+							props.inputDisabled ||
+							props.calendarDisabled
+						}
 						class="input-icon"
 						onClick={e => {
 							setIsOpen(true);
