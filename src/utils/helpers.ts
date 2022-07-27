@@ -71,8 +71,10 @@ export const placeholderText: { [key: string]: string } = {
 export function maskInput(
 	val: string,
 	dateSchema: "DMY" | "MDY" | "YMD",
-	delimiter: string
+	delimiter: string | undefined
 ) {
+	if (!delimiter) delimiter = "/";
+
 	let v, digitsAndDelimiterRegex, dayMonthRegex, yearRegex;
 	digitsAndDelimiterRegex = new RegExp(`[^${delimiter}0-9]`);
 
@@ -216,8 +218,8 @@ export const isCurrentMonth = (d: Date, selectedDate: Date) =>
 
 export const parseDateString = (
 	str: string,
-	delimiter: string,
-	dateSchema: "DMY" | "MDY" | "YMD"
+	dateSchema: DateSchema,
+	delimiter: string | undefined
 ) => {
 	const schema = {
 		Y: "year",
@@ -239,7 +241,11 @@ export const parseDateString = (
 	return { year: +year, month: +month - 1, day: +day };
 };
 
-export function getDateFormat(d: Date, locale: string, delimiter: string) {
+export function getDateFormat(
+	d: Date,
+	locale: string | undefined,
+	delimiter: string | undefined
+) {
 	let localeDate,
 		formattedDate,
 		splitDate,
@@ -256,14 +262,16 @@ export function getDateFormat(d: Date, locale: string, delimiter: string) {
 		dayIndex,
 		monthIndex,
 		yearIndex,
-		yearlessSplit;
+		dayMonth;
 
 	if (!d) return "";
 
 	locale = locale ? locale : "en"; // falsy or invalid defaults to en
 
 	localeDate = d.toLocaleDateString(locale);
-	delimiter = delimiter ? delimiter : localeDate.replace(/\d/g, "")[0];
+
+	if (!delimiter) delimiter = localeDate.replace(/\d/g, "")[0];
+	if (!delimiter) delimiter = "/";
 
 	formattedDate = localeDate.replace(/\D/g, delimiter);
 
@@ -286,19 +294,19 @@ export function getDateFormat(d: Date, locale: string, delimiter: string) {
 		formattedTestDate = testDate.replace(/\D/g, delimiter);
 		splitTestDate = formattedTestDate.split(delimiter);
 
-		yearlessSplit = splitTestDate.filter(d => d.length !== 4).map(Number);
-		notMonth = yearlessSplit.find(d => d !== month);
+		dayMonth = splitTestDate.filter(d => d.length !== 4).map(Number);
+		notMonth = dayMonth.find(d => d !== month);
 
-		month = yearlessSplit.find(d => d !== notMonth);
+		month = dayMonth.find(d => d !== notMonth);
 
 		monthIndex =
 			yearIndex === 0
-				? yearlessSplit.findIndex(v => v === notMonth) + 1
-				: yearlessSplit.findIndex(v => v === notMonth);
+				? dayMonth.findIndex(v => v === notMonth) + 1
+				: dayMonth.findIndex(v => v === notMonth);
 		dayIndex =
 			yearIndex === 0
-				? yearlessSplit.findIndex(v => v !== notMonth) + 1
-				: yearlessSplit.findIndex(v => v !== notMonth);
+				? dayMonth.findIndex(v => v !== notMonth) + 1
+				: dayMonth.findIndex(v => v !== notMonth);
 	}
 
 	const dateSchema: string[] = [];

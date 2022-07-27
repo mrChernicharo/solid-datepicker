@@ -1,4 +1,4 @@
-import { createEffect, createSignal, For, mergeProps, Show } from "solid-js";
+import { createEffect, createSignal, For, mergeProps, onMount, Show } from "solid-js";
 import { Transition } from "solid-transition-group";
 import "./style.css";
 import {
@@ -7,6 +7,7 @@ import {
 	idMaker,
 	isCurrentMonth,
 	DatePickerType,
+	parseDateString,
 	isSameDate,
 	getDateFormat,
 	maskInput,
@@ -67,16 +68,18 @@ export default function DatePicker(props: DatepickerProps) {
 	// const id = `calendar-popup-${idMaker()}`;
 
 	const [isOpen, setIsOpen] = createSignal(false);
+	const [inputFocused, setInputFocused] = createSignal(false);
+	const [isValid, setIsValid] = createSignal(true);
+	const [hasError, setHasError] = createSignal(false);
 	const [shownDate, setShownDate] = createSignal(
 		props.initialDate || props.value || new Date()
 	);
-	const [inputFocused, setInputFocused] = createSignal(false);
 
 	const getDateSchema = () => {
 		const dateFormat = getDateFormat(
 			props.value || new Date(),
-			props.locale || "en",
-			props.delimiter || "/"
+			props.locale,
+			props.delimiter
 		);
 		return dateFormat.replaceAll(props.delimiter || "/", "") as DateSchema; // YMD | }MDY | DMY
 	};
@@ -86,28 +89,12 @@ export default function DatePicker(props: DatepickerProps) {
 			year: "numeric",
 		});
 	};
-	const parseDateString = (str: string) => {
-		const schema = {
-			Y: "year",
-			M: "month",
-			D: "day",
-		};
-		const values = {
-			day: "",
-			month: "",
-			year: "",
-		};
-		let splitValues = str.split(props.delimiter || "/");
-
-		for (let i = 0; i < 3; i++) {
-			values[schema[getDateSchema()[i]]] = splitValues[i];
-		}
-		const { year, month, day } = values;
-
-		return { year: +year, month: +month - 1, day: +day };
-	};
 	const isValidDate = (str: string) => {
-		const { year, month, day } = parseDateString(str);
+		const { year, month, day } = parseDateString(
+			str,
+			getDateSchema(),
+			props.delimiter
+		);
 
 		if (day > 31) return false;
 		if (month > 11) return false;
@@ -145,20 +132,27 @@ export default function DatePicker(props: DatepickerProps) {
 		if (!v) return props.onDateSelected(null);
 
 		if (props.applyMask) {
-			v = maskInput(v, getDateSchema(), props.delimiter || "/");
+			v = maskInput(v, getDateSchema(), props.delimiter);
 			v = v.length > 10 ? v.slice(0, 10) : v;
 
 			e.currentTarget.value = v;
 
 			if (isValidDate(v)) {
-				const { year, month, day } = parseDateString(v);
+				const { year, month, day } = parseDateString(
+					v,
+					getDateSchema(),
+					props.delimiter
+				);
 				const date = new Date(new Date(year, month, day).setFullYear(year));
 
+				setIsValid(true);
+				setHasError(false);
 				props.onDateSelected(date);
 				setShownDate(date);
 			} else {
 				// set error???
 				// console.log("invalidDate", { v });
+				setIsValid(false);
 				props.onDateSelected(null);
 			}
 		}
@@ -170,6 +164,8 @@ export default function DatePicker(props: DatepickerProps) {
 			inputRef.focus();
 		}
 		inputRef.value = d.dateStr;
+		setIsValid(true);
+		setHasError(false);
 		props.onDateSelected(d.date);
 	}
 
@@ -184,7 +180,6 @@ export default function DatePicker(props: DatepickerProps) {
 
 		if (e.code === "ArrowDown") {
 			if (props.disabled || props.calendarDisabled) return;
-			console.log("open that jazz");
 
 			if (!isOpen()) {
 				setIsOpen(true);
@@ -194,8 +189,6 @@ export default function DatePicker(props: DatepickerProps) {
 		}
 	}
 	function handleMonthIncrKeyDown(e: KeyboardEvent) {
-		// console.log(document.activeElement);
-
 		switch (e.code) {
 			case "Escape": {
 				setIsOpen(false);
@@ -245,8 +238,6 @@ export default function DatePicker(props: DatepickerProps) {
 		}
 	}
 	function handleMonthDecrKeyDown(e: KeyboardEvent) {
-		// console.log(document.activeElement);
-
 		switch (e.code) {
 			case "Escape": {
 				setIsOpen(false);
@@ -288,8 +279,6 @@ export default function DatePicker(props: DatepickerProps) {
 		}
 	}
 	function handleYearDecrKeyDown(e: KeyboardEvent) {
-		// console.log(document.activeElement);
-
 		switch (e.code) {
 			case "Escape": {
 				setIsOpen(false);
@@ -371,17 +360,17 @@ export default function DatePicker(props: DatepickerProps) {
 		firstSaturday = (grid as any).find(cell => cell.weekday === 6).day;
 		const lastCell = cellsRefs.at(-1);
 
-		console.log({
-			// 	d,
-			// 	lastCell,
-			// 	currCell: e.currentTarget,
-			cellIndex,
-			grid,
-			g: grid[cellIndex],
-			// cellsRefs,
-			// 	// firstSaturday,
-			// 	// lastSunday,
-		});
+		// console.log({
+		// 	// 	d,
+		// 	// 	lastCell,
+		// 	// 	currCell: e.currentTarget,
+		// 	cellIndex,
+		// 	grid,
+		// 	g: grid[cellIndex],
+		// 	// cellsRefs,
+		// 	// 	// firstSaturday,
+		// 	// 	// lastSunday,
+		// });
 
 		switch (e.code) {
 			case "Escape": {
@@ -400,17 +389,17 @@ export default function DatePicker(props: DatepickerProps) {
 					if (cellIndex >= firstSaturday) {
 						cellsRefs[0].firstChild.focus();
 					} else {
-						console.log({
-							weekday: d.weekday,
-							// 	lastCell,
-							// 	currCell: e.currentTarget,
-							cellIndex,
-							// grid,
-							// g: grid[cellIndex],
-							// cellsRefs,
-							// 	// firstSaturday,
-							// 	// lastSunday,
-						});
+						// console.log({
+						// 	weekday: d.weekday,
+						// 	// 	lastCell,
+						// 	// 	currCell: e.currentTarget,
+						// 	cellIndex,
+						// 	// grid,
+						// 	// g: grid[cellIndex],
+						// 	// cellsRefs,
+						// 	// 	// firstSaturday,
+						// 	// 	// lastSunday,
+						// });
 
 						switch (d.weekday) {
 							case 0: {
@@ -549,13 +538,10 @@ export default function DatePicker(props: DatepickerProps) {
 	};
 
 	createEffect(() => {
-		console.log(isOpen());
-
 		if (!isOpen()) {
 			cellsRefs = [];
 		}
-
-		console.log({ activeElement: document.activeElement });
+		// console.log({ activeElement: document.activeElement });
 	});
 
 	createEffect(() => {
@@ -565,6 +551,18 @@ export default function DatePicker(props: DatepickerProps) {
 			outlineRef.classList.add("is-focused");
 			setInputFocused(true);
 		}
+	});
+
+	onMount(() => {
+		inputRef.addEventListener("focusout", e => {
+			if (!isValid()) {
+				setHasError(true);
+			}
+			// console.log({
+			// 	valid: isValid(),
+			// 	error: hasError(),
+			// });
+		});
 	});
 
 	return (
@@ -620,7 +618,7 @@ export default function DatePicker(props: DatepickerProps) {
 							setInputFocused(true);
 						}}
 						onBlur={e => {
-							console.log(props.value, inputRef.value.length);
+							// console.log(props.value, inputRef.value.length);
 							timeout = setTimeout(() => {
 								if (props.value === null && inputRef.value.length === 0) {
 									labelRef.classList.remove("is-focused");
@@ -669,6 +667,10 @@ export default function DatePicker(props: DatepickerProps) {
 			<div class="hint-container">
 				<Show when={props.hint}>
 					<small class="hint">{props.hint}</small>
+				</Show>
+
+				<Show when={hasError()}>
+					<small>Error!!!</small>
 				</Show>
 			</div>
 
