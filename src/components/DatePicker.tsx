@@ -1,6 +1,13 @@
-import { createEffect, createSignal, For, mergeProps, onMount, Show } from "solid-js";
-import { Transition } from "solid-transition-group";
-import "./datepicker.css";
+import {
+	createEffect,
+	createSignal,
+	For,
+	mergeProps,
+	onMount,
+	Show,
+} from 'solid-js';
+import { Transition } from 'solid-transition-group';
+import './datepicker.css';
 import {
 	getDaysGrid,
 	getWeekdays,
@@ -16,14 +23,14 @@ import {
 	DateSchema,
 	Theme,
 	DatepickerColor,
-} from "../utils/helpers";
+} from '../utils/helpers';
 import {
 	DEFAULT_ICON,
 	MONTH_DECREMENT_ICON,
 	MONTH_INCREMENT_ICON,
 	YEAR_DECREMENT_ICON,
 	YEAR_INCREMENT_ICON,
-} from "./icons";
+} from './icons';
 
 import {
 	DatePickerContainer,
@@ -34,37 +41,43 @@ import {
 	WeekdayCell,
 	CalendarHeader,
 	InputOutline,
-} from "./StyledComponents";
+	InputLabel,
+	InputField,
+	Input,
+	Overlay,
+	CalendarButtonGroup,
+	CalendarCell,
+} from './StyledComponents';
 
-const bg = "#3c3b46";
+const bg = '#3c3b46';
 
 const DEFAULT_PROPS: DatepickerProps = {
 	ref: null,
 	value: null,
-	color: "#009898",
+	color: '#009898',
 	icon: DEFAULT_ICON,
-	hint: "",
+	hint: '',
 	initialDate: new Date(),
 	min: null,
 	max: null,
-	delimiter: "/",
+	delimiter: '/',
 	inputWidth: 270,
 	filter: (d: Date) => true,
 	onDateSelected: (d: Date | null) => d, // both input and calendar,
 	onInput: (e: any) => e, // input input,
 	onChange: (e: any) => e, // input change,
-	dateClass: (d: Date) => "",
-	label: "date picker",
-	placeholder: "placeholder",
-	theme: "light",
+	dateClass: (d: Date) => '',
+	label: 'date picker',
+	placeholder: 'placeholder',
+	theme: 'light',
 	applyMask: true,
 	disabled: false,
 	inputDisabled: false,
 	calendarDisabled: false,
 	closeAfterClick: false,
 	showYearButtons: false,
-	locale: "en",
-	type: "datePicker",
+	locale: 'en',
+	type: 'datePicker',
 	touchUIMode: false,
 	calendarOnly: false, // no input, calendar onl;
 };
@@ -95,12 +108,12 @@ export default function DatePicker(props: DatepickerProps) {
 			props.locale,
 			props.delimiter
 		);
-		return dateFormat.replaceAll(props.delimiter || "/", "") as DateSchema; // YMD | }MDY | DMY
+		return dateFormat.replaceAll(props.delimiter || '/', '') as DateSchema; // YMD | }MDY | DMY
 	};
 	const getCurrentMonthYear = () => {
 		return (shownDate() || new Date()).toLocaleDateString(props.locale, {
-			month: "short",
-			year: "numeric",
+			month: 'short',
+			year: 'numeric',
 		});
 	};
 	const isValidDate = (str: string) => {
@@ -121,7 +134,7 @@ export default function DatePicker(props: DatepickerProps) {
 	const getCellWeekday = el => {
 		const day = +el.firstChild.textContent;
 
-		if (!day) console.error("getCellWeekday errored out!");
+		if (!day) console.error('getCellWeekday errored out!');
 
 		return grid.findIndex(
 			o =>
@@ -157,7 +170,9 @@ export default function DatePicker(props: DatepickerProps) {
 					getDateSchema(),
 					props.delimiter
 				);
-				const date = new Date(new Date(year, month, day).setFullYear(year));
+				const date = new Date(
+					new Date(year, month, day).setFullYear(year)
+				);
 
 				setIsValid(true);
 				setHasError(false);
@@ -184,15 +199,15 @@ export default function DatePicker(props: DatepickerProps) {
 	}
 
 	function handleInputKeyDown(e) {
-		if (e.code === "Escape") {
+		if (e.code === 'Escape') {
 			setIsOpen(false);
 		}
-		if (e.code === "Enter") {
+		if (e.code === 'Enter') {
 			if (props.disabled || props.calendarDisabled) return;
 			setIsOpen(!isOpen());
 		}
 
-		if (e.code === "ArrowDown") {
+		if (e.code === 'ArrowDown') {
 			if (props.disabled || props.calendarDisabled) return;
 
 			if (!isOpen()) {
@@ -204,10 +219,10 @@ export default function DatePicker(props: DatepickerProps) {
 	}
 	function handleMonthIncrKeyDown(e: KeyboardEvent) {
 		switch (e.code) {
-			case "Escape": {
+			case 'Escape': {
 				setIsOpen(false);
 			}
-			case "ArrowUp": {
+			case 'ArrowUp': {
 				setIsOpen(false);
 				if (props.inputDisabled) {
 					iconBtnRef.focus();
@@ -216,15 +231,15 @@ export default function DatePicker(props: DatepickerProps) {
 				}
 				break;
 			}
-			case "ArrowLeft": {
+			case 'ArrowLeft': {
 				monthDecrBtn.focus();
 				break;
 			}
-			case "ArrowRight": {
+			case 'ArrowRight': {
 				yearIncrBtn && yearIncrBtn.focus();
 				break;
 			}
-			case "ArrowDown": {
+			case 'ArrowDown': {
 				// TODO: Account for disabled cells
 
 				switch (getCellWeekday(cellsRefs[0])) {
@@ -253,10 +268,10 @@ export default function DatePicker(props: DatepickerProps) {
 	}
 	function handleMonthDecrKeyDown(e: KeyboardEvent) {
 		switch (e.code) {
-			case "Escape": {
+			case 'Escape': {
 				setIsOpen(false);
 			}
-			case "ArrowUp": {
+			case 'ArrowUp': {
 				setIsOpen(false);
 				if (props.inputDisabled) {
 					iconBtnRef.focus();
@@ -265,15 +280,15 @@ export default function DatePicker(props: DatepickerProps) {
 				}
 				break;
 			}
-			case "ArrowLeft": {
+			case 'ArrowLeft': {
 				yearDecrBtn && yearDecrBtn.focus();
 				break;
 			}
-			case "ArrowRight": {
+			case 'ArrowRight': {
 				monthIncrBtn.focus();
 				break;
 			}
-			case "ArrowDown": {
+			case 'ArrowDown': {
 				// TODO: Account for disabled cells
 
 				switch (getCellWeekday(cellsRefs[0])) {
@@ -294,10 +309,10 @@ export default function DatePicker(props: DatepickerProps) {
 	}
 	function handleYearDecrKeyDown(e: KeyboardEvent) {
 		switch (e.code) {
-			case "Escape": {
+			case 'Escape': {
 				setIsOpen(false);
 			}
-			case "ArrowUp": {
+			case 'ArrowUp': {
 				setIsOpen(false);
 				if (props.inputDisabled) {
 					iconBtnRef.focus();
@@ -306,11 +321,11 @@ export default function DatePicker(props: DatepickerProps) {
 				}
 				break;
 			}
-			case "ArrowRight": {
+			case 'ArrowRight': {
 				monthDecrBtn.focus();
 				break;
 			}
-			case "ArrowDown": {
+			case 'ArrowDown': {
 				// TODO: Account for disabled cells
 
 				cellsRefs[0].firstChild.focus();
@@ -321,10 +336,10 @@ export default function DatePicker(props: DatepickerProps) {
 		// console.log(document.activeElement);
 
 		switch (e.code) {
-			case "Escape": {
+			case 'Escape': {
 				setIsOpen(false);
 			}
-			case "ArrowUp": {
+			case 'ArrowUp': {
 				setIsOpen(false);
 				if (props.inputDisabled) {
 					iconBtnRef.focus();
@@ -333,11 +348,11 @@ export default function DatePicker(props: DatepickerProps) {
 				}
 				break;
 			}
-			case "ArrowLeft": {
+			case 'ArrowLeft': {
 				monthIncrBtn.focus();
 				break;
 			}
-			case "ArrowDown": {
+			case 'ArrowDown': {
 				// TODO: Account for disabled cells
 
 				switch (getCellWeekday(cellsRefs[0])) {
@@ -387,18 +402,18 @@ export default function DatePicker(props: DatepickerProps) {
 		// });
 
 		switch (e.code) {
-			case "Escape": {
+			case 'Escape': {
 				inputRef.focus();
 				setIsOpen(false);
 				break;
 			}
-			case "Tab": {
+			case 'Tab': {
 				if (cellIndex + 1 === +lastCell.firstChild.textContent) {
 					setIsOpen(false);
 				}
 				break;
 			}
-			case "ArrowUp": {
+			case 'ArrowUp': {
 				if (cellIndex - 7 < 0) {
 					if (cellIndex >= firstSaturday) {
 						cellsRefs[0].firstChild.focus();
@@ -446,12 +461,12 @@ export default function DatePicker(props: DatepickerProps) {
 				}
 				break;
 			}
-			case "ArrowRight": {
+			case 'ArrowRight': {
 				if (cellIndex + 1 >= +lastCell.firstChild.textContent) return;
 				if (d.weekday < 6) cellsRefs[cellIndex + 1].firstChild.focus();
 				break;
 			}
-			case "ArrowDown": {
+			case 'ArrowDown': {
 				if (cellIndex + 7 >= +lastCell.firstChild.textContent) {
 					if (cellIndex < lastSunday) {
 						lastCell.firstChild.focus();
@@ -461,7 +476,7 @@ export default function DatePicker(props: DatepickerProps) {
 				}
 				break;
 			}
-			case "ArrowLeft": {
+			case 'ArrowLeft': {
 				if (cellIndex - 1 < 0) return;
 				if (d.weekday > 0) cellsRefs[cellIndex - 1].firstChild.focus();
 				break;
@@ -509,7 +524,8 @@ export default function DatePicker(props: DatepickerProps) {
            ).getTime() - 1000 * 60
 		).getDate();
 
-		const nextDay = currentDay < lastDayInMonth ? currentDay : lastDayInMonth;
+		const nextDay =
+			currentDay < lastDayInMonth ? currentDay : lastDayInMonth;
 
 		const nextDate = new Date(
 			nextMonth === 0 ? currentYear + 1 : currentYear,
@@ -542,7 +558,7 @@ export default function DatePicker(props: DatepickerProps) {
 		// push it left only if too close from the edge
 		const isLeft = el.getBoundingClientRect().x < window.innerWidth - 300;
 
-		el.classList.add(isLeft ? "left" : "right");
+		el.classList.add(isLeft ? 'left' : 'right');
 	};
 	const exitTransition = (el, done) => {
 		const a = el.animate([{ opacity: 1 }, { opacity: 0 }], {
@@ -561,8 +577,8 @@ export default function DatePicker(props: DatepickerProps) {
 	createEffect(() => {
 		if (props.value) {
 			clearTimeout(timeout);
-			labelRef.classList.add("is-focused");
-			outlineRef.classList.add("is-focused");
+			labelRef.classList.add('is-focused');
+			outlineRef.classList.add('is-focused');
 			setInputFocused(true);
 		}
 	});
@@ -572,7 +588,7 @@ export default function DatePicker(props: DatepickerProps) {
 	});
 
 	onMount(() => {
-		inputRef.addEventListener("focusout", e => {
+		inputRef.addEventListener('focusout', e => {
 			if (!isValid()) {
 				setHasError(true);
 			}
@@ -584,216 +600,225 @@ export default function DatePicker(props: DatepickerProps) {
 	});
 
 	return (
-		<DatePickerContainer>
-			<div class="date-picker" ref={props.ref} onClick={e => {}}>
-				<div
-					class="date-input-field"
-					style={{ width: props.inputWidth + "px" }}
-					onClick={e => {
-						if (props.inputDisabled) {
-							setIsOpen(true);
-							cellsRefs[0].firstChild.focus();
-						}
-						inputRef.focus();
-					}}>
-					<InputWrapper
-						cursor={
-							props.disabled || props.inputDisabled ? "default" : "text"
-						}>
-						{/* INPUT LABEL */}
-						<span
-							ref={labelRef}
-							class="input-label"
-							style={{
-								color:
-									props.disabled ||
-									(props.inputDisabled && inputRef.value.length === 0)
-										? "var(--text-disabled)"
-										: inputFocused()
-										? props.color
-										: "var(--text)",
-							}}>
-							{props.label}
-						</span>
-
-						{/* TEXT INPUT */}
-						<input
-							ref={inputRef}
-							id="date-input"
-							type="text"
-							placeholder={props.placeholder}
-							style={{
-								color:
-									props.inputDisabled && inputRef.value.length > 0
-										? "white"
-										: "",
-							}}
-							onFocus={e => {
-								clearTimeout(timeout);
-								labelRef.classList.add("is-focused");
-								outlineRef.classList.add("is-focused");
-								setInputFocused(true);
-							}}
-							onBlur={e => {
-								// console.log(props.value, inputRef.value.length);
-								timeout = setTimeout(() => {
-									if (
-										props.value === null &&
-										inputRef.value.length === 0
-									) {
-										labelRef.classList.remove("is-focused");
-										outlineRef.classList.remove("is-focused");
-										setInputFocused(false);
-									}
-								}, 300);
-							}}
-							onKeyDown={handleInputKeyDown}
-							onInput={handleInput}
-							onChange={props.onChange}
-							disabled={props.disabled || props.inputDisabled}
-						/>
-
-						{/* INPUT BUTTON */}
-						<InputButton
-							ref={iconBtnRef}
-							disabled={props.disabled || props.calendarDisabled}
-							onClick={e => {
-								setIsOpen(true);
-							}}
-							onKeyDown={e => {
-								if (e.code === "Enter") {
-									e.preventDefault(); // prevent input focus
-									setIsOpen(!isOpen());
-								}
-								if (e.code === "ArrowDown") {
-									inputRef.blur();
-									setIsOpen(true);
-									cellsRefs[0].firstChild.focus();
-								}
-							}}>
-							{props.icon}
-						</InputButton>
-					</InputWrapper>
-
-					<InputOutline
-						ref={outlineRef}
-						isFocused={inputFocused()}
+		<DatePickerContainer ref={props.ref}>
+			<InputField
+				width={props.inputWidth}
+				onClick={e => {
+					if (props.inputDisabled) {
+						setIsOpen(true);
+						cellsRefs[0].firstChild.focus();
+					}
+					inputRef.focus();
+				}}
+			>
+				<InputWrapper
+					cursor={
+						props.disabled || props.inputDisabled
+							? 'default'
+							: 'text'
+					}
+				>
+					{/* INPUT LABEL */}
+					<InputLabel
+						ref={labelRef}
 						color={props.color}
+						isFocused={inputFocused()}
+						isDisabled={
+							props.disabled ||
+							(props.inputDisabled && inputRef.value.length === 0)
+						}
+					>
+						{props.label}
+					</InputLabel>
+
+					{/* TEXT INPUT */}
+					<Input
+						ref={inputRef}
+						type="text"
+						placeholder={props.placeholder}
+						onFocus={e => {
+							clearTimeout(timeout);
+							labelRef.classList.add('is-focused');
+							outlineRef.classList.add('is-focused');
+							setInputFocused(true);
+						}}
+						onBlur={e => {
+							// console.log(props.value, inputRef.value.length);
+							timeout = setTimeout(() => {
+								if (
+									props.value === null &&
+									inputRef.value.length === 0
+								) {
+									labelRef.classList.remove('is-focused');
+									outlineRef.classList.remove('is-focused');
+									setInputFocused(false);
+								}
+							}, 300);
+						}}
+						onKeyDown={handleInputKeyDown}
+						onInput={handleInput}
+						onChange={props.onChange}
+						disabled={props.disabled || props.inputDisabled}
 					/>
-				</div>
 
-				<HintContainer>
-					<Show when={props.hint}>
-						<HintText class="hint">{props.hint}</HintText>
-					</Show>
-
-					<Show when={hasError()}>
-						<HintText>Error!!!</HintText>
-					</Show>
-				</HintContainer>
-
-				<Transition onEnter={enterTransition} onExit={exitTransition}>
-					<Show when={isOpen()}>
-						<div ref={calendarPopupRef} class="calendar-popup">
-							{/* CALENDAR HEADER */}
-							<CalendarHeader>
-								<div class="calendar-btn-group">
-									<Show when={props.showYearButtons}>
-										<button
-											ref={yearDecrBtn}
-											onClick={yearDecrement}
-											onKeyDown={handleYearDecrKeyDown}>
-											<YEAR_DECREMENT_ICON />
-										</button>
-									</Show>
-									<button
-										ref={monthDecrBtn}
-										onClick={monthDecrement}
-										onKeyDown={handleMonthDecrKeyDown}>
-										<MONTH_DECREMENT_ICON />
-									</button>
-								</div>
-								<h3>{getCurrentMonthYear()}</h3>
-
-								<div class="calendar-btn-group">
-									<button
-										ref={monthIncrBtn}
-										onClick={monthIncrement}
-										onKeyDown={handleMonthIncrKeyDown}>
-										<MONTH_INCREMENT_ICON />
-									</button>
-									<Show when={props.showYearButtons}>
-										<button
-											ref={yearIncrBtn}
-											onClick={yearIncrement}
-											onKeyDown={handleYearIncrKeyDown}>
-											<YEAR_INCREMENT_ICON />
-										</button>
-									</Show>
-								</div>
-							</CalendarHeader>
-
-							{/* DATE CELLS */}
-							<div class="calendar-grid">
-								<For each={getWeekdays(props.locale, "narrow")}>
-									{weekday => (
-										<WeekdayCell class="weekday-cell">
-											{weekday}
-										</WeekdayCell>
-									)}
-								</For>
-								<For each={daysGrid(shownDate())}>
-									{d => {
-										let cellRef;
-										let disabled = checkIsDisabled(d);
-
-										const cellElement = (
-											<div
-												ref={cellRef}
-												id={idMaker()}
-												// prettier-ignore
-												classList={{ 
-												"current-month-cell": isCurrentMonth(d.date, shownDate()), 
-												"selected-date": !!props.value && isSameDate(d.date, props.value), 
-												"disabled": disabled,
-												"calendar-cell": true }}
-												style={{
-													background:
-														props.value &&
-														isSameDate(d.date, props.value)
-															? props.color
-															: bg,
-												}}
-												onClick={e => handleCellClick(d)}
-												onKeyDown={e => handleCellKeyDown(e, d)}>
-												<button disabled={disabled}>
-													{d.day}
-												</button>
-											</div>
-										);
-
-										d.date.getMonth() === shownDate().getMonth() &&
-											cellsRefs.push(cellRef);
-
-										// cellRef.classList.contains("current-month-cell") &&
-										// 	cellsRefs.push(cellRef);
-
-										return cellElement;
-									}}
-								</For>
-							</div>
-						</div>
-					</Show>
-				</Transition>
-
-				<Show when={isOpen()}>
-					<div
-						class="date-picker-overlay"
+					{/* INPUT BUTTON */}
+					<InputButton
+						ref={iconBtnRef}
+						disabled={props.disabled || props.calendarDisabled}
 						onClick={e => {
-							setIsOpen(false);
-						}}></div>
+							setIsOpen(true);
+						}}
+						onKeyDown={e => {
+							if (e.code === 'Enter') {
+								e.preventDefault(); // prevent input focus
+								setIsOpen(!isOpen());
+							}
+							if (e.code === 'ArrowDown') {
+								inputRef.blur();
+								setIsOpen(true);
+								cellsRefs[0].firstChild.focus();
+							}
+						}}
+					>
+						{props.icon}
+					</InputButton>
+				</InputWrapper>
+
+				<InputOutline
+					ref={outlineRef}
+					class="outline"
+					isFocused={inputFocused()}
+					color={props.color}
+				/>
+			</InputField>
+
+			<HintContainer>
+				<Show when={props.hint}>
+					<HintText class="hint">{props.hint}</HintText>
 				</Show>
-			</div>
+
+				<Show when={hasError()}>
+					<HintText>Error!!!</HintText>
+				</Show>
+			</HintContainer>
+
+			<Transition onEnter={enterTransition} onExit={exitTransition}>
+				<Show when={isOpen()}>
+					<div ref={calendarPopupRef} class="calendar-popup">
+						{/* CALENDAR HEADER */}
+						<CalendarHeader>
+							<CalendarButtonGroup>
+								<Show when={props.showYearButtons}>
+									<button
+										ref={yearDecrBtn}
+										onClick={yearDecrement}
+										onKeyDown={handleYearDecrKeyDown}
+									>
+										<YEAR_DECREMENT_ICON />
+									</button>
+								</Show>
+								<button
+									ref={monthDecrBtn}
+									onClick={monthDecrement}
+									onKeyDown={handleMonthDecrKeyDown}
+								>
+									<MONTH_DECREMENT_ICON />
+								</button>
+							</CalendarButtonGroup>
+							<h3>{getCurrentMonthYear()}</h3>
+
+							<CalendarButtonGroup>
+								<button
+									ref={monthIncrBtn}
+									onClick={monthIncrement}
+									onKeyDown={handleMonthIncrKeyDown}
+								>
+									<MONTH_INCREMENT_ICON />
+								</button>
+								<Show when={props.showYearButtons}>
+									<button
+										ref={yearIncrBtn}
+										onClick={yearIncrement}
+										onKeyDown={handleYearIncrKeyDown}
+									>
+										<YEAR_INCREMENT_ICON />
+									</button>
+								</Show>
+							</CalendarButtonGroup>
+						</CalendarHeader>
+
+						{/* DATE CELLS */}
+						<div class="calendar-grid">
+							<For each={getWeekdays(props.locale, 'narrow')}>
+								{weekday => (
+									<WeekdayCell class="weekday-cell">
+										{weekday}
+									</WeekdayCell>
+								)}
+							</For>
+							<For each={daysGrid(shownDate())}>
+								{d => {
+									let cellRef;
+									let disabled = checkIsDisabled(d);
+
+									const cellElement = (
+										<CalendarCell
+											ref={cellRef}
+											id={idMaker()}
+											class="calendar-cell"
+											color={props.color}
+											isVisible={isCurrentMonth(
+												d.date,
+												shownDate()
+											)}
+											isSelected={
+												!!props.value &&
+												isSameDate(d.date, props.value)
+											}
+											disabled={disabled}
+											// style={{
+											// 	background:
+											// 		props.value &&
+											// 		isSameDate(
+											// 			d.date,
+											// 			props.value
+											// 		)
+											// 			? props.color
+											// 			: bg,
+											// }}
+											onClick={e => handleCellClick(d)}
+											onKeyDown={e =>
+												handleCellKeyDown(e, d)
+											}
+										>
+											<button disabled={disabled}>
+												{d.day}
+											</button>
+										</CalendarCell>
+									);
+
+									d.date.getMonth() ===
+										shownDate().getMonth() &&
+										cellsRefs.push(cellRef);
+
+									// cellRef.classList.contains("current-month-cell") &&
+									// 	cellsRefs.push(cellRef);
+
+									return cellElement;
+								}}
+							</For>
+						</div>
+					</div>
+				</Show>
+			</Transition>
+
+			<Show when={isOpen()}>
+				<Overlay
+					onClick={e => {
+						setIsOpen(false);
+					}}
+				/>
+			</Show>
 		</DatePickerContainer>
 	);
 }

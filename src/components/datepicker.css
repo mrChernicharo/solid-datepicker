@@ -9,84 +9,6 @@
 	--text-dark: #999;
 }
 
-.date-input-field {
-	padding: 1.25rem 1rem 0.75rem;
-	position: relative;
-	/* background-color: var(--bg-medium); */
-	background-color: var(--bg);
-	border-top-left-radius: 0.35rem;
-	border-top-right-radius: 0.35rem;
-}
-
-span.input-label {
-	font-size: 13px;
-	position: absolute;
-	left: 2px;
-	transition: all 0.3s;
-	color: var(--text-secondary);
-	pointer-events: none;
-}
-
-span.input-label.is-focused {
-	transform: translate(-6px, -16px) scale(0.84);
-}
-
-input#date-input {
-	display: flex;
-	background-color: transparent;
-	color: #fff;
-	border: none;
-	outline: none;
-	font-size: 15px;
-}
-
-input#date-input::placeholder {
-	opacity: 0;
-	transition: 0.3s;
-}
-
-input#date-input:focus::placeholder {
-	color: var(--text-dark);
-	opacity: 1;
-}
-
-button {
-	color: #fff;
-	background: transparent;
-	border: none;
-	border-radius: 50%;
-	height: 32px;
-	width: 32px;
-
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	transition: 0.2s;
-
-	outline: none;
-	cursor: pointer;
-}
-
-.date-input-field:hover > div.date-input-outline {
-	height: 2px;
-	transition: 0.2s;
-}
-
-div.calendar-cell button:focus,
-div.calendar-cell button:hover,
-div.calendar-btn-group button:focus-visible {
-	background: var(--bg-medium);
-}
-
-div.calendar-btn-group button:hover {
-	background: var(--bg-medium);
-}
-
-input#date-input:disabled {
-	cursor: default;
-	color: var(--text-medium);
-}
-
 div.calendar-popup {
 	background-color: var(--bg);
 	border: 1px solid var(--text-medium);
@@ -114,10 +36,6 @@ header.calendar-header h3 {
 	width: 120px;
 }
 
-div.calendar-btn-group {
-	display: inherit;
-}
-
 div.calendar-grid {
 	font-size: 12px;
 	display: grid;
@@ -127,7 +45,7 @@ div.calendar-grid {
 	padding: 0.5rem;
 }
 
-div.calendar-cell {
+/* div.calendar-cell {
 	visibility: hidden;
 }
 
@@ -141,12 +59,11 @@ div.calendar-cell {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	/* padding: 0.5rem; */
 	color: rgba(255, 255, 255, 0.6);
 	cursor: pointer;
-}
+} */
 
-.calendar-cell.current-month-cell.disabled {
+/* .calendar-cell.current-month-cell.disabled {
 	pointer-events: none;
 	cursor: default;
 }
@@ -156,26 +73,4 @@ div.calendar-cell {
 
 .calendar-cell.selected-date {
 	transition: 0.2s;
-}
-
-.date-picker-overlay {
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 1000vw;
-	height: 1000vh;
-	opacity: 0.01;
-	z-index: 900;
-}
-
-@keyframes calendar-show {
-	0% {
-		transform: scale(0.6);
-		/* height: 0; */
-	}
-
-	100% {
-		transform: scale(1);
-		/* height: 100%; */
-	}
-}
+} */

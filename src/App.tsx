@@ -1,10 +1,10 @@
-import { FaCalendarAlt, FaHeart, FaSolidChevronDown } from "solid-icons/fa";
-import { createEffect, createSignal } from "solid-js";
-import DatePicker from "./components/DatePicker";
+import { FaCalendarAlt, FaHeart, FaSolidChevronDown } from 'solid-icons/fa';
+import { createEffect, createSignal } from 'solid-js';
+import DatePicker from './components/DatePicker';
 // let lang = "en";
-let lang = "pt-BR";
+let lang = 'pt-BR';
 
-const color = "#0098ae";
+const color = '#0098ae';
 const minDate = new Date(2022, 5, 11);
 const maxDate = new Date(2022, 6, 22);
 const initialDate = new Date(2022, 6, 13);
@@ -17,7 +17,7 @@ const weekendFilter = (d: Date | null): boolean => {
 const higlight20thDay = (d: Date | null) => {
 	const day = (d || new Date()).getDate();
 
-	return day === 20 ? "highlighted-20" : "";
+	return day === 20 ? 'highlighted-20' : '';
 };
 
 export default function App() {
@@ -30,7 +30,7 @@ export default function App() {
 	// datepickerRef.open()
 	// datepickerRef.close()
 
-	createEffect(() => console.log("App", { selectedDate: selectedDate() }));
+	createEffect(() => console.log('App', { selectedDate: selectedDate() }));
 
 	return (
 		<div class="App">
@@ -41,21 +41,20 @@ export default function App() {
 				<DatePicker
 					inputWidth={200}
 					ref={datepickerRef}
-					value={selectedDate()}
-					type={"datePicker"}
+					type={'datePicker'}
 					color={color}
-					locale={"pt-BR"}
+					locale={'pt-BR'}
 					icon={<FaCalendarAlt size={16} />}
 					initialDate={new Date()}
-					// disabled
 					// min={minDate}
 					// max={maxDate}
-					placeholder={"29/04/1987"}
-					hint={"brazilian"}
+					placeholder={'29/04/1987'}
+					hint={'brazilian'}
 					// hint={"dd/mm/aaaa"}
-					delimiter={"/"}
+					delimiter={'/'}
 					applyMask={true}
 					filter={weekendFilter}
+					value={selectedDate()}
 					onDateSelected={d => setSelectedDate(d)} // both input and calendar
 					// onInput={console.log} // input input
 					onInput={e => {}} // input input
@@ -74,10 +73,9 @@ export default function App() {
 					inputWidth={400}
 					closeAfterClick={true}
 					ref={datepickerRef2}
-					value={selectedDate2()}
-					type={"datePicker"}
-					color={"orange"}
-					locale={"en"}
+					type={'datePicker'}
+					color={'orange'}
+					locale={'en'}
 					theme="dark"
 					// disabled
 					// inputDisabled
@@ -86,11 +84,12 @@ export default function App() {
 					initialDate={initialDate}
 					min={minDate}
 					max={maxDate}
-					placeholder={"04 29 1987"}
-					hint={"american"}
-					delimiter={" "}
+					placeholder={'04 29 1987'}
+					hint={'american'}
+					delimiter={' '}
 					applyMask={true}
 					filter={weekendFilter}
+					value={selectedDate2()}
 					onDateSelected={d => setSelectedDate2(d)} // both input and calendar
 					// onInput={console.log} // input input
 					onInput={e => {}} // input input
@@ -106,19 +105,19 @@ export default function App() {
 					inputWidth={300}
 					closeAfterClick={false}
 					ref={datepickerRef3}
-					value={selectedDate3()}
-					type={"datePicker"}
-					color={"red"}
-					locale={"de"}
+					type={'datePicker'}
+					color={'red'}
+					locale={'de'}
 					icon={<FaSolidChevronDown size={16} />}
 					initialDate={initialDate}
 					min={new Date(2022, 3, 29)}
 					max={new Date(2022, 11, 4)}
-					placeholder={"1987-04-29"}
-					hint={"german"}
-					delimiter={"."}
+					placeholder={'1987-04-29'}
+					hint={'german'}
+					delimiter={'.'}
 					applyMask={true}
 					filter={d => true}
+					value={selectedDate3()}
 					onDateSelected={d => setSelectedDate3(d)} // both input and calendar
 					// onInput={console.log} // input input
 					onInput={e => {}} // input input
@@ -134,6 +133,7 @@ export default function App() {
 
 				<DatePicker
 					ref={datepickerRef4}
+					disabled
 					value={selectedDate4()}
 					onDateSelected={d => setSelectedDate4(d)}
 					theme="dark"
