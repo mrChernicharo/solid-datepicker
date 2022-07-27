@@ -143,7 +143,7 @@ div.date-input-outline:not(.is-focused)::before {
 }
 
 div.calendar-cell button:focus,
-div .calendar-cell button:hover,
+div.calendar-cell button:hover,
 div.calendar-btn-group button:focus-visible {
 	background: rgba(255, 255, 255, 0.1);
 }

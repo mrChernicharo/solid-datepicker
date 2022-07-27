@@ -6,9 +6,9 @@ import DatePicker from "./components/DatePicker";
 let lang = "pt-BR";
 
 const color = "#0098ae";
-const minDate = new Date(2022, 5, 31);
-const initialDate = new Date(2022, 6, 13);
+const minDate = new Date(2022, 5, 11);
 const maxDate = new Date(2022, 6, 22);
+const initialDate = new Date(2022, 6, 13);
 const weekendFilter = (d: Date | null): boolean => {
 	const day = (d || new Date()).getDay();
 	// Prevent Saturday and Sunday from being selected.

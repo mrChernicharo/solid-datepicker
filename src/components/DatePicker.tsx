@@ -370,7 +370,8 @@ export default function DatePicker(props: DatepickerProps) {
 						class="input-label"
 						style={{
 							color:
-								props.disabled || props.inputDisabled
+								props.disabled ||
+								(props.inputDisabled && inputRef.value.length === 0)
 									? "rgba(255, 255, 255, 0.2)"
 									: inputFocused()
 									? props.color
@@ -380,9 +381,15 @@ export default function DatePicker(props: DatepickerProps) {
 					</span>
 					<input
 						ref={inputRef}
-						id={"date-input"}
+						id="date-input"
 						type="text"
 						placeholder={props.placeholder}
+						style={{
+							color:
+								props.inputDisabled && inputRef.value.length > 0
+									? "white"
+									: "",
+						}}
 						onFocus={e => {
 							clearTimeout(timeout);
 							labelRef.classList.add("is-focused");
@@ -498,6 +505,8 @@ export default function DatePicker(props: DatepickerProps) {
 													break;
 												}
 												case "ArrowDown": {
+													// TODO: Account for disabled cells
+
 													cellsRefs[0].firstChild.focus();
 												}
 											}
@@ -530,7 +539,8 @@ export default function DatePicker(props: DatepickerProps) {
 												break;
 											}
 											case "ArrowDown": {
-												console.log(getCellWeekday(cellsRefs[0]));
+												// TODO: Account for disabled cells
+
 												switch (getCellWeekday(cellsRefs[0])) {
 													case 0:
 														cellsRefs[1].firstChild.focus();
@@ -578,11 +588,7 @@ export default function DatePicker(props: DatepickerProps) {
 												break;
 											}
 											case "ArrowDown": {
-												// cellsRefs[0].firstChild.focus();
-												console.log(getCellWeekday(cellsRefs[0]));
-												// cellsRefs[
-												// 	firstSaturday - 1
-												// ].firstChild.focus();
+												// TODO: Account for disabled cells
 
 												switch (getCellWeekday(cellsRefs[0])) {
 													case 0:
@@ -632,9 +638,8 @@ export default function DatePicker(props: DatepickerProps) {
 													break;
 												}
 												case "ArrowDown": {
-													console.log(
-														getCellWeekday(cellsRefs[0])
-													);
+													// TODO: Account for disabled cells
+
 													switch (
 														getCellWeekday(cellsRefs[0])
 													) {
@@ -678,6 +683,13 @@ export default function DatePicker(props: DatepickerProps) {
 									let cellRef;
 
 									let disabled = props.filter && !props.filter(d.date);
+
+									if (props.min && d.date < props.min) {
+										disabled = true;
+									}
+									if (props.max && d.date > props.max) {
+										disabled = true;
+									}
 
 									const cellElement = (
 										<div
