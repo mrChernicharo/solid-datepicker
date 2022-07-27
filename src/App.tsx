@@ -1,6 +1,5 @@
 import { FaCalendarAlt, FaHeart, FaSolidChevronDown } from "solid-icons/fa";
 import { createEffect, createSignal } from "solid-js";
-import s from "./App.module.css";
 import DatePicker from "./components/DatePicker";
 // let lang = "en";
 let lang = "pt-BR";
@@ -25,6 +24,7 @@ export default function App() {
 	const [selectedDate, setSelectedDate] = createSignal<Date | null>(null);
 	const [selectedDate2, setSelectedDate2] = createSignal<Date | null>(null);
 	const [selectedDate3, setSelectedDate3] = createSignal<Date | null>(null);
+	const [selectedDate4, setSelectedDate4] = createSignal<Date | null>(null);
 
 	let datepickerRef;
 	// datepickerRef.open()
@@ -33,7 +33,7 @@ export default function App() {
 	createEffect(() => console.log("App", { selectedDate: selectedDate() }));
 
 	return (
-		<div class={s.App}>
+		<div class="App">
 			{/* <DatePicker_v1 /> */}
 			<h1>DatePicker</h1>
 
@@ -77,6 +77,7 @@ export default function App() {
 					type={"datePicker"}
 					color={"orange"}
 					locale={"en"}
+					theme="dark"
 					// disabled
 					// inputDisabled
 					// calendarDisabled
@@ -110,8 +111,8 @@ export default function App() {
 					locale={"de"}
 					icon={<FaSolidChevronDown size={16} />}
 					initialDate={initialDate}
-					min={minDate}
-					max={maxDate}
+					min={new Date(2022, 3, 29)}
+					max={new Date(2022, 11, 4)}
 					placeholder={"1987-04-29"}
 					hint={"german"}
 					delimiter={"."}
@@ -128,6 +129,12 @@ export default function App() {
 					touchUIMode={false}
 					calendarOnly={false} // no input, calendar only
 					dateClass={higlight20thDay}
+				/>
+
+				<DatePicker
+					value={selectedDate4()}
+					onDateSelected={d => setSelectedDate3(d)}
+					theme="dark"
 				/>
 			</div>
 		</div>

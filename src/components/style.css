@@ -1,7 +1,6 @@
-/* #3c3b46; */
-/* rgba(255, 255, 255, 0.2); */
 :root {
 	--bg: #3c3b46;
+	--bg-dark: #282c34;
 	--bg-medium: rgba(255, 255, 255, 0.1);
 
 	--text: #fff;
@@ -34,7 +33,8 @@ p {
 .date-input-field {
 	padding: 1.25rem 1rem 0.75rem;
 	position: relative;
-	background-color: var(--bg-medium);
+	/* background-color: var(--bg-medium); */
+	background-color: var(--bg);
 	border-top-left-radius: 0.35rem;
 	border-top-right-radius: 0.35rem;
 }

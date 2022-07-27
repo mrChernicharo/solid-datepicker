@@ -14,6 +14,8 @@ import {
 	DateCell,
 	DatepickerProps,
 	DateSchema,
+	Theme,
+	DatepickerColor,
 } from "../utils/helpers";
 import {
 	DEFAULT_ICON,
@@ -37,13 +39,14 @@ const DEFAULT_PROPS: DatepickerProps = {
 	max: null,
 	delimiter: "/",
 	inputWidth: 270,
-	filter: (d: Date) => false,
-	onDateSelected: (d: Date | null) => d, // both input and calenda,
+	filter: (d: Date) => true,
+	onDateSelected: (d: Date | null) => d, // both input and calendar,
 	onInput: (e: any) => e, // input input,
-	onChange: (e: any) => e, // input chang,
+	onChange: (e: any) => e, // input change,
 	dateClass: (d: Date) => "",
 	label: "date picker",
 	placeholder: "placeholder",
+	theme: "light",
 	applyMask: true,
 	disabled: false,
 	inputDisabled: false,
@@ -56,6 +59,39 @@ const DEFAULT_PROPS: DatepickerProps = {
 	calendarOnly: false, // no input, calendar onl;
 };
 
+// const colors = (theme: Theme) => {
+// 	bg: theme === 'dark' ? '#3c3b46' : '#fff';
+// 	bgDark: theme === 'dark' ? '#282c34' : '#ccc';
+// 	bgMedium: theme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.9)';
+
+// 	text: #fff;
+// 	textDisabled: rgba(255, 255, 255, 0.2);
+// 	textSecondary: rgba(255, 255, 255, 0.4);
+// 	textDark: #999;
+// }
+
+const darkColors = {
+	bg: "#3c3b46",
+	bgDark: "#282c34",
+	bgMedium: "rgba(255, 255, 255, 0.1)",
+
+	text: "#fff",
+	textDisabled: "rgba(255, 255, 255, 0.2)",
+	textSecondary: "rgba(255, 255, 255, 0.4)",
+	textDark: "#999",
+};
+
+const lightColors = {
+	bg: "#fff",
+	bgDark: "#ddd",
+	bgMedium: "rgba(255, 255, 255, 0.9)",
+
+	text: "#000",
+	textDisabled: "rgba(255, 255, 255, 0.8)",
+	textSecondary: "rgba(255, 255, 255, 0.6)",
+	textDark: "#333",
+};
+
 export default function DatePicker(props: DatepickerProps) {
 	props = mergeProps(DEFAULT_PROPS, props);
 
@@ -65,6 +101,9 @@ export default function DatePicker(props: DatepickerProps) {
 	let grid: DateCell[] = [];
 	let cellsRefs: any = [];
 	let firstSaturday, lastSunday;
+
+	const color = (theme: Theme, color: DatepickerColor) =>
+		theme === "dark" ? darkColors[color] : lightColors[color];
 	// const id = `calendar-popup-${idMaker()}`;
 
 	const [isOpen, setIsOpen] = createSignal(false);
@@ -156,7 +195,7 @@ export default function DatePicker(props: DatepickerProps) {
 				props.onDateSelected(null);
 			}
 		}
-		props.onInput(e);
+		props.onInput && props.onInput(e);
 	}
 	function handleCellClick(d: DateCell) {
 		if (props.closeAfterClick) {
@@ -553,6 +592,10 @@ export default function DatePicker(props: DatepickerProps) {
 		}
 	});
 
+	createEffect(() => {
+		console.log(props.theme);
+	});
+
 	onMount(() => {
 		inputRef.addEventListener("focusout", e => {
 			if (!isValid()) {
@@ -591,10 +634,10 @@ export default function DatePicker(props: DatepickerProps) {
 							color:
 								props.disabled ||
 								(props.inputDisabled && inputRef.value.length === 0)
-									? "rgba(255, 255, 255, 0.2)"
+									? "var(--text-disabled)"
 									: inputFocused()
 									? props.color
-									: "white",
+									: "var(--text)",
 						}}>
 						{props.label}
 					</span>

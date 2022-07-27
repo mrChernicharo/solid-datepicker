@@ -1,14 +1,7 @@
 import { JSXElement } from "solid-js";
 
-export type DatePickerType =
-	| "monthYearPicker"
-	| "datePicker"
-	| "timePicker"
-	| "datetimePicker"
-	| "dateRange"
-	| "timeRange";
-
 export type DateSchema = "DMY" | "MDY" | "YMD";
+export type Theme = "light" | "dark";
 
 export type DateCell = {
 	date: Date;
@@ -17,9 +10,26 @@ export type DateCell = {
 	weekday: number;
 };
 
+export type DatePickerType =
+	| "monthYearPicker"
+	| "datePicker"
+	| "timePicker"
+	| "datetimePicker"
+	| "dateRange"
+	| "timeRange";
+
+export type DatepickerColor =
+	| "bg"
+	| "bgDark"
+	| "bgMedium"
+	| "text"
+	| "textDisabled"
+	| "textSecondary"
+	| "textDark";
+
 export interface DatepickerProps {
-	ref: any;
 	value: Date | null;
+	ref?: any;
 	color?: string;
 	icon?: JSXElement;
 	hint?: string;
@@ -28,9 +38,10 @@ export interface DatepickerProps {
 	max?: Date | null;
 	delimiter?: string;
 	inputWidth?: number;
+	theme?: Theme;
 	filter?: (d: Date) => boolean;
 	onDateSelected: (d: Date | null) => void; // both input and calenda;
-	onInput: (e: any) => void; // input input;
+	onInput?: (e: any) => void; // input input;
 	onChange?: (e: any) => void; // input chang;
 	dateClass?: (d: Date) => string;
 	label?: string;
