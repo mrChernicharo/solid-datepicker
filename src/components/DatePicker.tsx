@@ -7,7 +7,6 @@ import {
 	Show,
 } from 'solid-js';
 import { Transition } from 'solid-transition-group';
-import './datepicker.css';
 import {
 	getDaysGrid,
 	getWeekdays,
@@ -51,8 +50,6 @@ import {
 	CalendarPopup,
 } from './StyledComponents';
 
-const bg = '#3c3b46';
-
 const DEFAULT_PROPS: DatepickerProps = {
 	ref: null,
 	value: null,
@@ -64,6 +61,7 @@ const DEFAULT_PROPS: DatepickerProps = {
 	max: null,
 	delimiter: '/',
 	inputWidth: 270,
+	errorMessage: 'invalid date',
 	filter: (d: Date) => true,
 	onDateSelected: (d: Date | null) => d, // both input and calendar,
 	onInput: (e: any) => e, // input input,
@@ -87,14 +85,13 @@ const DEFAULT_PROPS: DatepickerProps = {
 export default function DatePicker(props: DatepickerProps) {
 	props = mergeProps(DEFAULT_PROPS, props);
 
+	// const id = `calendar-popup-${idMaker()}`;
 	let inputRef, labelRef, outlineRef, calendarPopupRef, iconBtnRef;
 	let monthDecrBtn, monthIncrBtn, yearDecrBtn, yearIncrBtn;
-	let timeout;
+	let timeout: NodeJS.Timeout;
 	let grid: DateCell[] = [];
 	let cellsRefs: any = [];
-	let firstSaturday, lastSunday;
-
-	// const id = `calendar-popup-${idMaker()}`;
+	let firstSaturday: number, lastSunday: number;
 
 	const [isOpen, setIsOpen] = createSignal(false);
 	const [inputFocused, setInputFocused] = createSignal(false);
@@ -695,18 +692,17 @@ export default function DatePicker(props: DatepickerProps) {
 			</InputField>
 
 			<HintContainer>
-				<Show when={props.hint}>
-					<HintText class="hint">{props.hint}</HintText>
+				<Show when={props.hint && !hasError()}>
+					<HintText>{props.hint}</HintText>
 				</Show>
 
 				<Show when={hasError()}>
-					<HintText>Error!!!</HintText>
+					<HintText>{props.errorMessage}</HintText>
 				</Show>
 			</HintContainer>
 
 			<Transition onEnter={enterTransition} onExit={exitTransition}>
 				<Show when={isOpen()}>
-					{/* <div ref={calendarPopupRef} class="calendar-popup"> */}
 					<CalendarPopup ref={calendarPopupRef}>
 						{/* CALENDAR HEADER */}
 						<CalendarHeader>
@@ -728,6 +724,8 @@ export default function DatePicker(props: DatepickerProps) {
 									<MONTH_DECREMENT_ICON />
 								</button>
 							</CalendarButtonGroup>
+
+							{/* CALENDAR MONTH YEAR */}
 							<h3>{getCurrentMonthYear()}</h3>
 
 							<CalendarButtonGroup>
@@ -770,6 +768,10 @@ export default function DatePicker(props: DatepickerProps) {
 											id={idMaker()}
 											class="calendar-cell"
 											color={props.color}
+											onClick={e => handleCellClick(d)}
+											onKeyDown={e =>
+												handleCellKeyDown(e, d)
+											}
 											isVisible={isCurrentMonth(
 												d.date,
 												shownDate()
@@ -779,20 +781,6 @@ export default function DatePicker(props: DatepickerProps) {
 												isSameDate(d.date, props.value)
 											}
 											disabled={disabled}
-											// style={{
-											// 	background:
-											// 		props.value &&
-											// 		isSameDate(
-											// 			d.date,
-											// 			props.value
-											// 		)
-											// 			? props.color
-											// 			: bg,
-											// }}
-											onClick={e => handleCellClick(d)}
-											onKeyDown={e =>
-												handleCellKeyDown(e, d)
-											}
 										>
 											<button disabled={disabled}>
 												{d.day}
@@ -804,15 +792,11 @@ export default function DatePicker(props: DatepickerProps) {
 										shownDate().getMonth() &&
 										cellsRefs.push(cellRef);
 
-									// cellRef.classList.contains("current-month-cell") &&
-									// 	cellsRefs.push(cellRef);
-
 									return cellElement;
 								}}
 							</For>
 						</CalendarGrid>
 					</CalendarPopup>
-					{/* </div> */}
 				</Show>
 			</Transition>
 

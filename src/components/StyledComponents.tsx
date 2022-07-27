@@ -2,17 +2,6 @@ import { JSXElement } from 'solid-js';
 import { keyframes, styled } from 'solid-styled-components';
 import { DatepickerColor, Theme } from '../utils/helpers';
 
-// const colors = (theme: Theme) => {
-// 	bg: theme === 'dark' ? '#3c3b46' : '#fff';
-// 	bgDark: theme === 'dark' ? '#282c34' : '#ccc';
-// 	bgMedium: theme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.9)';
-
-// 	text: #fff;
-// 	textMedium: rgba(255, 255, 255, 0.2);
-// 	textSecondary: rgba(255, 255, 255, 0.4);
-// 	textDark: #999;
-// }
-
 const underlineEnter = keyframes`
 0% {
     width: 50%;
@@ -44,14 +33,14 @@ const darkColors = {
 };
 
 const lightColors = {
-	bg: '#fff',
-	bgDark: '#ddd',
-	bgMedium: 'rgba(255, 255, 255, 0.9)',
+	bg: '#eee',
+	bgDark: '#ccc',
+	bgMedium: '#aaa',
 
-	text: '#000',
-	textMedium: 'rgba(255, 255, 255, 0.8)',
-	textSecondary: 'rgba(255, 255, 255, 0.6)',
-	textDark: '#333',
+	text: '#111',
+	textMedium: '#444',
+	textSecondary: '#666',
+	textDark: '#888',
 };
 
 const color = (theme: Theme, color: DatepickerColor) =>
@@ -63,7 +52,7 @@ const DatePickerContainer = styled('div')`
 	display: inline-block;
 
 	button {
-		color: ${darkColors.text};
+		color: ${lightColors.text};
 		background: transparent;
 		border: none;
 		border-radius: 50%;
@@ -84,7 +73,7 @@ const InputField = styled('div')(
 	(props: any) => `
 	padding: 1.25rem 1rem 0.75rem;
 	position: relative;
-	background-color: ${darkColors.bg};
+	background-color: ${lightColors.bg};
 	border-top-left-radius: 0.35rem;
 	border-top-right-radius: 0.35rem;
 	width: ${props.width}px;
@@ -113,21 +102,20 @@ const InputLabel = styled('div')(
 	transition: all 0.3s;
 	color: ${
 		props.isDisabled
-			? darkColors.textMedium
+			? lightColors.textMedium
 			: props.isFocused
 			? props.color
-			: darkColors.text
+			: lightColors.text
 	};
 	pointer-events: none;
 	transform: ${props.isFocused ? `translate(-6px, -16px) scale(0.84);` : ''}
 `
 );
 
-const Input = styled('input')(
-	(props: any) => `
+const Input = styled('input')`
 	display: flex;
 	background-color: transparent;
-	color: #fff;
+	color: ${lightColors.text};
 	border: none;
 	outline: none;
 	font-size: 15px;
@@ -138,11 +126,10 @@ const Input = styled('input')(
 	}
 
 	&:focus::placeholder {
-		color: ${darkColors.textDark};
+		color: ${lightColors.textDark};
 		opacity: 1;
 	}
-	`
-);
+`;
 
 const InputButton = styled('button')`
 	position: absolute;
@@ -151,12 +138,12 @@ const InputButton = styled('button')`
 
 	&:hover:not(:disabled),
 	&:focus:not(:disabled) {
-		background: ${darkColors.bgMedium};
+		background: ${lightColors.bgMedium};
 	}
 
 	&:disabled {
 		cursor: default;
-		color: ${darkColors.textMedium};
+		color: ${lightColors.textMedium};
 	}
 `;
 
@@ -167,8 +154,8 @@ const InputOutline = styled('div')(
 	width: 100%;
 	position: absolute;
 	left: 0;
-    color: ${darkColors.text};
-    background: ${props.isFocused ? props.color : darkColors.textSecondary};
+    color: ${lightColors.text};
+    background: ${props.isFocused ? props.color : lightColors.textSecondary};
     transition: .2s;
 
     &::before {
@@ -216,6 +203,7 @@ const HintText = styled('div')`
 `;
 
 const WeekdayCell = styled('div')`
+	color: ${lightColors.text};
 	height: 24px;
 `;
 
@@ -228,11 +216,12 @@ const CalendarHeader = styled('div')`
 	h3 {
 		font-size: 16px;
 		width: 120px;
+		color: ${lightColors.text};
 	}
 `;
 
 const CalendarPopup = styled('div')`
-	background-color: ${darkColors.bg};
+	background-color: ${lightColors.bg};
 	position: absolute;
 	z-index: 1000;
 	margin-top: -18px;
@@ -255,7 +244,7 @@ const CalendarButtonGroup = styled('div')`
 
 	button:focus,
 	button:hover {
-		background: ${darkColors.bgMedium};
+		background: ${lightColors.bgMedium};
 	}
 `;
 const CalendarCell = styled('div')(
@@ -272,13 +261,13 @@ const CalendarCell = styled('div')(
 	visibility: ${props.isVisible ? 'visible' : 'hidden'};
 	background: ${props.isSelected ? props.color : 'transparent'};
 	button {
-		color: ${props.disabled ? darkColors.textSecondary : darkColors.text};
+		color: ${props.disabled ? lightColors.textSecondary : lightColors.text};
 		cursor: ${props.disabled ? 'default' : 'pointer'};
 	}
 
 	button:focus,
 	button:hover {
-		background: ${props.disabled ? 'transparent' : darkColors.bgMedium};
+		background: ${props.disabled ? 'transparent' : lightColors.bgMedium};
 	}
 `
 );
@@ -287,7 +276,7 @@ const CalendarGrid = styled('div')`
 	font-size: 12px;
 	display: grid;
 	grid-template-columns: repeat(7, 1fr);
-	background-color: 1px solid ${darkColors.textMedium};
+	background-color: 1px solid ${lightColors.textMedium};
 
 	padding: 0.5rem;
 `;

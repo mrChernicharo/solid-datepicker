@@ -1,7 +1,7 @@
-import { JSXElement } from "solid-js";
+import { JSXElement } from 'solid-js';
 
-export type DateSchema = "DMY" | "MDY" | "YMD";
-export type Theme = "light" | "dark";
+export type DateSchema = 'DMY' | 'MDY' | 'YMD';
+export type Theme = 'light' | 'dark';
 
 export type DateCell = {
 	date: Date;
@@ -11,21 +11,21 @@ export type DateCell = {
 };
 
 export type DatePickerType =
-	| "monthYearPicker"
-	| "datePicker"
-	| "timePicker"
-	| "datetimePicker"
-	| "dateRange"
-	| "timeRange";
+	| 'monthYearPicker'
+	| 'datePicker'
+	| 'timePicker'
+	| 'datetimePicker'
+	| 'dateRange'
+	| 'timeRange';
 
 export type DatepickerColor =
-	| "bg"
-	| "bgDark"
-	| "bgMedium"
-	| "text"
-	| "textMedium"
-	| "textSecondary"
-	| "textDark";
+	| 'bg'
+	| 'bgDark'
+	| 'bgMedium'
+	| 'text'
+	| 'textMedium'
+	| 'textSecondary'
+	| 'textDark';
 
 export interface DatepickerProps {
 	value: Date | null;
@@ -45,6 +45,7 @@ export interface DatepickerProps {
 	onChange?: (e: any) => void; // input chang;
 	dateClass?: (d: Date) => string;
 	label?: string;
+	errorMessage?: string;
 	placeholder?: string;
 	applyMask?: boolean;
 	disabled?: boolean;
@@ -58,42 +59,47 @@ export interface DatepickerProps {
 	calendarOnly?: boolean; // no input, calendar onl;
 }
 
-const ID_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-";
+const ID_CHARS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-';
 
 export const idMaker = () =>
 	Array(12)
 		.fill(0)
-		.map(item => ID_CHARS.split("")[Math.round(Math.random() * ID_CHARS.length)])
-		.join("");
+		.map(
+			item =>
+				ID_CHARS.split('')[Math.round(Math.random() * ID_CHARS.length)]
+		)
+		.join('');
 
 export const getWeekdays = (
-	locale = "en",
-	weekday: "long" | "short" | "narrow" = "narrow"
+	locale = 'en',
+	weekday: 'long' | 'short' | 'narrow' = 'narrow'
 ) => {
 	const format = new Intl.DateTimeFormat(locale, { weekday }).format;
-	return [...Array(7).keys()].map(day => format(new Date(Date.UTC(2021, 5, day))));
+	return [...Array(7).keys()].map(day =>
+		format(new Date(Date.UTC(2021, 5, day)))
+	);
 };
 
 export const placeholderText: { [key: string]: string } = {
-	en: "mm/dd/yyyy",
-	"pt-BR": "dd/mm/aaaa",
+	en: 'mm/dd/yyyy',
+	'pt-BR': 'dd/mm/aaaa',
 };
 
 export function maskInput(
 	val: string,
-	dateSchema: "DMY" | "MDY" | "YMD",
+	dateSchema: 'DMY' | 'MDY' | 'YMD',
 	delimiter: string | undefined
 ) {
-	if (!delimiter) delimiter = "/";
+	if (!delimiter) delimiter = '/';
 
 	let v, digitsAndDelimiterRegex, dayMonthRegex, yearRegex;
 	digitsAndDelimiterRegex = new RegExp(`[^${delimiter}0-9]`);
 
-	v = val.replace(digitsAndDelimiterRegex, "");
+	v = val.replace(digitsAndDelimiterRegex, '');
 
-	if (dateSchema === "YMD") {
+	if (dateSchema === 'YMD') {
 		yearRegex = /(\d{4})(\d)/;
-		dayMonthRegex = new RegExp(`(\\d{4}${delimiter}\\d{2})(\\d)`, "g");
+		dayMonthRegex = new RegExp(`(\\d{4}${delimiter}\\d{2})(\\d)`, 'g');
 
 		v = v.replace(yearRegex, `$1${delimiter}$2`);
 		v = v.replace(dayMonthRegex, `$1${delimiter}$2`);
@@ -103,7 +109,7 @@ export function maskInput(
 
 		// prettier-ignore
 		v = v.length < 7 ? v.replace(dayMonthRegex, `$1${delimiter}$2`) : v;
-		v = v.replace(yearRegex, "$1$2");
+		v = v.replace(yearRegex, '$1$2');
 	}
 	v = v.length > 10 ? v.slice(0, 10) : v;
 
@@ -113,7 +119,7 @@ export function maskInput(
 export function parseDate(dateStr: string) {
 	if (dateStr.length !== 10) return null;
 
-	let [day, month, year] = dateStr.split("/").map(Number);
+	let [day, month, year] = dateStr.split('/').map(Number);
 
 	if (month > 12) {
 		month = 12;
@@ -128,8 +134,8 @@ export function parseDate(dateStr: string) {
 	return date;
 }
 
-export function getDaysGrid(date: Date, locale = "en", delimiter = "/") {
-	console.time("getDaysGrid");
+export function getDaysGrid(date: Date, locale = 'en', delimiter = '/') {
+	console.time('getDaysGrid');
 	const dateMonth = date.getMonth();
 	const dateYear = date.getFullYear();
 
@@ -137,12 +143,20 @@ export function getDaysGrid(date: Date, locale = "en", delimiter = "/") {
 	const nextMonth = dateMonth === 11 ? 0 : dateMonth + 1;
 
 	const lastDayInMonth = new Date(
-		new Date(dateMonth === 11 ? dateYear + 1 : dateYear, nextMonth, 1).getTime() -
+		new Date(
+			dateMonth === 11 ? dateYear + 1 : dateYear,
+			nextMonth,
+			1
+		).getTime() -
 			1000 * 60
 	).getDate();
 
 	const lastDayInPrevMonth = new Date(
-		new Date(dateMonth === 11 ? dateYear + 1 : dateYear, dateMonth, 1).getTime() -
+		new Date(
+			dateMonth === 11 ? dateYear + 1 : dateYear,
+			dateMonth,
+			1
+		).getTime() -
 			1000 * 60
 	).getDate();
 
@@ -215,7 +229,7 @@ export function getDaysGrid(date: Date, locale = "en", delimiter = "/") {
 		...days,
 		...initialDaysFromNextMonth,
 	];
-	console.timeEnd("getDaysGrid");
+	console.timeEnd('getDaysGrid');
 
 	return res;
 }
@@ -233,16 +247,16 @@ export const parseDateString = (
 	delimiter: string | undefined
 ) => {
 	const schema = {
-		Y: "year",
-		M: "month",
-		D: "day",
+		Y: 'year',
+		M: 'month',
+		D: 'day',
 	};
 	const values = {
-		day: "",
-		month: "",
-		year: "",
+		day: '',
+		month: '',
+		year: '',
 	};
-	let splitValues = str.split(delimiter || "/");
+	let splitValues = str.split(delimiter || '/');
 
 	for (let i = 0; i < 3; i++) {
 		values[schema[dateSchema[i]]] = splitValues[i];
@@ -275,14 +289,14 @@ export function getDateFormat(
 		yearIndex,
 		dayMonth;
 
-	if (!d) return "";
+	if (!d) return '';
 
-	locale = locale ? locale : "en"; // falsy or invalid defaults to en
+	locale = locale ? locale : 'en'; // falsy or invalid defaults to en
 
 	localeDate = d.toLocaleDateString(locale);
 
-	if (!delimiter) delimiter = localeDate.replace(/\d/g, "")[0];
-	if (!delimiter) delimiter = "/";
+	if (!delimiter) delimiter = localeDate.replace(/\d/g, '')[0];
+	if (!delimiter) delimiter = '/';
 
 	formattedDate = localeDate.replace(/\D/g, delimiter);
 
@@ -322,9 +336,9 @@ export function getDateFormat(
 
 	const dateSchema: string[] = [];
 	const schema = {
-		[dayIndex]: "D",
-		[monthIndex]: "M",
-		[yearIndex]: "Y",
+		[dayIndex]: 'D',
+		[monthIndex]: 'M',
+		[yearIndex]: 'Y',
 	};
 
 	for (let i = 0; i < 3; i++) {
@@ -334,7 +348,7 @@ export function getDateFormat(
 		}
 	}
 
-	const result = dateSchema.join("");
+	const result = dateSchema.join('');
 
 	// console.log({result, dateSchema, year, yearIndex, splitDate})
 	return result;
