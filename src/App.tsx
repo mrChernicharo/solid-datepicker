@@ -118,7 +118,7 @@ export default function App() {
 					hint={"german"}
 					delimiter={"."}
 					applyMask={true}
-					filter={weekendFilter}
+					filter={d => true}
 					onDateSelected={d => setSelectedDate3(d)} // both input and calendar
 					// onInput={console.log} // input input
 					onInput={e => {}} // input input

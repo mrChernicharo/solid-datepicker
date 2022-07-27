@@ -531,6 +531,8 @@ export default function DatePicker(props: DatepickerProps) {
 									console.log("hey");
 									let cellRef;
 
+									let disabled = props.filter && !props.filter(d.date);
+
 									const cellElement = (
 										<div
 											ref={cellRef}
@@ -556,7 +558,7 @@ export default function DatePicker(props: DatepickerProps) {
 												props.onDateSelected(d.date);
 											}}
 											onKeyDown={e => handleCellKeyDown(e, d)}>
-											<button>{d.day}</button>
+											<button disabled={disabled}>{d.day}</button>
 										</div>
 									);
 

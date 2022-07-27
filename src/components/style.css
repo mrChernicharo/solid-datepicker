@@ -172,20 +172,14 @@ div.calendar-popup {
 	margin-top: -16px;
 
 	transition: 0.3s;
-
-	/* animation: name duration timing-function delay iteration-count direction fill-mode; */
-	/* animation: calendar-show 1s forwards; */
-	/* transform: translate(-20px); */
 }
 div.calendar-popup.left {
 	opacity: 1;
 	left: 0;
-	/* transform: translate(0px); */
 }
 div.calendar-popup.right {
 	opacity: 1;
 	right: 0;
-	/* transform: translate(0px); */
 }
 
 header.calendar-header {
@@ -235,6 +229,10 @@ div.calendar-cell {
 	color: rgba(255, 255, 255, 0.6);
 	cursor: pointer;
 }
+.calendar-cell.current-month-cell > button:disabled {
+	color:rgba(255, 255, 255, 0.2);
+}
+
 .calendar-cell.selected-date {
 	/* background-color: var(--primary-color); */
 }
