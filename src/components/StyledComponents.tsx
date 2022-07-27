@@ -224,18 +224,30 @@ const CalendarHeader = styled('div')`
 	justify-content: space-between;
 	align-items: center;
 	padding: 0.5rem;
+
+	h3 {
+		font-size: 16px;
+		width: 120px;
+	}
 `;
 
 const CalendarPopup = styled('div')`
 	background-color: ${darkColors.bg};
-	border: 1px solid ${darkColors.textMedium};
 	position: absolute;
-
 	z-index: 1000;
-	opacity: 0;
-	margin-top: -16px;
+	margin-top: -18px;
 
+	opacity: 0;
 	transition: 0.3s;
+
+	&.left {
+		opacity: 1;
+		left: 0;
+	}
+	&.right {
+		opacity: 1;
+		right: 0;
+	}
 `;
 
 const CalendarButtonGroup = styled('div')`
@@ -271,6 +283,15 @@ const CalendarCell = styled('div')(
 `
 );
 
+const CalendarGrid = styled('div')`
+	font-size: 12px;
+	display: grid;
+	grid-template-columns: repeat(7, 1fr);
+	background-color: 1px solid ${darkColors.textMedium};
+
+	padding: 0.5rem;
+`;
+
 const Overlay = styled('div')`
 	position: fixed;
 	top: 0;
@@ -296,5 +317,6 @@ export {
 	CalendarPopup,
 	CalendarButtonGroup,
 	CalendarCell,
+	CalendarGrid,
 	Overlay,
 };

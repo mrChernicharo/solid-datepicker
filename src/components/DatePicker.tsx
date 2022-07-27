@@ -47,6 +47,8 @@ import {
 	Overlay,
 	CalendarButtonGroup,
 	CalendarCell,
+	CalendarGrid,
+	CalendarPopup,
 } from './StyledComponents';
 
 const bg = '#3c3b46';
@@ -704,7 +706,8 @@ export default function DatePicker(props: DatepickerProps) {
 
 			<Transition onEnter={enterTransition} onExit={exitTransition}>
 				<Show when={isOpen()}>
-					<div ref={calendarPopupRef} class="calendar-popup">
+					{/* <div ref={calendarPopupRef} class="calendar-popup"> */}
+					<CalendarPopup ref={calendarPopupRef}>
 						{/* CALENDAR HEADER */}
 						<CalendarHeader>
 							<CalendarButtonGroup>
@@ -748,7 +751,7 @@ export default function DatePicker(props: DatepickerProps) {
 						</CalendarHeader>
 
 						{/* DATE CELLS */}
-						<div class="calendar-grid">
+						<CalendarGrid>
 							<For each={getWeekdays(props.locale, 'narrow')}>
 								{weekday => (
 									<WeekdayCell class="weekday-cell">
@@ -807,8 +810,9 @@ export default function DatePicker(props: DatepickerProps) {
 									return cellElement;
 								}}
 							</For>
-						</div>
-					</div>
+						</CalendarGrid>
+					</CalendarPopup>
+					{/* </div> */}
 				</Show>
 			</Transition>
 
