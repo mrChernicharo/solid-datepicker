@@ -79,7 +79,7 @@ export default function App() {
 					locale={"en"}
 					// disabled
 					// inputDisabled
-					calendarDisabled
+					// calendarDisabled
 					icon={<FaHeart size={16} />}
 					initialDate={initialDate}
 					min={minDate}
@@ -123,7 +123,7 @@ export default function App() {
 					// onInput={console.log} // input input
 					onChange={e => {}} // input change
 					label="DatePicker 2"
-					inputDisabled
+					// inputDisabled
 					showYearButtons={true}
 					touchUIMode={false}
 					calendarOnly={false} // no input, calendar only

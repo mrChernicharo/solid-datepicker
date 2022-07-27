@@ -12,6 +12,7 @@ import {
 	maskInput,
 	DateCell,
 	DatepickerProps,
+	DateSchema,
 } from "../utils/helpers";
 import {
 	DEFAULT_ICON,
@@ -63,23 +64,7 @@ export default function DatePicker(props: DatepickerProps) {
 	let grid: DateCell[] = [];
 	let cellsRefs: any = [];
 	let firstSaturday, lastSunday;
-	const id = `calendar-popup-${idMaker()}`;
-
-	const dateFormat = getDateFormat(
-		props.value || new Date(),
-		props.locale || "en",
-		props.delimiter || "/"
-	);
-	const dateSchema = dateFormat.replaceAll(props.delimiter || "/", "") as
-		| "DMY"
-		| "MDY"
-		| "YMD"; // YMD | MDY | DMY
-
-	const currentMonthYear = () =>
-		(shownDate() || new Date()).toLocaleDateString(props.locale, {
-			month: "short",
-			year: "numeric",
-		});
+	// const id = `calendar-popup-${idMaker()}`;
 
 	const [isOpen, setIsOpen] = createSignal(false);
 	const [shownDate, setShownDate] = createSignal(
@@ -87,12 +72,20 @@ export default function DatePicker(props: DatepickerProps) {
 	);
 	const [inputFocused, setInputFocused] = createSignal(false);
 
-	const daysGrid = (date: Date | null): DateCell[] => {
-		let d = date || new Date();
-		grid = getDaysGrid(d, props.locale, props.delimiter);
-		return grid;
+	const getDateSchema = () => {
+		const dateFormat = getDateFormat(
+			props.value || new Date(),
+			props.locale || "en",
+			props.delimiter || "/"
+		);
+		return dateFormat.replaceAll(props.delimiter || "/", "") as DateSchema; // YMD | }MDY | DMY
 	};
-
+	const getCurrentMonthYear = () => {
+		return (shownDate() || new Date()).toLocaleDateString(props.locale, {
+			month: "short",
+			year: "numeric",
+		});
+	};
 	const parseDateString = (str: string) => {
 		const schema = {
 			Y: "year",
@@ -107,13 +100,12 @@ export default function DatePicker(props: DatepickerProps) {
 		let splitValues = str.split(props.delimiter || "/");
 
 		for (let i = 0; i < 3; i++) {
-			values[schema[dateSchema[i]]] = splitValues[i];
+			values[schema[getDateSchema()[i]]] = splitValues[i];
 		}
 		const { year, month, day } = values;
 
 		return { year: +year, month: +month - 1, day: +day };
 	};
-
 	const isValidDate = (str: string) => {
 		const { year, month, day } = parseDateString(str);
 
@@ -125,13 +117,35 @@ export default function DatePicker(props: DatepickerProps) {
 		if (!isNaN(date.getTime())) return true;
 	};
 
+	const getCellWeekday = el => {
+		const day = +el.firstChild.textContent;
+
+		if (!day) console.error("getCellWeekday errored out!");
+
+		return grid.findIndex(
+			o =>
+				o.day === day &&
+				o.date.getTime() ===
+					new Date(
+						shownDate().getFullYear(),
+						shownDate().getMonth(),
+						day
+					).getTime()
+		);
+	};
+	const daysGrid = (date: Date | null): DateCell[] => {
+		let d = date || new Date();
+		grid = getDaysGrid(d, props.locale, props.delimiter);
+		return grid;
+	};
+
 	function handleInput(e) {
 		let v = e.currentTarget.value;
 
 		if (!v) return props.onDateSelected(null);
 
 		if (props.applyMask) {
-			v = maskInput(v, dateSchema, props.delimiter || "/");
+			v = maskInput(v, getDateSchema(), props.delimiter || "/");
 			v = v.length > 10 ? v.slice(0, 10) : v;
 
 			e.currentTarget.value = v;
@@ -150,7 +164,204 @@ export default function DatePicker(props: DatepickerProps) {
 		}
 		props.onInput(e);
 	}
+	function handleCellClick(d: DateCell) {
+		if (props.closeAfterClick) {
+			setIsOpen(false);
+			inputRef.focus();
+		}
+		inputRef.value = d.dateStr;
+		props.onDateSelected(d.date);
+	}
 
+	function handleInputKeyDown(e) {
+		if (e.code === "Escape") {
+			setIsOpen(false);
+		}
+		if (e.code === "Enter") {
+			if (props.disabled || props.calendarDisabled) return;
+			setIsOpen(!isOpen());
+		}
+
+		if (e.code === "ArrowDown") {
+			if (props.disabled || props.calendarDisabled) return;
+			console.log("open that jazz");
+
+			if (!isOpen()) {
+				setIsOpen(true);
+			}
+			inputRef.blur();
+			cellsRefs[0].firstChild.focus();
+		}
+	}
+	function handleMonthIncrKeyDown(e: KeyboardEvent) {
+		// console.log(document.activeElement);
+
+		switch (e.code) {
+			case "Escape": {
+				setIsOpen(false);
+			}
+			case "ArrowUp": {
+				setIsOpen(false);
+				if (props.inputDisabled) {
+					iconBtnRef.focus();
+				} else {
+					inputRef.focus();
+				}
+				break;
+			}
+			case "ArrowLeft": {
+				monthDecrBtn.focus();
+				break;
+			}
+			case "ArrowRight": {
+				yearIncrBtn && yearIncrBtn.focus();
+				break;
+			}
+			case "ArrowDown": {
+				// TODO: Account for disabled cells
+
+				switch (getCellWeekday(cellsRefs[0])) {
+					case 0:
+						cellsRefs[5].firstChild.focus();
+						break;
+					case 1:
+						cellsRefs[4].firstChild.focus();
+						break;
+					case 2:
+						cellsRefs[3].firstChild.focus();
+						break;
+					case 3:
+						cellsRefs[2].firstChild.focus();
+						break;
+					case 4:
+						cellsRefs[1].firstChild.focus();
+						break;
+					case 5:
+					case 6:
+						cellsRefs[0].firstChild.focus();
+						break;
+				}
+			}
+		}
+	}
+	function handleMonthDecrKeyDown(e: KeyboardEvent) {
+		// console.log(document.activeElement);
+
+		switch (e.code) {
+			case "Escape": {
+				setIsOpen(false);
+			}
+			case "ArrowUp": {
+				setIsOpen(false);
+				if (props.inputDisabled) {
+					iconBtnRef.focus();
+				} else {
+					inputRef.focus();
+				}
+				break;
+			}
+			case "ArrowLeft": {
+				yearDecrBtn && yearDecrBtn.focus();
+				break;
+			}
+			case "ArrowRight": {
+				monthIncrBtn.focus();
+				break;
+			}
+			case "ArrowDown": {
+				// TODO: Account for disabled cells
+
+				switch (getCellWeekday(cellsRefs[0])) {
+					case 0:
+						cellsRefs[1].firstChild.focus();
+						break;
+					case 1:
+					case 2:
+					case 3:
+					case 4:
+					case 5:
+					case 6:
+						cellsRefs[0].firstChild.focus();
+						break;
+				}
+			}
+		}
+	}
+	function handleYearDecrKeyDown(e: KeyboardEvent) {
+		// console.log(document.activeElement);
+
+		switch (e.code) {
+			case "Escape": {
+				setIsOpen(false);
+			}
+			case "ArrowUp": {
+				setIsOpen(false);
+				if (props.inputDisabled) {
+					iconBtnRef.focus();
+				} else {
+					inputRef.focus();
+				}
+				break;
+			}
+			case "ArrowRight": {
+				monthDecrBtn.focus();
+				break;
+			}
+			case "ArrowDown": {
+				// TODO: Account for disabled cells
+
+				cellsRefs[0].firstChild.focus();
+			}
+		}
+	}
+	function handleYearIncrKeyDown(e: KeyboardEvent) {
+		// console.log(document.activeElement);
+
+		switch (e.code) {
+			case "Escape": {
+				setIsOpen(false);
+			}
+			case "ArrowUp": {
+				setIsOpen(false);
+				if (props.inputDisabled) {
+					iconBtnRef.focus();
+				} else {
+					inputRef.focus();
+				}
+				break;
+			}
+			case "ArrowLeft": {
+				monthIncrBtn.focus();
+				break;
+			}
+			case "ArrowDown": {
+				// TODO: Account for disabled cells
+
+				switch (getCellWeekday(cellsRefs[0])) {
+					case 0:
+						cellsRefs[6].firstChild.focus();
+					case 1:
+						cellsRefs[5].firstChild.focus();
+						break;
+					case 2:
+						cellsRefs[4].firstChild.focus();
+						break;
+					case 3:
+						cellsRefs[3].firstChild.focus();
+						break;
+					case 4:
+						cellsRefs[2].firstChild.focus();
+						break;
+					case 5:
+						cellsRefs[1].firstChild.focus();
+						break;
+					case 6:
+						cellsRefs[0].firstChild.focus();
+						break;
+				}
+			}
+		}
+	}
 	function handleCellKeyDown(e: KeyboardEvent, d: DateCell) {
 		const cellIndex: number = cellsRefs.findIndex(
 			ref => ref.firstChild.textContent === d.day.toString()
@@ -311,21 +522,30 @@ export default function DatePicker(props: DatepickerProps) {
 		setShownDate(new Date(timestamp));
 	};
 
-	const getCellWeekday = el => {
-		const day = +el.firstChild.textContent;
+	function checkIsDisabled(d: DateCell) {
+		let disabled = props.filter && !props.filter(d.date);
 
-		if (!day) console.error("getCellWeekday errored out!");
+		if (props.min && d.date < props.min) {
+			disabled = true;
+		}
+		if (props.max && d.date > props.max) {
+			disabled = true;
+		}
 
-		return grid.findIndex(
-			o =>
-				o.day === day &&
-				o.date.getTime() ===
-					new Date(
-						shownDate().getFullYear(),
-						shownDate().getMonth(),
-						day
-					).getTime()
-		);
+		return disabled;
+	}
+
+	const enterTransition = (el, done) => {
+		// push it left only if too close from the edge
+		const isLeft = el.getBoundingClientRect().x < window.innerWidth - 300;
+
+		el.classList.add(isLeft ? "left" : "right");
+	};
+	const exitTransition = (el, done) => {
+		const a = el.animate([{ opacity: 1 }, { opacity: 0 }], {
+			duration: 200,
+		});
+		a.finished.then(done);
 	};
 
 	createEffect(() => {
@@ -365,6 +585,7 @@ export default function DatePicker(props: DatepickerProps) {
 						cursor:
 							props.disabled || props.inputDisabled ? "default" : "text",
 					}}>
+					{/* INPUT LABEL */}
 					<span
 						ref={labelRef!}
 						class="input-label"
@@ -379,6 +600,8 @@ export default function DatePicker(props: DatepickerProps) {
 						}}>
 						{props.label}
 					</span>
+
+					{/* TEXT INPUT */}
 					<input
 						ref={inputRef}
 						id="date-input"
@@ -406,30 +629,13 @@ export default function DatePicker(props: DatepickerProps) {
 								}
 							}, 300);
 						}}
-						onKeyDown={e => {
-							if (e.code === "Escape") {
-								setIsOpen(false);
-							}
-							if (e.code === "Enter") {
-								if (props.disabled || props.calendarDisabled) return;
-								setIsOpen(!isOpen());
-							}
-
-							if (e.code === "ArrowDown") {
-								if (props.disabled || props.calendarDisabled) return;
-								console.log("open that jazz");
-
-								if (!isOpen()) {
-									setIsOpen(true);
-								}
-								inputRef.blur();
-								cellsRefs[0].firstChild.focus();
-							}
-						}}
+						onKeyDown={handleInputKeyDown}
 						onInput={handleInput}
 						onChange={props.onChange}
 						disabled={props.disabled || props.inputDisabled}
 					/>
+
+					{/* INPUT BUTTON */}
 					<button
 						ref={iconBtnRef}
 						disabled={props.disabled || props.calendarDisabled}
@@ -466,230 +672,56 @@ export default function DatePicker(props: DatepickerProps) {
 				</Show>
 			</div>
 
-			<Transition
-				onEnter={(el, done) => {
-					// push it left only if too close from the edge
-					const isLeft = el.getBoundingClientRect().x < window.innerWidth - 270;
-
-					el.classList.add(isLeft ? "left" : "right");
-				}}
-				onExit={(el, done) => {
-					const a = el.animate([{ opacity: 1 }, { opacity: 0 }], {
-						duration: 200,
-					});
-					a.finished.then(done);
-				}}>
+			<Transition onEnter={enterTransition} onExit={exitTransition}>
 				<Show when={isOpen()}>
-					<div ref={calendarPopupRef} id={id} class="calendar-popup">
+					<div ref={calendarPopupRef} class="calendar-popup">
+						{/* CALENDAR HEADER */}
 						<header class="calendar-header">
 							<div class="calendar-btn-group">
 								<Show when={props.showYearButtons}>
 									<button
 										ref={yearDecrBtn}
 										onClick={yearDecrement}
-										onKeyDown={e => {
-											console.log(document.activeElement);
-
-											switch (e.code) {
-												case "ArrowUp": {
-													setIsOpen(false);
-													if (props.inputDisabled) {
-														iconBtnRef.focus();
-													} else {
-														inputRef.focus();
-													}
-													break;
-												}
-												case "ArrowRight": {
-													monthDecrBtn.focus();
-													break;
-												}
-												case "ArrowDown": {
-													// TODO: Account for disabled cells
-
-													cellsRefs[0].firstChild.focus();
-												}
-											}
-										}}>
+										onKeyDown={handleYearDecrKeyDown}>
 										<YEAR_DECREMENT_ICON />
 									</button>
 								</Show>
 								<button
 									ref={monthDecrBtn}
 									onClick={monthDecrement}
-									onKeyDown={e => {
-										console.log(document.activeElement);
-
-										switch (e.code) {
-											case "ArrowUp": {
-												setIsOpen(false);
-												if (props.inputDisabled) {
-													iconBtnRef.focus();
-												} else {
-													inputRef.focus();
-												}
-												break;
-											}
-											case "ArrowLeft": {
-												yearDecrBtn && yearDecrBtn.focus();
-												break;
-											}
-											case "ArrowRight": {
-												monthIncrBtn.focus();
-												break;
-											}
-											case "ArrowDown": {
-												// TODO: Account for disabled cells
-
-												switch (getCellWeekday(cellsRefs[0])) {
-													case 0:
-														cellsRefs[1].firstChild.focus();
-														break;
-													case 1:
-													case 2:
-													case 3:
-													case 4:
-													case 5:
-													case 6:
-														cellsRefs[0].firstChild.focus();
-														break;
-												}
-											}
-										}
-									}}>
+									onKeyDown={handleMonthDecrKeyDown}>
 									<MONTH_DECREMENT_ICON />
 								</button>
 							</div>
-							<h3>{currentMonthYear()}</h3>
+							<h3>{getCurrentMonthYear()}</h3>
 
 							<div class="calendar-btn-group">
 								<button
 									ref={monthIncrBtn}
 									onClick={monthIncrement}
-									onKeyDown={e => {
-										console.log(document.activeElement);
-
-										switch (e.code) {
-											case "ArrowUp": {
-												setIsOpen(false);
-												if (props.inputDisabled) {
-													iconBtnRef.focus();
-												} else {
-													inputRef.focus();
-												}
-												break;
-											}
-											case "ArrowLeft": {
-												monthDecrBtn.focus();
-												break;
-											}
-											case "ArrowRight": {
-												yearIncrBtn && yearIncrBtn.focus();
-												break;
-											}
-											case "ArrowDown": {
-												// TODO: Account for disabled cells
-
-												switch (getCellWeekday(cellsRefs[0])) {
-													case 0:
-														cellsRefs[5].firstChild.focus();
-														break;
-													case 1:
-														cellsRefs[4].firstChild.focus();
-														break;
-													case 2:
-														cellsRefs[3].firstChild.focus();
-														break;
-													case 3:
-														cellsRefs[2].firstChild.focus();
-														break;
-													case 4:
-														cellsRefs[1].firstChild.focus();
-														break;
-													case 5:
-													case 6:
-														cellsRefs[0].firstChild.focus();
-														break;
-												}
-											}
-										}
-									}}>
+									onKeyDown={handleMonthIncrKeyDown}>
 									<MONTH_INCREMENT_ICON />
 								</button>
 								<Show when={props.showYearButtons}>
 									<button
 										ref={yearIncrBtn}
 										onClick={yearIncrement}
-										onKeyDown={e => {
-											console.log(document.activeElement);
-
-											switch (e.code) {
-												case "ArrowUp": {
-													setIsOpen(false);
-													if (props.inputDisabled) {
-														iconBtnRef.focus();
-													} else {
-														inputRef.focus();
-													}
-													break;
-												}
-												case "ArrowLeft": {
-													monthIncrBtn.focus();
-													break;
-												}
-												case "ArrowDown": {
-													// TODO: Account for disabled cells
-
-													switch (
-														getCellWeekday(cellsRefs[0])
-													) {
-														case 0:
-															cellsRefs[6].firstChild.focus();
-														case 1:
-															cellsRefs[5].firstChild.focus();
-															break;
-														case 2:
-															cellsRefs[4].firstChild.focus();
-															break;
-														case 3:
-															cellsRefs[3].firstChild.focus();
-															break;
-														case 4:
-															cellsRefs[2].firstChild.focus();
-															break;
-														case 5:
-															cellsRefs[1].firstChild.focus();
-															break;
-														case 6:
-															cellsRefs[0].firstChild.focus();
-															break;
-													}
-												}
-											}
-										}}>
+										onKeyDown={handleYearIncrKeyDown}>
 										<YEAR_INCREMENT_ICON />
 									</button>
 								</Show>
 							</div>
 						</header>
 
+						{/* DATE CELLS */}
 						<div class="calendar-grid">
 							<For each={getWeekdays(props.locale, "narrow")}>
 								{weekday => <div class="weekday-cell">{weekday}</div>}
 							</For>
 							<For each={daysGrid(shownDate())}>
 								{d => {
-									console.log("hey");
 									let cellRef;
-
-									let disabled = props.filter && !props.filter(d.date);
-
-									if (props.min && d.date < props.min) {
-										disabled = true;
-									}
-									if (props.max && d.date > props.max) {
-										disabled = true;
-									}
+									let disabled = checkIsDisabled(d);
 
 									const cellElement = (
 										<div
@@ -708,21 +740,17 @@ export default function DatePicker(props: DatepickerProps) {
 														? props.color
 														: bg,
 											}}
-											onClick={e => {
-												if (props.closeAfterClick) {
-													setIsOpen(false);
-													inputRef.focus();
-												}
-												inputRef.value = d.dateStr;
-												props.onDateSelected(d.date);
-											}}
+											onClick={e => handleCellClick(d)}
 											onKeyDown={e => handleCellKeyDown(e, d)}>
 											<button disabled={disabled}>{d.day}</button>
 										</div>
 									);
 
-									cellRef.classList.contains("current-month-cell") &&
+									d.date.getMonth() === shownDate().getMonth() &&
 										cellsRefs.push(cellRef);
+
+									// cellRef.classList.contains("current-month-cell") &&
+									// 	cellsRefs.push(cellRef);
 
 									return cellElement;
 								}}

@@ -8,6 +8,8 @@ export type DatePickerType =
 	| "dateRange"
 	| "timeRange";
 
+export type DateSchema = "DMY" | "MDY" | "YMD";
+
 export type DateCell = {
 	date: Date;
 	dateStr: string;
