@@ -1,6 +1,7 @@
-lockfileVersion: 5.3
+lockfileVersion: 5.4
 
 specifiers:
+  '@melodev/solid-datepicker': ^0.1.2
   solid-icons: ^0.5.0
   solid-js: ^1.4.7
   solid-styled-components: ^0.28.4
@@ -10,6 +11,7 @@ specifiers:
   vite-plugin-solid: ^2.3.0
 
 dependencies:
+  '@melodev/solid-datepicker': 0.1.2
   solid-icons: 0.5.0_solid-js@1.4.7
   solid-js: 1.4.7
   solid-styled-components: 0.28.4_solid-js@1.4.7
@@ -366,6 +368,14 @@ packages:
       '@jridgewell/resolve-uri': 3.1.0
       '@jridgewell/sourcemap-codec': 1.4.14
     dev: true
+
+  /@melodev/solid-datepicker/0.1.2:
+    resolution: {integrity: sha512-OJzckIVujNU+/lLqbFWL9edSccD0e9XCzdmtacJ4WXdK8Jl5qYP1KrkpfiQENYyctqJVWMw9Tkn7dY7IYSrwVw==}
+    dependencies:
+      solid-js: 1.4.7
+      solid-styled-components: 0.28.4_solid-js@1.4.7
+      solid-transition-group: 0.0.10_solid-js@1.4.7
+    dev: false
 
   /ansi-styles/3.2.1:
     resolution: {integrity: sha512-VT0ZI6kZRdTh8YyJw3SMbYm/u+NqfsAxEpWO0Pf9sq8/e94WxxOpPKx9FR1FlyCtOVDNOQ+8ntlqFxiRc+r5qA==}
@@ -821,7 +831,6 @@ packages:
 
   /solid-js/1.4.7:
     resolution: {integrity: sha512-u3hoe5w3xseAc/8zLwYaQVGanWXknMMQkzryNz7lOPy2ygW6DhCtfMseun4kLflRNRzrUUpTV3W5p7j2SGcHCQ==}
-    dev: false
 
   /solid-refresh/0.4.1_solid-js@1.4.7:
     resolution: {integrity: sha512-v3tD/OXQcUyXLrWjPW1dXZyeWwP7/+GQNs8YTL09GBq+5FguA6IejJWUvJDrLIA4M0ho9/5zK2e9n+uy+4488g==}

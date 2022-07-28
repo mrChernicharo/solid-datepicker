@@ -2,25 +2,23 @@
 	"exclude": ["dist", "node_modules"],
 	"compilerOptions": {
 		"target": "es6",
-		"outDir": "./lib/esm",
+		"outDir": "./dist",
 		"lib": ["esnext", "DOM", "DOM.Iterable"],
 		"declaration": true,
 		"jsx": "preserve",
 		"allowJs": true,
 		"esModuleInterop": true,
 		"module": "esnext",
-		"rootDir": "./",
+		"rootDir": "./src",
 		"moduleResolution": "node",
 		"sourceMap": true,
 		"importHelpers": true,
 		"downlevelIteration": true,
-		"forceConsistentCasingInFileNames": true,
 		"strict": true,
 		"resolveJsonModule": true,
 		"isolatedModules": true,
 		"noImplicitAny": false,
 		"skipLibCheck": true,
-		"skipDefaultLibCheck": true,
-		"typeRoots": ["index.d.ts", "node_modules/@types"]
+		"skipDefaultLibCheck": true
 	}
 }

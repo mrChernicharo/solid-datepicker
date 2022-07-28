@@ -1,14 +1,16 @@
 {
+	"include": ["./src"],
 	"compilerOptions": {
 		"strict": true,
 		"target": "ESNext",
 		"module": "ESNext",
 		"moduleResolution": "node",
 		"allowSyntheticDefaultImports": true,
+		"lib": ["DOM", "DOM.Iterable", "ESNext"],
 		"esModuleInterop": true,
 		"jsx": "preserve",
 		"jsxImportSource": "solid-js",
-		"types": ["vite/client"],
+		"types": [],
 		"noEmit": true,
 		"isolatedModules": true,
 		"noImplicitAny": false
