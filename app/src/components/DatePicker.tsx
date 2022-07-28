@@ -88,7 +88,7 @@ export default function DatePicker(props: DatepickerProps) {
 	// const id = `calendar-popup-${idMaker()}`;
 	let inputRef, labelRef, outlineRef, calendarPopupRef, iconBtnRef;
 	let monthDecrBtn, monthIncrBtn, yearDecrBtn, yearIncrBtn;
-	let timeout: NodeJS.Timeout;
+	let timeout: any;
 	let grid: DateCell[] = [];
 	let cellsRefs: any = [];
 	let firstSaturday: number, lastSunday: number;

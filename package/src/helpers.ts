@@ -168,7 +168,7 @@ export function getDaysGrid(date: Date, locale = 'en', delimiter = '/') {
 			date: d,
 			dateStr: d
 				.toLocaleDateString(locale)
-				.replace(/[-/.@#$%^&*|;:\s]/g, delimiter),
+				.replaceAll(/[-/.@#$%^&*|;:\s]/g, delimiter),
 			weekday: d.getDay(),
 			day: i,
 		});
@@ -191,7 +191,7 @@ export function getDaysGrid(date: Date, locale = 'en', delimiter = '/') {
 			date: nextDate,
 			dateStr: nextDate
 				.toLocaleDateString(locale)
-				.replace(/[-/.@#$%^&*|;:\s]/g, delimiter),
+				.replaceAll(/[-/.@#$%^&*|;:\s]/g, delimiter),
 			weekday: nextDate.getDay(),
 			day: initialDay,
 		});
@@ -214,7 +214,7 @@ export function getDaysGrid(date: Date, locale = 'en', delimiter = '/') {
 			date: prevDate,
 			dateStr: prevDate
 				.toLocaleDateString(locale)
-				.replace(/[-/.@#$%^&*|;:\s]/g, delimiter),
+				.replaceAll(/[-/.@#$%^&*|;:\s]/g, delimiter),
 			weekday: prevDate.getDay(),
 			day: lastDay,
 		});

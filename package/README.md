@@ -1,3 +1,7 @@
-# solid datepicker
+# Solid DatePicker
 
-a customizable ready-to-use datePicker component for Solidjs applications
+### A reusable datepicker for solidJS projects
+
+```
+
+```

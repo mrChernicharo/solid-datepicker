@@ -1,5 +1,5 @@
 {
-	"include": ["./src"],
+	"include": ["./src", "../package/src/DatePicker.tsx"],
 	"compilerOptions": {
 		"strict": true,
 		"target": "ESNext",
