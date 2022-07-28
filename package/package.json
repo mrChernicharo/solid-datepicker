@@ -1,0 +1,40 @@
+{
+	"name": "@melodev/solid-datepicker",
+	"version": "0.1.1",
+	"description": "extensible datepicker component for solid applications",
+	"main": "./dist/cjs/index.js",
+	"module": "./dist/esm/index.js",
+	"types": "./dist/esm/index.d.ts",
+	"scripts": {
+		"prepare": "npm run build",
+		"prepublishOnly": "npm test && npm run prettier && npm run lint",
+		"build": "yarn build:esm && yarn build:cjs",
+		"build:esm": "tsc",
+		"build:cjs": "tsc --module commonjs --outDir dist/cjs"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/mrchernicharo/solid-datepicker.git"
+	},
+	"devDependencies": {
+		"typescript": "^4.7.3"
+	},
+	"peerDependencies": {
+		"solid-js": "^1.4.7",
+		"solid-transition-group": "^0.0.10",
+		"solid-styled-components": "^0.28.4"
+	},
+	"keywords": [
+		"datepicker",
+		"date",
+		"calendar",
+		"solidjs",
+		"solid-datepicker"
+	],
+	"author": "melodev",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/mrchernicharo/solid-datepicker/issues"
+	},
+	"homepage": "https://github.com/mrchernicharo/solid-datepicker#readme"
+}

@@ -2,6 +2,6 @@
 
 ### A reusable datepicker for solidJS projects
 
+```
 
-
-
+```

@@ -1,6 +1,8 @@
 import { FaCalendarAlt, FaHeart, FaSolidChevronDown } from 'solid-icons/fa';
 import { createEffect, createSignal } from 'solid-js';
 import DatePicker from './components/DatePicker';
+// import * as DatePicker from '@melodev/solid-datepicker';
+
 // let lang = "en";
 let lang = 'pt-BR';
 
@@ -8,15 +10,15 @@ const color = '#0098ae';
 const minDate = new Date(2022, 5, 11);
 const maxDate = new Date(2022, 6, 22);
 const initialDate = new Date(2022, 6, 13);
+
+// Prevent Saturday and Sunday from being selected.
 const weekendFilter = (d: Date | null): boolean => {
 	const day = (d || new Date()).getDay();
-	// Prevent Saturday and Sunday from being selected.
 	return day !== 0 && day !== 6;
 };
 
 const higlight20thDay = (d: Date | null) => {
 	const day = (d || new Date()).getDate();
-
 	return day === 20 ? 'highlighted-20' : '';
 };
 
@@ -34,7 +36,6 @@ export default function App() {
 
 	return (
 		<div class="App">
-			{/* <DatePicker_v1 /> */}
 			<h1>DatePicker</h1>
 
 			<div>

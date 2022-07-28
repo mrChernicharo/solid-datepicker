@@ -1,0 +1,22 @@
+{
+	"exclude": ["dist", "node_modules"],
+	"compilerOptions": {
+		"target": "es6",
+		"lib": ["esnext", "dom"],
+		"declaration": true,
+		"jsx": "preserve",
+		"module": "esnext",
+		"rootDir": "./",
+		"moduleResolution": "node",
+		"sourceMap": true,
+		"outDir": "./dist/esm",
+		"importHelpers": true,
+		"downlevelIteration": true,
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"strict": true,
+		"noImplicitAny": false,
+		"skipLibCheck": true,
+		"skipDefaultLibCheck": true
+	}
+}
