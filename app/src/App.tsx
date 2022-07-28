@@ -1,9 +1,6 @@
 import { FaCalendarAlt, FaHeart, FaSolidChevronDown } from 'solid-icons/fa';
 import { createEffect, createSignal } from 'solid-js';
-// import DatePicker from './components/DatePicker';
-// import DatePicker from '@melodev/solid-datepicker';
 import { DatePicker } from '@melodev/solid-datepicker';
-// import * as DatePicker from '@melodev/solid-datepicker';
 
 // let lang = "en";
 let lang = 'pt-BR';
