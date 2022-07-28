@@ -2,16 +2,23 @@
 	"name": "@melodev/solid-datepicker",
 	"version": "0.1.1",
 	"description": "extensible datepicker component for solid applications",
-	"main": "./dist/cjs/index.js",
-	"module": "./dist/esm/index.js",
-	"types": "./dist/esm/index.d.ts",
+	"main": "./lib/cjs/index.js",
+	"module": "./lib/esm/index.js",
+	"types": "./lib/esm/index.d.ts",
+	"files": [
+		"lib/"
+	],
 	"scripts": {
-		"prepare": "npm run build",
+		"clean": "rimraf lib",
+		"copy-files": "copyfiles -e **/*.ts -e **/*.tsx -u 1 lib/esm",
+		"tsc": "npm run clean && tsc -p tsconfig.json && tsc -p tsconfig-cjs.json && npm run copy-files",
+		"prepare": "npm run tsc",
 		"prepublishOnly": "npm test && npm run prettier && npm run lint",
-		"build": "yarn build:esm && yarn build:cjs",
+		"build": "npm build:esm && npm build:cjs",
 		"build:esm": "tsc",
-		"build:cjs": "tsc --module commonjs --outDir dist/cjs"
+		"build:cjs": "tsc --module commonjs --outDir lib/cjs"
 	},
+	"private": "false",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/mrchernicharo/solid-datepicker.git"
@@ -19,10 +26,12 @@
 	"devDependencies": {
 		"typescript": "^4.7.3"
 	},
-	"peerDependencies": {
+	"dependencies": {
+		"copyfiles": "^2.4.1",
+		"rimraf": "^3.0.2",
 		"solid-js": "^1.4.7",
-		"solid-transition-group": "^0.0.10",
-		"solid-styled-components": "^0.28.4"
+		"solid-styled-components": "^0.28.4",
+		"solid-transition-group": "^0.0.10"
 	},
 	"keywords": [
 		"datepicker",

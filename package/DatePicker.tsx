@@ -82,13 +82,13 @@ const DEFAULT_PROPS: DatepickerProps = {
 	calendarOnly: false, // no input, calendar onl;
 };
 
-export default function DatePicker(props: DatepickerProps) {
+export function DatePicker(props: DatepickerProps) {
 	props = mergeProps(DEFAULT_PROPS, props);
 
 	// const id = `calendar-popup-${idMaker()}`;
 	let inputRef, labelRef, outlineRef, calendarPopupRef, iconBtnRef;
 	let monthDecrBtn, monthIncrBtn, yearDecrBtn, yearIncrBtn;
-	let timeout: NodeJS.Timeout;
+	let timeout;
 	let grid: DateCell[] = [];
 	let cellsRefs: any = [];
 	let firstSaturday: number, lastSunday: number;
@@ -107,7 +107,9 @@ export default function DatePicker(props: DatepickerProps) {
 			props.locale,
 			props.delimiter
 		);
-		return dateFormat.replaceAll(props.delimiter || '/', '') as DateSchema; // YMD | }MDY | DMY
+		return dateFormat
+			.replace(props.delimiter || '/', '')
+			.replace(props.delimiter || '/', '') as DateSchema; // YMD | }MDY | DMY
 	};
 	const getCurrentMonthYear = () => {
 		return (shownDate() || new Date()).toLocaleDateString(props.locale, {
