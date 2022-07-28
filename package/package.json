@@ -1,6 +1,6 @@
 {
 	"name": "@melodev/solid-datepicker",
-	"version": "0.1.3",
+	"version": "0.1.4",
 	"description": "extensible datepicker component for solid applications",
 	"main": "./dist/index.js",
 	"module": "./dist/index.js",
@@ -11,8 +11,7 @@
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"clean": "rm -rf dist",
-		"build": "npm run clean && tsc && cp package.json README.md ./dist && npm run replace",
-		"replace": "sed 's+/dist++g' package.json > ./dist/package.json"
+		"build": "npm run clean && tsc && cp package.json README.md ./dist && npm run replace"
 	},
 	"repository": {
 		"type": "git",
