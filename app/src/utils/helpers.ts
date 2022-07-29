@@ -103,11 +103,20 @@ export function maskInput(
 	if (!delimiter) delimiter = '/';
 
 	console.log(val);
-	let v: string, d, m, y, digitsAndDelimiterRegex, dayMonthRegex, yearRegex;
+	let v: string,
+		digitsAndDelimiterRegex,
+		initialDelimiterRegex,
+		doubleDelimiterRegex,
+		dayMonthRegex,
+		yearRegex;
 
 	digitsAndDelimiterRegex = new RegExp(`[^${delimiter}0-9]`);
+	doubleDelimiterRegex = new RegExp(`[${delimiter}][${delimiter}]`, 'g');
+	initialDelimiterRegex = new RegExp(`\b${delimiter}`);
 
 	v = val.replace(digitsAndDelimiterRegex, '');
+	v = v.replace(initialDelimiterRegex, '');
+	v = v.replace(doubleDelimiterRegex, delimiter);
 
 	if (dateSchema === 'YMD') {
 		yearRegex = /(\d{4})(\d)/;
@@ -292,16 +301,6 @@ export const parseDateString = (
 	for (let i = 0; i < 3; i++) {
 		values[schema[dateSchema[i]]] = splitValues[i];
 	}
-
-	values.day =
-		values.day && values.day.length > 2
-			? values.day.slice(1, 3)
-			: values.day;
-
-	values.month =
-		values.month && values.month.length > 2
-			? values.month.slice(1, 3)
-			: values.month;
 
 	const { year, month, day } = values;
 
