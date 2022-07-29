@@ -1,5 +1,5 @@
 {
-  "version": "0.1.10",
+  "version": "0.1.12",
   "name": "@melodev/solid-datepicker",
   "description": "A customizable datepicker component for SolidJS projects",
   "type": "module",

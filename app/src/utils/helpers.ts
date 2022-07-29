@@ -163,7 +163,7 @@ export function checkIsDisabled(
 }
 
 export function getDaysGrid(date: Date, locale = 'en', delimiter = '/') {
-	console.time('getDaysGrid');
+	// console.time('getDaysGrid');
 	const dateMonth = date.getMonth();
 	const dateYear = date.getFullYear();
 
@@ -258,8 +258,8 @@ export function getDaysGrid(date: Date, locale = 'en', delimiter = '/') {
 		...initialDaysFromNextMonth,
 	].map((o, i) => ({ ...o, gridPos: i }));
 
-	console.log({ grid: res });
-	console.timeEnd('getDaysGrid');
+	// console.log({ grid: res });
+	// console.timeEnd('getDaysGrid');
 
 	return res;
 }
