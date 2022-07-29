@@ -229,6 +229,7 @@ const CalendarHeader = styled('div')(
 	h3 {
 		font-size: 16px;
 		width: 120px;
+		text-align: center;
 		color: ${color(props.theme, 'text')};
 	}
 `
@@ -270,8 +271,8 @@ const CalendarCell = styled('div')(
 
 	border: none;
 	border-radius: 50%;
-	width: 36px;
-	height: 36px;
+	width: 32px;
+	height: 32px;
 	display: flex;
 	justify-content: center;
 	align-items: center;

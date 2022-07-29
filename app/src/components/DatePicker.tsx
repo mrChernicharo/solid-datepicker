@@ -62,7 +62,7 @@ const DEFAULT_PROPS: DatepickerProps = {
 	min: null,
 	max: null,
 	delimiter: '/',
-	inputWidth: 270,
+	inputWidth: 160,
 	errorMessage: 'invalid date',
 	filter: (d: Date) => true,
 	onDateSelected: (d: Date | null) => d, // both input and calendar,
@@ -77,7 +77,7 @@ const DEFAULT_PROPS: DatepickerProps = {
 	inputDisabled: false,
 	calendarDisabled: false,
 	closeAfterClick: false,
-	showYearButtons: false,
+	hideYearButtons: false,
 	locale: 'en',
 	type: 'datePicker',
 	touchUIMode: false,
@@ -138,29 +138,19 @@ export function DatePicker(props: DatepickerProps) {
 
 		if (!isNaN(date.getTime())) return true;
 	};
-	const getCellWeekday = el => {
-		const day = +(el.firstChild as HTMLButtonElement).textContent!;
+	const daysGrid = (date: Date | null): DateCell[] => {
+		let d = date || new Date();
+		grid = getDaysGrid(d, props.locale, props.delimiter);
 
-		if (!day) console.error('getCellWeekday errored out!');
-
-		return grid.findIndex(
-			o =>
-				o.day === day &&
-				o.date.getTime() ===
-					new Date(
-						shownDate().getFullYear(),
-						shownDate().getMonth(),
-						day
-					).getTime()
-		);
+		return grid;
 	};
+
+	// KEYBOARD NAVIGATION HELPERS
 	const getCellBtnEl = (index: number): HTMLButtonElement => {
 		let cell = cellsRefs[index]?.firstChild as HTMLButtonElement;
 
 		return cell;
 	};
-
-	// keyboard navigation helpers
 	const findNextInColumn = (col: number, day = 0) => {
 		return cellsLogicGrid.find(
 			c => c.col === col && c.day > day && !c.disabled
@@ -195,15 +185,7 @@ export function DatePicker(props: DatepickerProps) {
 
 	const focusHeaderButton = (cell: LogicCell) => {
 		const colMapping = {};
-		if (props.showYearButtons) {
-			colMapping[0] = yearDecrBtn;
-			colMapping[1] = monthDecrBtn;
-			colMapping[2] = monthDecrBtn;
-			colMapping[3] = monthIncrBtn;
-			colMapping[4] = monthIncrBtn;
-			colMapping[5] = monthIncrBtn;
-			colMapping[6] = yearIncrBtn;
-		} else {
+		if (props.hideYearButtons) {
 			colMapping[0] = monthDecrBtn;
 			colMapping[1] = monthDecrBtn;
 			colMapping[2] = monthDecrBtn;
@@ -211,21 +193,27 @@ export function DatePicker(props: DatepickerProps) {
 			colMapping[4] = monthIncrBtn;
 			colMapping[5] = monthIncrBtn;
 			colMapping[6] = monthIncrBtn;
+		} else {
+			colMapping[0] = yearDecrBtn;
+			colMapping[1] = monthDecrBtn;
+			colMapping[2] = monthDecrBtn;
+			colMapping[3] = monthIncrBtn;
+			colMapping[4] = monthIncrBtn;
+			colMapping[5] = monthIncrBtn;
+			colMapping[6] = yearIncrBtn;
 		}
 
 		const headerBtn = colMapping[cell.col];
 		headerBtn.focus();
 	};
-
-	// const getCellPositionInGrid = (cell:HTMLDivElement) => {
-
-	// }
-
-	const daysGrid = (date: Date | null): DateCell[] => {
-		let d = date || new Date();
-		grid = getDaysGrid(d, props.locale, props.delimiter);
-
-		return grid;
+	const focusFirstAvailableCell = () => {
+		const firstAvailableCell = findNextAvailable();
+		if (firstAvailableCell) {
+			const freeIdx = cellsRefs.findIndex(
+				c => Number(c.dataset.day) === firstAvailableCell.day
+			);
+			getCellBtnEl(freeIdx).focus();
+		}
 	};
 
 	function handleInput(e) {
@@ -273,65 +261,55 @@ export function DatePicker(props: DatepickerProps) {
 		props.onDateSelected(d.date);
 	}
 
+	// KEYDOWN METHODS
 	function handleInputKeyDown(e) {
 		if (e.code === 'Escape') {
-			setIsOpen(false);
+			return setIsOpen(false);
 		}
 		if (e.code === 'Enter') {
 			if (props.disabled || props.calendarDisabled) return;
-			setIsOpen(!isOpen());
+			e.preventDefault();
+		}
+
+		if (e.code === 'ArrowRight') {
+			return iconBtnRef.focus();
 		}
 
 		if (e.code === 'ArrowDown') {
 			if (props.disabled || props.calendarDisabled) return;
+		}
 
+		if (
+			e.code === 'Enter' ||
+			e.code === 'Space' ||
+			e.code === 'ArrowDown'
+		) {
 			if (!isOpen()) {
 				setIsOpen(true);
 			}
 			inputRef.blur();
-
-			const firstAvailableCell = findNextAvailable();
-			if (firstAvailableCell) {
-				const freeIdx = cellsRefs.findIndex(
-					c => Number(c.dataset.day) === firstAvailableCell.day
-				);
-				getCellBtnEl(freeIdx).focus();
-			}
+			focusFirstAvailableCell();
 		}
 	}
-	function handleMonthIncrKeyDown(e: KeyboardEvent) {
-		switch (e.code) {
-			case 'Escape': {
-				setIsOpen(false);
+	function handleIconButtonKeyDown(e) {
+		{
+			if (e.code === 'ArrowLeft') {
+				return inputRef.focus();
 			}
-			case 'ArrowUp': {
-				setIsOpen(false);
-				if (props.inputDisabled) {
-					iconBtnRef.focus();
-				} else {
-					inputRef.focus();
+			if (e.code === 'ArrowDown') {
+				if (props.disabled || props.calendarDisabled) return;
+			}
+			if (
+				e.code === 'Enter' ||
+				e.code === 'Space' ||
+				e.code === 'ArrowDown'
+			) {
+				e.preventDefault(); // prevent input focus
+				if (!isOpen()) {
+					setIsOpen(true);
 				}
-				break;
-			}
-			case 'ArrowLeft': {
-				monthDecrBtn.focus();
-				break;
-			}
-			case 'ArrowRight': {
-				yearIncrBtn && yearIncrBtn.focus();
-				break;
-			}
-			case 'ArrowDown': {
-				// TODO: Account for disabled cells
-				let nextLogicCell = findNextInColumn(5);
-
-				if (!nextLogicCell) {
-					nextLogicCell = findNextAvailable();
-				}
-
-				if (nextLogicCell) {
-					getCellBtnEl(nextLogicCell.day - 1).focus();
-				}
+				inputRef.blur();
+				focusFirstAvailableCell();
 			}
 		}
 	}
@@ -339,6 +317,14 @@ export function DatePicker(props: DatepickerProps) {
 		switch (e.code) {
 			case 'Escape': {
 				setIsOpen(false);
+				break;
+			}
+			case 'Tab': {
+				if (e.shiftKey && props.hideYearButtons) {
+					setIsOpen(false);
+					setTimeout(() => iconBtnRef.focus(), 300);
+				}
+				break;
 			}
 			case 'ArrowUp': {
 				setIsOpen(false);
@@ -358,7 +344,42 @@ export function DatePicker(props: DatepickerProps) {
 				break;
 			}
 			case 'ArrowDown': {
-				let nextLogicCell = findNextInColumn(1);
+				let nextLogicCell = props.hideYearButtons
+					? findNextInColumn(0)
+					: findNextInColumn(1);
+
+				if (!nextLogicCell) {
+					nextLogicCell = findNextAvailable();
+				}
+
+				if (nextLogicCell) {
+					getCellBtnEl(nextLogicCell.day - 1).focus();
+				}
+			}
+		}
+	}
+	function handleMonthIncrKeyDown(e: KeyboardEvent) {
+		switch (e.code) {
+			case 'Escape': {
+				setIsOpen(false);
+			}
+			case 'ArrowUp': {
+				setIsOpen(false);
+				iconBtnRef.focus();
+				break;
+			}
+			case 'ArrowLeft': {
+				monthDecrBtn.focus();
+				break;
+			}
+			case 'ArrowRight': {
+				yearIncrBtn && yearIncrBtn.focus();
+				break;
+			}
+			case 'ArrowDown': {
+				let nextLogicCell = props.hideYearButtons
+					? findNextInColumn(6)
+					: findNextInColumn(5);
 
 				if (!nextLogicCell) {
 					nextLogicCell = findNextAvailable();
@@ -374,6 +395,14 @@ export function DatePicker(props: DatepickerProps) {
 		switch (e.code) {
 			case 'Escape': {
 				setIsOpen(false);
+				break;
+			}
+			case 'Tab': {
+				if (e.shiftKey) {
+					setIsOpen(false);
+					setTimeout(() => iconBtnRef.focus(), 300);
+				}
+				break;
 			}
 			case 'ArrowUp': {
 				setIsOpen(false);
@@ -410,11 +439,7 @@ export function DatePicker(props: DatepickerProps) {
 			}
 			case 'ArrowUp': {
 				setIsOpen(false);
-				if (props.inputDisabled) {
-					iconBtnRef.focus();
-				} else {
-					inputRef.focus();
-				}
+				iconBtnRef.focus();
 				break;
 			}
 			case 'ArrowLeft': {
@@ -434,6 +459,7 @@ export function DatePicker(props: DatepickerProps) {
 			}
 		}
 	}
+
 	function handleCellKeyDown(e: KeyboardEvent, d: DateCell) {
 		const currLogicCell = cellsLogicGrid.find(c => c.day === d.day)!;
 
@@ -508,6 +534,7 @@ export function DatePicker(props: DatepickerProps) {
 		}
 	}
 
+	// HEADER BUTTON ACTIONS
 	const yearDecrement = e => {
 		cellsRefs = [];
 		const timestamp = shownDate().getTime() - 1000 * 60 * 60 * 24 * 365.25;
@@ -564,6 +591,7 @@ export function DatePicker(props: DatepickerProps) {
 		setShownDate(new Date(timestamp));
 	};
 
+	// TRANSITIONS
 	const enterTransition = (el, done) => {
 		// push it left only if too close from the edge
 		const isLeft = el.getBoundingClientRect().x < window.innerWidth - 300;
@@ -578,7 +606,7 @@ export function DatePicker(props: DatepickerProps) {
 	};
 
 	createEffect(() => {
-		console.log({ month: shownDate().getMonth() + 1 });
+		console.log({ shownDate: shownDate() });
 
 		if (!isOpen()) {
 			cellsRefs = [];
@@ -692,25 +720,13 @@ export function DatePicker(props: DatepickerProps) {
 
 					{/* INPUT BUTTON */}
 					<InputButton
-						theme={props.theme}
 						ref={iconBtnRef}
+						theme={props.theme}
 						disabled={props.disabled || props.calendarDisabled}
 						onClick={e => {
 							setIsOpen(true);
 						}}
-						onKeyDown={e => {
-							if (e.code === 'Enter') {
-								e.preventDefault(); // prevent input focus
-								setIsOpen(!isOpen());
-							}
-							if (e.code === 'ArrowDown') {
-								inputRef.blur();
-								setIsOpen(true);
-								(
-									cellsRefs[0].firstChild as HTMLButtonElement
-								).focus();
-							}
-						}}
+						onKeyDown={handleIconButtonKeyDown}
 					>
 						{props.icon}
 					</InputButton>
@@ -741,7 +757,7 @@ export function DatePicker(props: DatepickerProps) {
 						{/* CALENDAR HEADER */}
 						<CalendarHeader theme={props.theme}>
 							<CalendarButtonGroup theme={props.theme}>
-								<Show when={props.showYearButtons}>
+								<Show when={!props.hideYearButtons}>
 									<button
 										ref={yearDecrBtn}
 										onClick={yearDecrement}
@@ -770,7 +786,7 @@ export function DatePicker(props: DatepickerProps) {
 								>
 									<MONTH_INCREMENT_ICON />
 								</button>
-								<Show when={props.showYearButtons}>
+								<Show when={!props.hideYearButtons}>
 									<button
 										ref={yearIncrBtn}
 										onClick={yearIncrement}

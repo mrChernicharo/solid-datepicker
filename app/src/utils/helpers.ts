@@ -62,7 +62,7 @@ export interface DatepickerProps {
 	inputDisabled?: boolean;
 	calendarDisabled?: boolean;
 	closeAfterClick?: boolean;
-	showYearButtons?: boolean;
+	hideYearButtons?: boolean;
 	locale?: string;
 	type?: DatePickerType;
 	touchUIMode?: boolean;

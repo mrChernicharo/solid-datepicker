@@ -45,7 +45,7 @@ export default function App() {
 
 			<div>
 				<DatePicker
-					inputWidth={200}
+					inputWidth={140}
 					ref={datepickerRef}
 					type={'datePicker'}
 					color={color}
@@ -67,9 +67,9 @@ export default function App() {
 					// onInput={console.log} // input input
 					onChange={e => {}} // input change
 					closeAfterClick={false}
-					label="DatePicker label"
+					label="DatePicker"
 					// disabled
-					showYearButtons={false}
+					hideYearButtons={false}
 					touchUIMode={false}
 					calendarOnly={false} // no input, calendar only
 					dateClass={higlight20thDay}
@@ -102,7 +102,7 @@ export default function App() {
 					// onInput={console.log} // input input
 					onChange={e => {}} // input change
 					label="DatePicker 2"
-					showYearButtons={true}
+					hideYearButtons
 					touchUIMode={false}
 					calendarOnly={false} // no input, calendar only
 					dateClass={higlight20thDay}
@@ -131,7 +131,7 @@ export default function App() {
 					onChange={e => {}} // input change
 					label="DatePicker 2"
 					// inputDisabled
-					showYearButtons={true}
+					hideYearButtons={true}
 					touchUIMode={false}
 					calendarOnly={false} // no input, calendar only
 					dateClass={higlight20thDay}
@@ -139,7 +139,6 @@ export default function App() {
 
 				<DatePicker
 					ref={datepickerRef4}
-					disabled
 					value={selectedDate4()}
 					onDateSelected={d => setSelectedDate4(d)}
 					theme="dark"
