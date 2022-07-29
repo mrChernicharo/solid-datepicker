@@ -102,7 +102,9 @@ export function maskInput(
 ) {
 	if (!delimiter) delimiter = '/';
 
-	let v, digitsAndDelimiterRegex, dayMonthRegex, yearRegex;
+	console.log(val);
+	let v: string, d, m, y, digitsAndDelimiterRegex, dayMonthRegex, yearRegex;
+
 	digitsAndDelimiterRegex = new RegExp(`[^${delimiter}0-9]`);
 
 	v = val.replace(digitsAndDelimiterRegex, '');
@@ -121,28 +123,27 @@ export function maskInput(
 		v = v.length < 7 ? v.replace(dayMonthRegex, `$1${delimiter}$2`) : v;
 		v = v.replace(yearRegex, '$1$2');
 	}
-	v = v.length > 10 ? v.slice(0, 10) : v;
 
 	return v;
 }
 
-export function parseDate(dateStr: string) {
-	if (dateStr.length !== 10) return null;
+// export function parseDate(dateStr: string) {
+// 	if (dateStr.length !== 10) return null;
 
-	let [day, month, year] = dateStr.split('/').map(Number);
+// 	let [day, month, year] = dateStr.split('/').map(Number);
 
-	if (month > 12) {
-		month = 12;
-	}
+// 	if (month > 12) {
+// 		month = 12;
+// 	}
 
-	if (day > 31) {
-		day = 31;
-	}
+// 	if (day > 31) {
+// 		day = 31;
+// 	}
 
-	const date = new Date(year, month - 1, day);
+// 	const date = new Date(year, month - 1, day);
 
-	return date;
-}
+// 	return date;
+// }
 
 export function checkIsDisabled(
 	d: DateCell,
@@ -291,6 +292,17 @@ export const parseDateString = (
 	for (let i = 0; i < 3; i++) {
 		values[schema[dateSchema[i]]] = splitValues[i];
 	}
+
+	values.day =
+		values.day && values.day.length > 2
+			? values.day.slice(1, 3)
+			: values.day;
+
+	values.month =
+		values.month && values.month.length > 2
+			? values.month.slice(1, 3)
+			: values.month;
+
 	const { year, month, day } = values;
 
 	return { year: +year, month: +month - 1, day: +day };
