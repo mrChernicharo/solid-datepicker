@@ -1,9 +1,5 @@
-# transform text input into 3 different inputs with individual masks
+# improve input masking (account for 1/1/1111 formatting)
 
-# selectedDate X referenceDate/trackedDate
+# fix year type bug
 
-# intl handles
-
-# topLevel API
-
-# Css it up
+# improve keyboard navigation (account for disabled dates)

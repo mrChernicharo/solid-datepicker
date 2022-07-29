@@ -1,6 +1,7 @@
 import { FaCalendarAlt, FaHeart, FaSolidChevronDown } from 'solid-icons/fa';
 import { createEffect, createSignal } from 'solid-js';
-import { DatePicker } from '@melodev/solid-datepicker';
+import { DatePicker } from './components/DatePicker';
+// import { DatePicker } from '@melodev/solid-datepicker';
 
 // let lang = "en";
 let lang = 'pt-BR';
@@ -14,6 +15,11 @@ const initialDate = new Date(2022, 6, 13);
 const weekendFilter = (d: Date | null): boolean => {
 	const day = (d || new Date()).getDay();
 	return day !== 0 && day !== 6;
+};
+
+const evenDayFilter = (d: Date | null): boolean => {
+	const day = (d || new Date()).getDate();
+	return day % 2 === 0;
 };
 
 const higlight20thDay = (d: Date | null) => {
@@ -116,7 +122,7 @@ export default function App() {
 					hint={'german'}
 					delimiter={'.'}
 					applyMask={true}
-					filter={d => true}
+					filter={evenDayFilter}
 					value={selectedDate3()}
 					onDateSelected={d => setSelectedDate3(d)} // both input and calendar
 					// onInput={console.log} // input input

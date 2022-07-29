@@ -8,6 +8,16 @@ export type DateCell = {
 	dateStr: string;
 	day: number;
 	weekday: number;
+	gridPos: number;
+};
+
+export type LogicCell = {
+	col: number;
+	day: number;
+	disabled: boolean;
+	pos: number;
+	row: number;
+	weekday: number;
 };
 
 export type DatePickerType =
@@ -134,6 +144,24 @@ export function parseDate(dateStr: string) {
 	return date;
 }
 
+export function checkIsDisabled(
+	d: DateCell,
+	filterFn: ((d: Date) => boolean) | undefined = undefined,
+	min: Date | null = null,
+	max: Date | null = null
+) {
+	let disabled = !!filterFn && !filterFn(d.date);
+
+	if (min !== null && d.date < min) {
+		disabled = true;
+	}
+	if (max !== null && d.date > max) {
+		disabled = true;
+	}
+
+	return disabled;
+}
+
 export function getDaysGrid(date: Date, locale = 'en', delimiter = '/') {
 	console.time('getDaysGrid');
 	const dateMonth = date.getMonth();
@@ -228,7 +256,9 @@ export function getDaysGrid(date: Date, locale = 'en', delimiter = '/') {
 		...lastDaysFromPrevMonth,
 		...days,
 		...initialDaysFromNextMonth,
-	];
+	].map((o, i) => ({ ...o, gridPos: i }));
+
+	console.log({ grid: res });
 	console.timeEnd('getDaysGrid');
 
 	return res;
