@@ -115,7 +115,7 @@ export function maskInput(
 		v = v.replace(dayMonthRegex, `$1${delimiter}$2`);
 	} else {
 		dayMonthRegex = new RegExp(/(\d{2})(\d)/);
-		yearRegex = new RegExp(`(\\d+${delimiter}\\d+${delimiter})(\\d)`);
+		yearRegex = new RegExp(`(\\d+[${delimiter}]\\d+[${delimiter}])(\\d)`);
 
 		// prettier-ignore
 		v = v.length < 7 ? v.replace(dayMonthRegex, `$1${delimiter}$2`) : v;

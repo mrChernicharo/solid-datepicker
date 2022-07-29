@@ -75,6 +75,7 @@ export default function App() {
 					dateClass={higlight20thDay}
 				/>
 
+				<span>{selectedDate()?.toLocaleDateString('pt-BR')}</span>
 				<DatePicker
 					inputWidth={400}
 					closeAfterClick={true}
@@ -92,7 +93,7 @@ export default function App() {
 					max={maxDate}
 					placeholder={'04 29 1987'}
 					hint={'american'}
-					delimiter={' '}
+					delimiter={'*'}
 					applyMask={true}
 					filter={weekendFilter}
 					value={selectedDate2()}
@@ -107,6 +108,12 @@ export default function App() {
 					calendarOnly={false} // no input, calendar only
 					dateClass={higlight20thDay}
 				/>
+
+				<span>
+					{selectedDate2()
+						?.toLocaleDateString('en')
+						.replace(/\*/g, '*')}
+				</span>
 				<DatePicker
 					inputWidth={300}
 					closeAfterClick={false}
@@ -137,12 +144,25 @@ export default function App() {
 					dateClass={higlight20thDay}
 				/>
 
+				<span>
+					{selectedDate3()
+						?.toLocaleDateString('de')
+						.replace(/\./g, '.')}
+				</span>
 				<DatePicker
 					ref={datepickerRef4}
 					value={selectedDate4()}
+					locale="jpn"
+					delimiter="-"
 					onDateSelected={d => setSelectedDate4(d)}
 					theme="dark"
 				/>
+
+				<span>
+					{selectedDate4()
+						?.toLocaleDateString('jpn')
+						.replace(/-/g, '-')}
+				</span>
 			</div>
 		</div>
 	);

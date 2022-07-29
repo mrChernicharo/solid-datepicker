@@ -271,9 +271,9 @@ export function DatePicker(props: DatepickerProps) {
 			e.preventDefault();
 		}
 
-		if (e.code === 'ArrowRight') {
-			return iconBtnRef.focus();
-		}
+		// if (e.code === 'ArrowRight') {
+		// 	return iconBtnRef.focus();
+		// }
 
 		if (e.code === 'ArrowDown') {
 			if (props.disabled || props.calendarDisabled) return;
