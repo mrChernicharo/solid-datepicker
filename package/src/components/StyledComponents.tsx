@@ -1,6 +1,6 @@
 import { JSXElement } from 'solid-js';
 import { keyframes, styled } from 'solid-styled-components';
-import { DatepickerColor, Theme } from './helpers';
+import { DatepickerColor, Theme } from '../utils/helpers';
 
 const underlineEnter = keyframes`
 0% {
@@ -214,7 +214,6 @@ const WeekdayCell = styled('div')(
   (props: any) => `
 	color: ${color(props.theme, 'text')};
 	height: 24px;
-	text-align: center;
 `,
 );
 
@@ -223,7 +222,6 @@ const CalendarHeader = styled('div')(
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	text-align: center;
 	padding: 0.5rem;
 
 	h3 {
@@ -296,7 +294,7 @@ const CalendarGrid = styled('div')(
 	font-size: 12px;
 	display: grid;
 	grid-template-columns: repeat(7, 1fr);
-	background-color: ${color(props.theme, 'textMedium')};
+	background-color: 1px solid ${color(props.theme, 'textMedium')};
 
 	padding: 0.5rem;
 `,

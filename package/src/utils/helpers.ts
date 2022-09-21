@@ -94,10 +94,21 @@ export function maskInput(
 ) {
   if (!delimiter) delimiter = '/';
 
-  let v, digitsAndDelimiterRegex, dayMonthRegex, yearRegex;
+  console.log(val);
+  let v: string,
+    digitsAndDelimiterRegex,
+    initialDelimiterRegex,
+    doubleDelimiterRegex,
+    dayMonthRegex,
+    yearRegex;
+
   digitsAndDelimiterRegex = new RegExp(`[^${delimiter}0-9]`);
+  doubleDelimiterRegex = new RegExp(`[${delimiter}][${delimiter}]`, 'g');
+  initialDelimiterRegex = new RegExp(`\b${delimiter}`);
 
   v = val.replace(digitsAndDelimiterRegex, '');
+  v = v.replace(initialDelimiterRegex, '');
+  v = v.replace(doubleDelimiterRegex, delimiter);
 
   if (dateSchema === 'YMD') {
     yearRegex = /(\d{4})(\d)/;
@@ -107,34 +118,33 @@ export function maskInput(
     v = v.replace(dayMonthRegex, `$1${delimiter}$2`);
   } else {
     dayMonthRegex = new RegExp(/(\d{2})(\d)/);
-    yearRegex = new RegExp(`(\\d+${delimiter}\\d+${delimiter})(\\d)`);
+    yearRegex = new RegExp(`(\\d+[${delimiter}]\\d+[${delimiter}])(\\d)`);
 
     // prettier-ignore
     v = v.length < 7 ? v.replace(dayMonthRegex, `$1${delimiter}$2`) : v;
     v = v.replace(yearRegex, '$1$2');
   }
-  v = v.length > 10 ? v.slice(0, 10) : v;
 
   return v;
 }
 
-export function parseDate(dateStr: string) {
-  if (dateStr.length !== 10) return null;
+// export function parseDate(dateStr: string) {
+// 	if (dateStr.length !== 10) return null;
 
-  let [day, month, year] = dateStr.split('/').map(Number);
+// 	let [day, month, year] = dateStr.split('/').map(Number);
 
-  if (month > 12) {
-    month = 12;
-  }
+// 	if (month > 12) {
+// 		month = 12;
+// 	}
 
-  if (day > 31) {
-    day = 31;
-  }
+// 	if (day > 31) {
+// 		day = 31;
+// 	}
 
-  const date = new Date(year, month - 1, day);
+// 	const date = new Date(year, month - 1, day);
 
-  return date;
-}
+// 	return date;
+// }
 
 export function checkIsDisabled(
   d: DateCell,
@@ -256,6 +266,7 @@ export const parseDateString = (
   for (let i = 0; i < 3; i++) {
     values[schema[dateSchema[i]]] = splitValues[i];
   }
+
   const { year, month, day } = values;
 
   return { year: +year, month: +month - 1, day: +day };

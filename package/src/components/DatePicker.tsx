@@ -17,7 +17,7 @@ import {
   DatepickerColor,
   checkIsDisabled,
   LogicCell,
-} from './helpers';
+} from '../utils/helpers';
 import {
   DEFAULT_ICON,
   MONTH_DECREMENT_ICON,
@@ -114,8 +114,11 @@ export function DatePicker(props: DatepickerProps) {
   const isValidDate = (str: string) => {
     const { year, month, day } = parseDateString(str, getDateSchema(), props.delimiter);
 
-    if (day > 31) return false;
-    if (month > 11) return false;
+    console.log({ year, month, day });
+
+    if (!day || day > 31) return false;
+    if (isNaN(month) || month > 11) return false;
+    if (!year) return false;
 
     const date = new Date(new Date(year, month, day).setFullYear(year));
 
@@ -200,10 +203,14 @@ export function DatePicker(props: DatepickerProps) {
 
     if (props.applyMask) {
       v = maskInput(v, getDateSchema(), props.delimiter);
+
+      // v = sliceLongNums(v)
+
       v = v.length > 10 ? v.slice(0, 10) : v;
 
       e.currentTarget.value = v;
 
+      console.log({ valid: isValidDate(v), v });
       if (isValidDate(v)) {
         const { year, month, day } = parseDateString(v, getDateSchema(), props.delimiter);
         const date = new Date(new Date(year, month, day).setFullYear(year));
@@ -242,9 +249,9 @@ export function DatePicker(props: DatepickerProps) {
       e.preventDefault();
     }
 
-    if (e.code === 'ArrowRight') {
-      return iconBtnRef.focus();
-    }
+    // if (e.code === 'ArrowRight') {
+    // 	return iconBtnRef.focus();
+    // }
 
     if (e.code === 'ArrowDown') {
       if (props.disabled || props.calendarDisabled) return;
