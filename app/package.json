@@ -15,7 +15,7 @@
 		"vite-plugin-solid": "^2.3.0"
 	},
 	"dependencies": {
-		"@melodev/solid-datepicker": "^0.1.10",
+		"@melodev/solid-datepicker": "^0.1.14",
 		"solid-icons": "^0.5.0",
 		"solid-js": "^1.4.7",
 		"solid-styled-components": "^0.28.4",
