@@ -12,7 +12,10 @@ export default function App() {
 
     return (
         <div>
-        	<DatePicker/>
+        	<DatePicker
+                value={selectedDate()}
+                onDateSelected={d => setSelectedDate(d)}
+            />
         </div>
     );
 }
