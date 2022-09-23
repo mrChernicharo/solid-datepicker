@@ -17,6 +17,7 @@ import {
   DatepickerColor,
   checkIsDisabled,
   LogicCell,
+  isValidDate,
 } from '../utils/helpers';
 import {
   DEFAULT_ICON,
@@ -69,7 +70,7 @@ const DEFAULT_PROPS: DatepickerProps = {
   disabled: false,
   inputDisabled: false,
   calendarDisabled: false,
-  closeAfterClick: false,
+  closeAfterClick: true,
   hideYearButtons: false,
   locale: 'en',
   type: 'datePicker',
@@ -111,19 +112,19 @@ export function DatePicker(props: DatepickerProps) {
       year: 'numeric',
     });
   };
-  const isValidDate = (str: string) => {
-    const { year, month, day } = parseDateString(str, getDateSchema(), props.delimiter);
+  // const isValidDate = (str: string) => {
+  //   const { year, month, day } = parseDateString(str, getDateSchema(), props.delimiter);
 
-    // console.log({ year, month, day });
+  //   // console.log({ year, month, day });
 
-    if (!day || day > 31) return false;
-    if (isNaN(month) || month > 11) return false;
-    if (!year) return false;
+  //   if (!day || day > 31) return false;
+  //   if (isNaN(month) || month > 11) return false;
+  //   if (!year) return false;
 
-    const date = new Date(new Date(year, month, day).setFullYear(year));
+  //   const date = new Date(new Date(year, month, day).setFullYear(year));
 
-    if (!isNaN(date.getTime())) return true;
-  };
+  //   if (!isNaN(date.getTime())) return true;
+  // };
   const daysGrid = (date: Date | null): DateCell[] => {
     let d = date || new Date();
     grid = getDaysGrid(d, props.locale, props.delimiter);
@@ -197,37 +198,32 @@ export function DatePicker(props: DatepickerProps) {
   };
 
   function handleInput(e) {
-    let v = e.currentTarget.value;
-
-    if (!v) return props.onDateSelected(null);
+    if (!e.currentTarget.value) return props.onDateSelected(null);
 
     if (props.applyMask) {
-      v = maskInput(v, getDateSchema(), props.delimiter);
+      maskInput(e, getDateSchema(), props.delimiter!);
+    }
+    if (isValidDate(e.currentTarget.value, getDateSchema(), props.delimiter!)) {
+      const { year, month, day } = parseDateString(
+        e.currentTarget.value,
+        getDateSchema(),
+        props.delimiter,
+      );
+      const date = new Date(new Date(year, month, day).setFullYear(year));
 
-      // v = sliceLongNums(v)
-
-      v = v.length > 10 ? v.slice(0, 10) : v;
-
-      e.currentTarget.value = v;
-
-      //   console.log({ valid: isValidDate(v), v });
-      if (isValidDate(v)) {
-        const { year, month, day } = parseDateString(v, getDateSchema(), props.delimiter);
-        const date = new Date(new Date(year, month, day).setFullYear(year));
-
-        setIsValid(true);
-        setHasError(false);
-        props.onDateSelected(date);
-        setShownDate(date);
-      } else {
-        // set error???
-        // console.log("invalidDate", { v });
-        setIsValid(false);
-        props.onDateSelected(null);
-      }
+      setIsValid(true);
+      setHasError(false);
+      props.onDateSelected(date);
+      setShownDate(date);
+    } else {
+      // set error???
+      // console.log("invalidDate", { v });
+      setIsValid(false);
+      props.onDateSelected(null);
     }
     props.onInput && props.onInput(e);
   }
+
   function handleCellClick(d: DateCell) {
     if (props.closeAfterClick) {
       setIsOpen(false);

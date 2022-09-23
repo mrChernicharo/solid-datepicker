@@ -1,9 +1,9 @@
 import { FaCalendarAlt, FaHeart, FaSolidChevronDown } from 'solid-icons/fa';
 import { createEffect, createSignal } from 'solid-js';
-// import { DatePicker } from './components/DatePicker';
+import { DatePicker } from './components/DatePicker';
 // import { DatePicker } from '../../package/src/index';
 // @ts-ignore
-import { DatePicker } from '@melodev/solid-datepicker';
+// import { DatePicker } from '@melodev/solid-datepicker';
 
 // let lang = "en";
 let lang = 'pt-BR';
@@ -114,7 +114,6 @@ export default function App() {
         <span>{selectedDate2()?.toLocaleDateString('en').replace(/\*/g, '*')}</span>
         <DatePicker
           inputWidth={300}
-          closeAfterClick={false}
           ref={datepickerRef3}
           type={'datePicker'}
           color={'red'}
@@ -149,6 +148,7 @@ export default function App() {
           value={selectedDate4()}
           locale="jpn"
           delimiter="-"
+          placeholder="yyyy-mm-dd"
           onDateSelected={(d) => setSelectedDate4(d)}
           theme="dark"
         />
