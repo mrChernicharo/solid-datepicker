@@ -253,8 +253,8 @@ export function DatePicker(props: DatepickerProps) {
       if (props.disabled || props.calendarDisabled) return;
     }
 
-    if (e.code === 'Enter' || e.code === 'Space' || e.code === 'ArrowDown') {
-      if (!isOpen()) {
+    if (e.code === 'Enter' || e.code === 'ArrowDown') {
+      if (!isOpen() && !props.calendarDisabled) {
         setIsOpen(true);
       }
       inputRef.blur();
@@ -271,7 +271,7 @@ export function DatePicker(props: DatepickerProps) {
       }
       if (e.code === 'Enter' || e.code === 'Space' || e.code === 'ArrowDown') {
         e.preventDefault(); // prevent input focus
-        if (!isOpen()) {
+        if (!isOpen() && !props.calendarDisabled) {
           setIsOpen(true);
         }
         inputRef.blur();
@@ -605,8 +605,9 @@ export function DatePicker(props: DatepickerProps) {
       <InputField
         theme={props.theme}
         width={props.inputWidth}
+        disabled={props.disabled || props.inputDisabled}
         onClick={(e) => {
-          if (props.inputDisabled) {
+          if (props.inputDisabled && !props.calendarDisabled) {
             setIsOpen(true);
             (cellsRefs[0].firstChild as HTMLButtonElement).focus();
           }
@@ -616,6 +617,7 @@ export function DatePicker(props: DatepickerProps) {
         <InputWrapper
           theme={props.theme}
           cursor={props.disabled || props.inputDisabled ? 'default' : 'text'}
+          isDisabled={props.disabled || props.inputDisabled}
         >
           {/* INPUT LABEL */}
           <InputLabel
@@ -623,7 +625,7 @@ export function DatePicker(props: DatepickerProps) {
             color={props.color}
             theme={props.theme}
             isFocused={inputFocused()}
-            isDisabled={props.disabled || (props.inputDisabled && inputRef.value.length === 0)}
+            isDisabled={props.disabled || props.inputDisabled}
           >
             {props.label}
           </InputLabel>
@@ -662,6 +664,7 @@ export function DatePicker(props: DatepickerProps) {
             theme={props.theme}
             disabled={props.disabled || props.calendarDisabled}
             onClick={(e) => {
+              if (props.calendarDisabled) return;
               setIsOpen(true);
             }}
             onKeyDown={handleIconButtonKeyDown}

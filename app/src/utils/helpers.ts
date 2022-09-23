@@ -87,47 +87,6 @@ export const placeholderText: { [key: string]: string } = {
   'pt-BR': 'dd/mm/aaaa',
 };
 
-// export function maskInput(
-// 	val: string,
-// 	dateSchema: 'DMY' | 'MDY' | 'YMD',
-// 	delimiter: string | undefined
-// ) {
-// 	if (!delimiter) delimiter = '/';
-
-// 	console.log(val);
-// 	let v: string,
-// 		digitsAndDelimiterRegex,
-// 		initialDelimiterRegex,
-// 		doubleDelimiterRegex,
-// 		dayMonthRegex,
-// 		yearRegex;
-
-// 	digitsAndDelimiterRegex = new RegExp(`[^${delimiter}0-9]`);
-// 	doubleDelimiterRegex = new RegExp(`[${delimiter}][${delimiter}]`, 'g');
-// 	initialDelimiterRegex = new RegExp(`\b${delimiter}`);
-
-// 	v = val.replace(digitsAndDelimiterRegex, '');
-// 	v = v.replace(initialDelimiterRegex, '');
-// 	v = v.replace(doubleDelimiterRegex, delimiter);
-
-// 	if (dateSchema === 'YMD') {
-// 		yearRegex = /(\d{4})(\d)/;
-// 		dayMonthRegex = new RegExp(`(\\d{4}${delimiter}\\d{2})(\\d)`, 'g');
-
-// 		v = v.replace(yearRegex, `$1${delimiter}$2`);
-// 		v = v.replace(dayMonthRegex, `$1${delimiter}$2`);
-// 	} else {
-// 		dayMonthRegex = new RegExp(/(\d{2})(\d)/);
-// 		yearRegex = new RegExp(`(\\d+[${delimiter}]\\d+[${delimiter}])(\\d)`);
-
-// 		// prettier-ignore
-// 		v = v.length < 7 ? v.replace(dayMonthRegex, `$1${delimiter}$2`) : v;
-// 		v = v.replace(yearRegex, '$1$2');
-// 	}
-
-// 	return v;
-// }
-
 export type IInputEvent = InputEvent & {
   currentTarget: HTMLInputElement;
   target: Element;
@@ -137,12 +96,12 @@ export type IInputEvent = InputEvent & {
 
 export type Delimiter =
   | '/'
-  | ' '
+  | '-'
   | '.'
+  | ' '
   | ','
   | ':'
   | ';'
-  | '-'
   | '_'
   | "'"
   | '"'

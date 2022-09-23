@@ -34,6 +34,7 @@ export default function App() {
   const [selectedDate2, setSelectedDate2] = createSignal<Date | null>(null);
   const [selectedDate3, setSelectedDate3] = createSignal<Date | null>(null);
   const [selectedDate4, setSelectedDate4] = createSignal<Date | null>(null);
+  const [selectedDate5, setSelectedDate5] = createSignal<Date | null>(null);
 
   let datepickerRef, datepickerRef2, datepickerRef3, datepickerRef4;
   // datepickerRef.open()
@@ -70,6 +71,8 @@ export default function App() {
           onChange={(e) => {}} // input change
           closeAfterClick={false}
           label="DatePicker"
+          // inputDisabled
+          //  calendarDisabled
           // disabled
           hideYearButtons={false}
           touchUIMode={false}
@@ -106,6 +109,9 @@ export default function App() {
           onChange={(e) => {}} // input change
           label="DatePicker 2"
           hideYearButtons
+          // inputDisabled
+          // calendarDisabled
+          // disabled
           touchUIMode={false}
           calendarOnly={false} // no input, calendar only
           dateClass={higlight20thDay}
@@ -122,7 +128,7 @@ export default function App() {
           initialDate={initialDate}
           min={new Date(2022, 3, 29)}
           max={new Date(2022, 11, 4)}
-          placeholder={'1987-04-29'}
+          placeholder={'29-04-1987'}
           hint={'german'}
           delimiter={'.'}
           applyMask={true}
@@ -135,6 +141,8 @@ export default function App() {
           onChange={(e) => {}} // input change
           label="DatePicker 2"
           // inputDisabled
+          // calendarDisabled
+          // disabled
           hideYearButtons={true}
           touchUIMode={false}
           calendarOnly={false} // no input, calendar only
@@ -154,6 +162,10 @@ export default function App() {
         />
 
         <span>{selectedDate4()?.toLocaleDateString('jpn').replace(/-/g, '-')}</span>
+
+        <DatePicker value={selectedDate5()} onDateSelected={(d) => setSelectedDate5(d)} />
+
+        <span>{selectedDate5()?.toLocaleDateString('jpn').replace(/-/g, '-')}</span>
       </div>
     </div>
   );
