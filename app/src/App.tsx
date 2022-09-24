@@ -134,6 +134,7 @@ export default function App() {
           placeholder={'29-04-1987'}
           hint={'german'}
           delimiter={'.'}
+          theme="light"
           applyMask={true}
           filter={evenDayFilter}
           value={selectedDate3()}

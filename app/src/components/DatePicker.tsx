@@ -5,23 +5,15 @@ import {
   getWeekdays,
   idMaker,
   isCurrentMonth,
-  DatePickerType,
   parseDateString,
   isSameDate,
   getDateFormat,
   maskInput,
-  DateCell,
-  DatepickerProps,
-  DateSchema,
-  Theme,
-  DatepickerColor,
   checkIsDisabled,
-  LogicCell,
   isValidDate,
-  regex,
-  Delimiter,
   getDefaultPlaceholder,
-} from '../utils/helpers';
+} from '../lib/helpers';
+import { DateCell, DatepickerProps, DateSchema, Theme, LogicCell } from '../lib/types';
 import {
   DEFAULT_ICON,
   MONTH_DECREMENT_ICON,
@@ -49,6 +41,11 @@ import {
   CalendarPopup,
 } from './StyledComponents';
 
+let DEFAULT_THEME: Theme = 'light';
+if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+  DEFAULT_THEME = 'dark';
+}
+
 const DEFAULT_PROPS: DatepickerProps = {
   value: null,
   color: '#009898',
@@ -67,7 +64,7 @@ const DEFAULT_PROPS: DatepickerProps = {
   dateClass: (d: Date) => '',
   label: 'date picker',
   placeholder: '',
-  theme: 'light',
+  theme: DEFAULT_THEME,
   applyMask: true,
   disabled: false,
   inputDisabled: false,

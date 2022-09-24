@@ -1,6 +1,5 @@
-import { JSXElement } from 'solid-js';
 import { keyframes, styled } from 'solid-styled-components';
-import { DatepickerColor, Theme } from '../utils/helpers';
+import { DatepickerColor, Theme } from '../lib/types';
 
 const underlineEnter = keyframes`
 0% {
