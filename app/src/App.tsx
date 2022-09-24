@@ -1,4 +1,4 @@
-import { FaCalendarAlt, FaHeart, FaSolidChevronDown } from 'solid-icons/fa';
+import { FaCalendarAlt, FaHeart, FaSolidChevronDown, FaSolidLayerGroup } from 'solid-icons/fa';
 import { createEffect, createSignal } from 'solid-js';
 import { DatePicker } from './components/DatePicker';
 // import { DatePicker } from '../../package/src/index';
@@ -35,8 +35,8 @@ export default function App() {
   const [selectedDate3, setSelectedDate3] = createSignal<Date | null>(null);
   const [selectedDate4, setSelectedDate4] = createSignal<Date | null>(null);
   const [selectedDate5, setSelectedDate5] = createSignal<Date | null>(null);
+  const [selectedDate6, setSelectedDate6] = createSignal<Date | null>(null);
 
-  let datepickerRef, datepickerRef2, datepickerRef3, datepickerRef4;
   // datepickerRef.open()
   // datepickerRef.close()
 
@@ -46,10 +46,15 @@ export default function App() {
     <div class="App">
       <h1>DatePicker</h1>
 
+      {/* 
+          <button onclick={(e) => console.log('not working')}>
+            open datepicker 1
+          </button> 
+      */}
+
       <div>
         <DatePicker
-          inputWidth={140}
-          ref={datepickerRef}
+          // inputWidth={140}
           type={'datePicker'}
           color={color}
           locale={'pt-BR'}
@@ -70,7 +75,7 @@ export default function App() {
           // onInput={console.log} // input input
           onChange={(e) => {}} // input change
           closeAfterClick={false}
-          label="DatePicker"
+          label="Data de nascimento"
           // inputDisabled
           //  calendarDisabled
           // disabled
@@ -79,12 +84,11 @@ export default function App() {
           calendarOnly={false} // no input, calendar only
           dateClass={higlight20thDay}
         />
+        <small>{selectedDate()?.toLocaleDateString('pt-BR')}</small>
 
-        <span>{selectedDate()?.toLocaleDateString('pt-BR')}</span>
         <DatePicker
-          inputWidth={400}
+          inputWidth={380}
           closeAfterClick={true}
-          ref={datepickerRef2}
           type={'datePicker'}
           color={'orange'}
           locale={'en'}
@@ -107,7 +111,7 @@ export default function App() {
           onInput={(e) => {}} // input input
           // onInput={console.log} // input input
           onChange={(e) => {}} // input change
-          label="DatePicker 2"
+          label="Hey"
           hideYearButtons
           // inputDisabled
           // calendarDisabled
@@ -116,11 +120,10 @@ export default function App() {
           calendarOnly={false} // no input, calendar only
           dateClass={higlight20thDay}
         />
+        <small>{selectedDate2()?.toLocaleDateString('en').replace(/\*/g, '*')}</small>
 
-        <span>{selectedDate2()?.toLocaleDateString('en').replace(/\*/g, '*')}</span>
         <DatePicker
           inputWidth={300}
-          ref={datepickerRef3}
           type={'datePicker'}
           color={'red'}
           locale={'de'}
@@ -139,7 +142,7 @@ export default function App() {
           onInput={(e) => {}} // input input
           // onInput={console.log} // input input
           onChange={(e) => {}} // input change
-          label="DatePicker 2"
+          label="DatePicker 2 DatePicker 2 DatePicker 2"
           // inputDisabled
           // calendarDisabled
           // disabled
@@ -148,11 +151,9 @@ export default function App() {
           calendarOnly={false} // no input, calendar only
           dateClass={higlight20thDay}
         />
-
-        <span>{selectedDate3()?.toLocaleDateString('de').replace(/\./g, '.')}</span>
+        <small>{selectedDate3()?.toLocaleDateString('de').replace(/\./g, '.')}</small>
 
         <DatePicker
-          ref={datepickerRef4}
           value={selectedDate4()}
           locale="jpn"
           delimiter="-"
@@ -160,12 +161,18 @@ export default function App() {
           onDateSelected={(d) => setSelectedDate4(d)}
           theme="dark"
         />
-
-        <span>{selectedDate4()?.toLocaleDateString('jpn').replace(/-/g, '-')}</span>
+        <small>{selectedDate4()?.toLocaleDateString('jpn').replace(/-/g, '-')}</small>
 
         <DatePicker value={selectedDate5()} onDateSelected={(d) => setSelectedDate5(d)} />
+        <small>{selectedDate5()?.toDateString()}</small>
 
-        <span>{selectedDate5()?.toLocaleDateString('jpn').replace(/-/g, '-')}</span>
+        <DatePicker
+          locale="fr"
+          icon={<FaSolidLayerGroup />}
+          value={selectedDate6()}
+          onDateSelected={(d) => setSelectedDate6(d)}
+        />
+        <small>{selectedDate6()?.toDateString()}</small>
       </div>
     </div>
   );

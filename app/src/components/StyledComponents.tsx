@@ -118,7 +118,9 @@ const InputLabel = styled('div')(
       : color(props.theme, 'text')
   };
 	pointer-events: none;
-	transform: ${props.isFocused ? `translate(-6px, -16px) scale(0.84);` : ''};
+	transform: ${
+    props.isFocused ? `translate(-${props.label.length * 0.58}px, -16px) scale(0.84);` : ''
+  };
 `,
 );
 

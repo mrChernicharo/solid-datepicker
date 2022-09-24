@@ -39,7 +39,6 @@ export type DatepickerColor =
 
 export interface DatepickerProps {
   value: Date | null;
-  ref?: any;
   color?: string;
   icon?: JSXElement;
   hint?: string;
@@ -60,6 +59,7 @@ export interface DatepickerProps {
   applyMask?: boolean;
   disabled?: boolean;
   inputDisabled?: boolean;
+  calendarImperativelyOpened?: boolean;
   calendarDisabled?: boolean;
   closeAfterClick?: boolean;
   hideYearButtons?: boolean;
@@ -122,7 +122,7 @@ export type Delimiter =
 // beginningDelim: new RegExp(`^[${delimiter}]`),
 // beginningDelim: /^\//g,
 // threeDelims: /(.)+\/(.)+\/(.)+\//g,
-export const regex = (delimiter) => {
+export const regex = (delimiter: Delimiter) => {
   const r = {
     letters: /[A-Za-z]+/g,
     specialChars: /[-. !?><:;\/"^'|\\{}()\[\]+=_*&%$#@~`]+/g,
@@ -352,6 +352,17 @@ export const parseDateString = (
   return { year: +year, month: +month - 1, day: +day };
 };
 
+export function getDefaultPlaceholder(locale: string, delimiter: Delimiter) {
+  return [...getDateFormat(new Date(), locale, delimiter)]
+    .map((ch) => {
+      if (regex(' ').specialChars.test(ch)) return ch;
+      else if (ch === 'D') return Array(2).fill('d').join('');
+      else if (ch === 'M') return Array(2).fill('m').join('');
+      else if (ch === 'Y') return Array(4).fill('y').join('');
+    })
+    .join('');
+}
+
 export function getDateFormat(d: Date, locale: string | undefined, delimiter: string | undefined) {
   let localeDate,
     formattedDate,
@@ -431,9 +442,9 @@ export function getDateFormat(d: Date, locale: string | undefined, delimiter: st
   }
 
   const result = dateSchema.join('');
-
+  console.log(result);
   // console.log({result, dateSchema, year, yearIndex, splitDate})
-  return result;
+  return result as DateSchema;
 }
 
 export function isValidDate(str: string, format: DateSchema, delimiter: Delimiter) {

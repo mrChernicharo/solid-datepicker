@@ -18,6 +18,9 @@ import {
   checkIsDisabled,
   LogicCell,
   isValidDate,
+  regex,
+  Delimiter,
+  getDefaultPlaceholder,
 } from '../utils/helpers';
 import {
   DEFAULT_ICON,
@@ -47,7 +50,6 @@ import {
 } from './StyledComponents';
 
 const DEFAULT_PROPS: DatepickerProps = {
-  ref: null,
   value: null,
   color: '#009898',
   icon: DEFAULT_ICON,
@@ -64,7 +66,7 @@ const DEFAULT_PROPS: DatepickerProps = {
   onChange: (e: any) => e, // input change,
   dateClass: (d: Date) => '',
   label: 'date picker',
-  placeholder: 'placeholder',
+  placeholder: '',
   theme: 'light',
   applyMask: true,
   disabled: false,
@@ -79,7 +81,9 @@ const DEFAULT_PROPS: DatepickerProps = {
 };
 
 export function DatePicker(props: DatepickerProps) {
-  props = mergeProps(DEFAULT_PROPS, props);
+  props = mergeProps(DEFAULT_PROPS, props, {
+    placeholder: props.placeholder || getDefaultPlaceholder(props.locale!, props.delimiter!),
+  });
 
   // const id = `calendar-popup-${idMaker()}`;
   let inputRef!: HTMLInputElement,
@@ -104,7 +108,7 @@ export function DatePicker(props: DatepickerProps) {
 
   const getDateSchema = () => {
     const dateFormat = getDateFormat(props.value || new Date(), props.locale, props.delimiter);
-    return dateFormat.replaceAll(props.delimiter || '/', '') as DateSchema; // YMD | }MDY | DMY
+    return dateFormat.replaceAll(props.delimiter || '/', '') as DateSchema; // YMD | MDY | DMY
   };
   const getCurrentMonthYear = () => {
     return (shownDate() || new Date()).toLocaleDateString(props.locale, {
@@ -112,19 +116,6 @@ export function DatePicker(props: DatepickerProps) {
       year: 'numeric',
     });
   };
-  // const isValidDate = (str: string) => {
-  //   const { year, month, day } = parseDateString(str, getDateSchema(), props.delimiter);
-
-  //   // console.log({ year, month, day });
-
-  //   if (!day || day > 31) return false;
-  //   if (isNaN(month) || month > 11) return false;
-  //   if (!year) return false;
-
-  //   const date = new Date(new Date(year, month, day).setFullYear(year));
-
-  //   if (!isNaN(date.getTime())) return true;
-  // };
   const daysGrid = (date: Date | null): DateCell[] => {
     let d = date || new Date();
     grid = getDaysGrid(d, props.locale, props.delimiter);
@@ -598,10 +589,13 @@ export function DatePicker(props: DatepickerProps) {
         setHasError(true);
       }
     });
+
+    // props.elementRef.open = () => setIsOpen(true);
+    // props.elementRef.close = () => setIsOpen(false);
   });
 
   return (
-    <DatePickerContainer ref={props.ref} theme={props.theme}>
+    <DatePickerContainer theme={props.theme}>
       <InputField
         theme={props.theme}
         width={props.inputWidth}
@@ -624,6 +618,7 @@ export function DatePicker(props: DatepickerProps) {
             ref={labelRef}
             color={props.color}
             theme={props.theme}
+            label={props.label}
             isFocused={inputFocused()}
             isDisabled={props.disabled || props.inputDisabled}
           >
